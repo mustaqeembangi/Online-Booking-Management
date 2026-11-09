@@ -1,61 +1,58 @@
 import Image from "next/image";
-import Link from "next/link";
-import Container from "@/components/ui/Container";
+import { ArrowUpRight } from "lucide-react";
 import { getTour } from "@/data/tours";
+import Container from "@/components/ui/Container";
+import Button from "@/components/ui/Button";
+
+// Groups the tour's real "includes" list into chapters. Numbers are positions in that list.
+const CHAPTERS = [
+  { title: "The drive", items: [0, 1], image: "private-desert-safari" },
+  { title: "The dunes", items: [2, 3, 4], image: "sand-boarding" },
+  { title: "The camp", items: [5, 6, 7, 8, 9], image: "camel-riding" },
+  { title: "The night", items: [10, 11], image: "evening-desert-safari" },
+];
 
 export default function EveningSequence() {
   const tour = getTour("evening-desert-safari");
   if (!tour) return null;
   return (
-    <section className="border-t border-line py-20 sm:py-28">
-      <Container>
-        <div className="grid gap-12 lg:grid-cols-12 lg:gap-16">
-          <div className="lg:col-span-5">
-            <div className="lg:sticky lg:top-28">
-              <h2 className="text-3xl font-semibold sm:text-5xl">Your evening in the desert</h2>
-              <div className="relative mt-8 aspect-[4/3] overflow-hidden rounded-2xl bg-line">
-                <Image
-                  src={tour.image}
-                  alt="Desert camp and dunes on the evening safari"
-                  fill
-                  sizes="(min-width: 1024px) 40vw, 100vw"
-                  className="object-cover"
-                />
-              </div>
-              <dl className="mt-6 flex gap-10">
-                {tour.departs && (
-                  <div>
-                    <dt className="text-sm text-ink/60">Pickup</dt>
-                    <dd className="mt-1 text-lg font-semibold">{tour.departs}</dd>
-                  </div>
-                )}
-                {tour.returns && (
-                  <div>
-                    <dt className="text-sm text-ink/60">Back at your hotel</dt>
-                    <dd className="mt-1 text-lg font-semibold">{tour.returns}</dd>
-                  </div>
-                )}
-              </dl>
-              <Link
-                href={`/tours/${tour.slug}`}
-                className="mt-6 inline-block font-semibold text-brand-deep underline underline-offset-4"
-              >
-                See the Evening Desert Safari
-              </Link>
-            </div>
-          </div>
-          <ol className="lg:col-span-7">
-            {tour.includes.map((item, i) => (
-              <li key={item} className="flex gap-5 border-t border-line py-5 first:border-t-0 first:pt-0">
-                <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-ink font-display text-base font-semibold text-white">
-                  {i + 1}
-                </span>
-                <span className="pt-1.5 text-lg leading-snug">{item}</span>
-              </li>
-            ))}
-          </ol>
+    <Container as="section" className="section-y">
+      <div className="flex flex-wrap items-end justify-between gap-6">
+        <h2 className="display-xl reveal max-w-4xl">
+          One evening, <span className="accent-word text-brand-deep">four chapters</span>
+        </h2>
+        <div className="reveal">
+          <p className="text-ink/60">Pickup {tour.departs}, back {tour.returns}</p>
+          <Button href={`/tours/${tour.slug}`} variant="outline" className="mt-3" icon={<ArrowUpRight size={18} />}>
+            See the Evening Safari
+          </Button>
         </div>
-      </Container>
-    </section>
+      </div>
+
+      <div className="mt-[clamp(2rem,5vw,5rem)] grid gap-[clamp(0.75rem,1.2vw,1.5rem)]">
+        {CHAPTERS.map((c, i) => (
+          <article
+            key={c.title}
+            style={{ "--i": i } as React.CSSProperties}
+            className="on-ink chapter grid overflow-hidden rounded-[var(--radius-card)] bg-ink text-white shadow-[0_-20px_40px_-24px_rgb(11_18_14/0.55)] ring-1 ring-white/15 ring-inset md:grid-cols-2"
+          >
+            <div className="relative aspect-[16/10] md:order-2 md:aspect-auto md:min-h-[clamp(20rem,34vw,34rem)]">
+              <Image src={`/images/tours/${c.image}.jpg`} alt="" fill sizes="(min-width: 768px) 50vw, 100vw" className="object-cover" />
+            </div>
+            <div className="flex flex-col justify-between gap-8 p-[clamp(1.5rem,3.5vw,4rem)]">
+              <div className="flex items-baseline gap-4">
+                <span className="accent-word text-[clamp(1.5rem,2.5vw,2.75rem)] text-brand">{i + 1}</span>
+                <h3 className="text-[clamp(2.25rem,5vw,5.5rem)] leading-none">{c.title}</h3>
+              </div>
+              <ul className="space-y-2.5 text-[clamp(1.05rem,1.4vw,1.4rem)] leading-snug text-white/85">
+                {c.items.map((n) => (
+                  <li key={n}>{tour.includes[n]}</li>
+                ))}
+              </ul>
+            </div>
+          </article>
+        ))}
+      </div>
+    </Container>
   );
 }

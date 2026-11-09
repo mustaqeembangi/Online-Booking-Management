@@ -1,5 +1,5 @@
 import type { Metadata, Viewport } from "next";
-import { Bricolage_Grotesque, Instrument_Sans } from "next/font/google";
+import { Funnel_Display, Geist, Instrument_Serif } from "next/font/google";
 import { Analytics } from "@vercel/analytics/next";
 import { SITE } from "@/data/site";
 import Header from "@/components/layout/Header";
@@ -8,14 +8,21 @@ import WhatsAppFab from "@/components/layout/WhatsAppFab";
 import SiteJsonLd from "@/components/info/SiteJsonLd";
 import "./globals.css";
 
-const bricolage = Bricolage_Grotesque({
+const funnel = Funnel_Display({
   subsets: ["latin"],
-  variable: "--font-bricolage",
+  variable: "--font-funnel",
   display: "swap",
 });
-const instrument = Instrument_Sans({
+const geist = Geist({
   subsets: ["latin"],
-  variable: "--font-instrument",
+  variable: "--font-geist",
+  display: "swap",
+});
+const serifAccent = Instrument_Serif({
+  subsets: ["latin"],
+  weight: "400",
+  style: "italic",
+  variable: "--font-serif-accent",
   display: "swap",
 });
 
@@ -37,11 +44,13 @@ export const metadata: Metadata = {
 export const viewport: Viewport = {
   width: "device-width",
   initialScale: 1,
+  viewportFit: "cover",
+  themeColor: "#0b120e",
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en" className={`${bricolage.variable} ${instrument.variable}`}>
+    <html lang="en" className={`${funnel.variable} ${geist.variable} ${serifAccent.variable}`}>
       <body>
         <SiteJsonLd />
         <Header />

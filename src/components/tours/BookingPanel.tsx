@@ -48,7 +48,7 @@ export default function BookingPanel({ tour }: { tour: Tour }) {
     const apply = () =>
       document.documentElement.style.setProperty(
         "--fab-offset",
-        mq.matches ? "5.5rem" : "0px",
+        mq.matches ? "5.25rem" : "0px",
       );
     apply();
     mq.addEventListener("change", apply);
@@ -227,16 +227,16 @@ export default function BookingPanel({ tour }: { tour: Tour }) {
   return (
     <>
       {/* Desktop and iPad landscape: sticky card in the side column */}
-      <div className="sticky top-24 hidden max-h-[calc(100dvh-7rem)] overflow-y-auto rounded-2xl border border-line bg-white p-6 shadow-sm lg:block">
+      <div className="sticky top-24 hidden max-h-[calc(100dvh-7rem)] overflow-y-auto rounded-[var(--radius-card)] border border-line bg-white p-[clamp(1.25rem,2vw,2rem)] shadow-[0_40px_80px_-40px_rgb(11_18_14/0.45)] lg:block">
         <div className="mb-5">{priceLine}</div>
         {form}
       </div>
 
       {/* Phones and iPad portrait: sticky bottom bar */}
-      <div className="fixed inset-x-0 bottom-0 z-40 border-t border-line bg-white lg:hidden">
-        <div className="mx-auto flex max-w-7xl items-center justify-between gap-4 px-5 py-3 sm:px-8">
+      <div className="fixed inset-x-3 bottom-[max(0.75rem,env(safe-area-inset-bottom))] z-40 rounded-full border border-white/70 bg-white/90 shadow-[0_16px_40px_-16px_rgb(11_18_14/0.5)] backdrop-blur-xl lg:hidden">
+        <div className="flex items-center justify-between gap-4 py-2 pl-6 pr-2">
           <div className="min-w-0 leading-tight">{priceLine}</div>
-          <Button onClick={() => setOpen(true)} size="md" className="shrink-0">
+          <Button onClick={() => setOpen(true)} variant="ink" size="md" className="shrink-0">
             Book
           </Button>
         </div>
@@ -250,7 +250,7 @@ export default function BookingPanel({ tour }: { tour: Tour }) {
             className="absolute inset-0 bg-ink/60"
             onClick={() => setOpen(false)}
           />
-          <div className="absolute inset-x-0 bottom-0 flex max-h-[92dvh] animate-[sheet-up_.25s_ease-out] flex-col rounded-t-3xl bg-white shadow-2xl">
+          <div className="absolute inset-x-0 bottom-0 flex max-h-[92dvh] animate-[sheet-up_.25s_ease-out] flex-col rounded-t-[2rem] bg-white pb-[env(safe-area-inset-bottom)] shadow-2xl">
             <div className="flex items-center justify-between gap-3 border-b border-line px-5 py-4">
               <h2 className="text-lg font-semibold leading-snug text-ink">Book this tour</h2>
               <button
@@ -264,7 +264,6 @@ export default function BookingPanel({ tour }: { tour: Tour }) {
             </div>
             <div className="overflow-y-auto overscroll-contain px-5 pb-8 pt-5">{form}</div>
           </div>
-          <style>{`@keyframes sheet-up{from{transform:translateY(100%)}to{transform:none}}`}</style>
         </div>
       )}
     </>

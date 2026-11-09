@@ -1,33 +1,23 @@
-import Button from "@/components/ui/Button";
-import Container from "@/components/ui/Container";
+import Image from "next/image";
+import { MessageCircle, Phone } from "lucide-react";
 import { SITE } from "@/data/site";
 import { whatsappLink } from "@/lib/whatsapp";
+import Button from "@/components/ui/Button";
 
 export default function ContactBand() {
   return (
-    <section className="on-ink bg-ink py-20 text-white sm:py-24">
-      <Container>
-        <h2 className="max-w-2xl text-3xl font-semibold sm:text-5xl">Talk to the Ammar Tours team</h2>
-        <div className="mt-10 flex flex-col gap-8 lg:flex-row lg:items-end lg:justify-between">
-          <dl className="grid gap-6 sm:grid-cols-2 lg:gap-12">
-            <div>
-              <dt className="text-sm text-white/60">Phone</dt>
-              <dd className="mt-1 text-xl font-semibold">
-                <a href={SITE.phoneHref} className="hover:underline">{SITE.phone}</a>
-              </dd>
-            </div>
-            <div className="min-w-0">
-              <dt className="text-sm text-white/60">Email</dt>
-              <dd className="mt-1 break-words text-xl font-semibold">
-                <a href={SITE.emailHref} className="hover:underline">{SITE.email}</a>
-              </dd>
-            </div>
-          </dl>
-          <Button href={whatsappLink()} size="lg" className="self-start">
-            Message us on WhatsApp
-          </Button>
+    <section className="on-ink relative isolate flex min-h-[min(90svh,56rem)] items-end overflow-hidden bg-ink text-white">
+      <Image src="/images/tours/musandam-dibba-cruise.jpg" alt="" fill sizes="100vw" className="-z-20 object-cover" />
+      <div className="absolute inset-0 -z-10 bg-gradient-to-t from-ink via-ink/40 to-ink/10" />
+      <div className="w-full px-[var(--gutter)] py-[clamp(3rem,6vw,6rem)]">
+        <h2 className="hero-title reveal">
+          Ready when <span className="accent-word text-brand">you are.</span>
+        </h2>
+        <div className="reveal mt-[clamp(1.5rem,3vw,3rem)] flex flex-wrap gap-2.5">
+          <Button href={whatsappLink()} size="lg" icon={<MessageCircle size={20} />}>Message us on WhatsApp</Button>
+          <Button href={SITE.phoneHref} size="lg" variant="glass" icon={<Phone size={18} />}>{SITE.phone}</Button>
         </div>
-      </Container>
+      </div>
     </section>
   );
 }

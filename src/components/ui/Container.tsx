@@ -10,7 +10,7 @@ export default function Container({
   as?: ElementType;
 }) {
   return (
-    <Tag className={`mx-auto w-full max-w-7xl px-5 sm:px-8 ${className}`}>
+    <Tag className={`w-full px-[var(--gutter)] ${className}`}>
       {children}
     </Tag>
   );

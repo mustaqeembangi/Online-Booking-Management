@@ -2,42 +2,57 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Menu, MenuButton, MenuItem, MenuItems } from "@headlessui/react";
-import { ChevronDown, MessageCircle, X, Menu as MenuIcon } from "lucide-react";
+import { ArrowUpRight, ChevronDown, MessageCircle, X, Menu as MenuIcon } from "lucide-react";
 import { CATEGORIES } from "@/data/tours";
 import { whatsappLink } from "@/lib/whatsapp";
 import Button from "@/components/ui/Button";
 
-const linkCls = "text-[15px] font-semibold text-ink hover:text-brand-deep";
+const linkCls =
+  "rounded-full px-4 py-2 text-[15px] font-medium text-ink transition-colors hover:bg-ink hover:text-white";
 
 export default function Header() {
   const [open, setOpen] = useState(false);
+  const close = () => setOpen(false);
+
+  useEffect(() => {
+    if (!open) return;
+    const previous = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+    const onKey = (e: KeyboardEvent) => e.key === "Escape" && setOpen(false);
+    window.addEventListener("keydown", onKey);
+    return () => {
+      document.body.style.overflow = previous;
+      window.removeEventListener("keydown", onKey);
+    };
+  }, [open]);
+
   return (
-    <header className="sticky top-0 z-40 border-b border-line bg-white">
-      <div className="mx-auto flex h-16 w-full max-w-7xl items-center justify-between px-5 sm:px-8 lg:h-20">
-        <Link href="/" className="flex shrink-0 items-center" onClick={() => setOpen(false)}>
+    <header className="fixed inset-x-0 top-[max(0.75rem,env(safe-area-inset-top))] z-40 px-3">
+      <div className="mx-auto flex h-16 max-w-[1240px] items-center justify-between rounded-full border border-white/70 bg-white/85 pl-5 pr-2 shadow-[0_16px_40px_-20px_rgb(11_18_14/0.45)] backdrop-blur-xl sm:pl-6">
+        <Link href="/" className="flex shrink-0 items-center" onClick={close}>
           <Image
             src="/images/logo.png"
             alt="Ammar Tours"
             width={160}
-            height={56}
+            height={127}
             priority
-            className="h-10 w-auto lg:h-12"
+            className="h-11 w-auto"
           />
         </Link>
 
-        <nav className="hidden items-center gap-8 lg:flex" aria-label="Main">
+        <nav className="hidden items-center gap-1 md:flex" aria-label="Main">
           <Menu as="div" className="relative">
             <MenuButton className={`${linkCls} inline-flex items-center gap-1`}>
               Tours <ChevronDown size={16} />
             </MenuButton>
             <MenuItems
-              anchor={{ to: "bottom start", gap: 14 }}
-              className="z-50 w-64 rounded-2xl border border-line bg-white p-2 shadow-xl focus:outline-none"
+              anchor={{ to: "bottom start", gap: 18 }}
+              className="z-50 w-72 rounded-3xl border border-line bg-white p-2 shadow-2xl focus:outline-none"
             >
               <MenuItem>
-                <Link href="/tours" className="block rounded-lg px-3 py-2.5 text-[15px] font-semibold text-ink data-[focus]:bg-ink data-[focus]:text-white">
+                <Link href="/tours" className="block rounded-2xl px-4 py-3 text-[15px] font-semibold text-ink data-[focus]:bg-ink data-[focus]:text-white">
                   All tours
                 </Link>
               </MenuItem>
@@ -45,7 +60,7 @@ export default function Header() {
                 <MenuItem key={c.id}>
                   <Link
                     href={`/tours?category=${c.id}`}
-                    className="block rounded-lg px-3 py-2.5 text-[15px] text-ink data-[focus]:bg-ink data-[focus]:text-white"
+                    className="block rounded-2xl px-4 py-3 text-[15px] text-ink data-[focus]:bg-ink data-[focus]:text-white"
                   >
                     {c.name}
                   </Link>
@@ -55,53 +70,73 @@ export default function Header() {
           </Menu>
           <Link href="/about" className={linkCls}>About</Link>
           <Link href="/contact" className={linkCls}>Contact</Link>
-          <Button href={whatsappLink()} icon={<MessageCircle size={18} />}>
+          <Button href={whatsappLink()} variant="ink" className="ml-2" icon={<MessageCircle size={18} />}>
             WhatsApp
           </Button>
         </nav>
 
         <button
           type="button"
-          className="grid h-11 w-11 place-items-center rounded-full border border-line lg:hidden"
-          aria-label={open ? "Close menu" : "Open menu"}
+          className="grid h-12 w-12 place-items-center rounded-full bg-ink text-white md:hidden"
+          aria-label="Open menu"
           aria-expanded={open}
-          onClick={() => setOpen((v) => !v)}
+          onClick={() => setOpen(true)}
         >
-          {open ? <X size={22} /> : <MenuIcon size={22} />}
+          <MenuIcon size={22} />
         </button>
       </div>
 
       {open && (
-        <nav
-          className="max-h-[calc(100dvh-4rem)] overflow-y-auto border-t border-line bg-white px-5 pb-6 pt-4 lg:hidden"
-          aria-label="Mobile"
+        <div
+          className="on-ink fixed inset-0 z-50 flex animate-[fade-in_.2s_ease-out] flex-col overflow-y-auto overscroll-contain bg-ink px-6 pb-[max(1.5rem,env(safe-area-inset-bottom))] pt-[max(1.25rem,env(safe-area-inset-top))] text-white md:hidden"
+          role="dialog"
+          aria-modal="true"
+          aria-label="Menu"
         >
-          <Link href="/tours" onClick={() => setOpen(false)} className="block py-3 text-lg font-semibold">
-            All tours
-          </Link>
-          <ul className="mb-2 ml-1 border-l-2 border-line pl-4">
-            {CATEGORIES.map((c) => (
-              <li key={c.id}>
-                <Link
-                  href={`/tours?category=${c.id}`}
-                  onClick={() => setOpen(false)}
-                  className="block py-2 text-[16px] text-ink/80"
-                >
-                  {c.name}
-                </Link>
-              </li>
+          <div className="flex justify-end">
+            <button
+              type="button"
+              aria-label="Close menu"
+              onClick={close}
+              className="grid h-12 w-12 place-items-center rounded-full bg-white text-ink"
+            >
+              <X size={22} />
+            </button>
+          </div>
+          <nav aria-label="Mobile" className="mt-4 flex flex-1 flex-col">
+            {[
+              { href: "/tours", label: "All tours" },
+              { href: "/about", label: "About" },
+              { href: "/contact", label: "Contact" },
+            ].map((l) => (
+              <Link
+                key={l.href}
+                href={l.href}
+                onClick={close}
+                className="flex items-center justify-between border-b border-white/15 py-4 font-display text-[clamp(2.25rem,11vw,3.5rem)] font-semibold leading-none tracking-tight"
+              >
+                {l.label}
+                <ArrowUpRight size={30} aria-hidden />
+              </Link>
             ))}
-          </ul>
-          <Link href="/about" onClick={() => setOpen(false)} className="block py-3 text-lg font-semibold">
-            About
-          </Link>
-          <Link href="/contact" onClick={() => setOpen(false)} className="block py-3 text-lg font-semibold">
-            Contact
-          </Link>
-          <Button href={whatsappLink()} size="lg" className="mt-3 w-full" icon={<MessageCircle size={20} />}>
-            Chat on WhatsApp
-          </Button>
-        </nav>
+            <ul className="mt-6 grid grid-cols-2 gap-x-4">
+              {CATEGORIES.map((c) => (
+                <li key={c.id}>
+                  <Link
+                    href={`/tours?category=${c.id}`}
+                    onClick={close}
+                    className="block py-2.5 text-[16px] text-white/80"
+                  >
+                    {c.name}
+                  </Link>
+                </li>
+              ))}
+            </ul>
+            <Button href={whatsappLink()} size="lg" className="mt-auto w-full" icon={<MessageCircle size={20} />}>
+              Chat on WhatsApp
+            </Button>
+          </nav>
+        </div>
       )}
     </header>
   );

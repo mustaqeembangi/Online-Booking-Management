@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { Star } from "lucide-react";
+import { Check, MessageCircle, Star } from "lucide-react";
 import Container from "@/components/ui/Container";
 import Button from "@/components/ui/Button";
 import TourCard from "@/components/tours/TourCard";
@@ -45,12 +45,14 @@ export async function generateMetadata({
 
 function List({ title, items }: { title: string; items: string[] }) {
   return (
-    <section className="mt-12">
-      <h2 className="text-2xl font-semibold text-ink">{title}</h2>
-      <ul className="mt-4 grid gap-x-8 gap-y-2.5 sm:grid-cols-2">
+    <section className="mt-[clamp(2.5rem,5vw,4.5rem)] first:mt-0">
+      <h2 className="text-[clamp(1.75rem,3vw,3rem)] leading-none">{title}</h2>
+      <ul className="mt-5 grid gap-x-8 sm:grid-cols-2">
         {items.map((i) => (
-          <li key={i} className="flex gap-3 text-[16px] text-ink/85">
-            <span aria-hidden className="mt-2.5 h-1.5 w-1.5 shrink-0 rounded-full bg-brand-deep" />
+          <li key={i} className="flex gap-3 border-t border-line py-3.5 text-[17px] leading-snug">
+            <span aria-hidden className="mt-0.5 grid h-5 w-5 shrink-0 place-items-center rounded-full bg-ink text-brand">
+              <Check size={13} strokeWidth={3} />
+            </span>
             <span>{i}</span>
           </li>
         ))}
@@ -80,7 +82,7 @@ export default async function TourPage({
   const related = [
     ...TOURS.filter((t) => t.category === tour.category && t.slug !== tour.slug),
     ...TOURS.filter((t) => t.category !== tour.category && t.featured && t.slug !== tour.slug),
-  ].slice(0, 3);
+  ].slice(0, 4);
 
   const jsonLd = {
     "@context": "https://schema.org",
@@ -109,72 +111,65 @@ export default async function TourPage({
           __html: JSON.stringify(jsonLd).replace(/</g, "\\u003c"),
         }}
       />
-      <Container className="pb-28 pt-6 sm:pt-10 lg:pb-20">
-        <nav aria-label="Breadcrumb" className="mb-5 text-sm text-ink/60">
-          <Link href="/tours" className="hover:text-ink hover:underline">
-            Tours
-          </Link>
-          {category && (
-            <>
-              <span aria-hidden> / </span>
-              <Link
-                href={`/tours?category=${category.id}`}
-                className="hover:text-ink hover:underline"
-              >
-                {category.name}
-              </Link>
-            </>
-          )}
-        </nav>
-
-        <div className="grid gap-10 lg:grid-cols-[minmax(0,1fr)_400px] lg:gap-14">
-          <div className="min-w-0">
-            <div className="relative aspect-[4/3] overflow-hidden rounded-2xl bg-line sm:aspect-[16/10]">
-              <Image
-                src={tour.image}
-                alt={tour.title}
-                fill
-                priority
-                sizes="(min-width: 1280px) 760px, (min-width: 1024px) 60vw, 100vw"
-                className="object-cover"
-              />
-            </div>
-
-            <div className="mt-8">
+      <section className="on-ink bg-ink text-white">
+        <div className="grid lg:min-h-[min(90svh,58rem)] lg:grid-cols-2">
+          <div className="relative aspect-[4/3] max-h-[72svh] w-full sm:aspect-[16/9] lg:order-2 lg:aspect-auto lg:max-h-none">
+            <Image
+              src={tour.image}
+              alt={tour.title}
+              fill
+              priority
+              sizes="(min-width: 1024px) 50vw, 100vw"
+              className="object-cover"
+            />
+          </div>
+          <div className="flex flex-col justify-end px-[var(--gutter)] pb-[clamp(2.5rem,5vw,5rem)] pt-8 lg:pr-[clamp(2rem,4vw,5rem)] lg:pt-32">
+            <nav aria-label="Breadcrumb" className="text-sm text-white/60">
+              <Link href="/tours" className="hover:text-white">Tours</Link>
               {category && (
-                <div className="text-sm font-semibold text-brand-deep">{category.name}</div>
+                <>
+                  <span aria-hidden> / </span>
+                  <Link href={`/tours?category=${category.id}`} className="hover:text-white">
+                    {category.name}
+                  </Link>
+                </>
               )}
-              <h1 className="mt-1 text-3xl font-semibold leading-tight text-ink sm:text-4xl lg:text-[2.75rem]">
-                {tour.title}
-              </h1>
-              {tour.gyg && (
-                <a
-                  href={SITE.socials.getyourguide}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="mt-3 inline-flex items-center gap-2 text-[15px] text-ink/75 hover:text-ink hover:underline"
-                >
-                  <Star size={16} className="fill-ink text-ink" aria-hidden />
-                  {tour.gyg.rating.toFixed(1)} on GetYourGuide (
-                  {tour.gyg.reviews.toLocaleString("en-US")} reviews)
-                </a>
-              )}
-              <p className="mt-5 max-w-2xl text-lg leading-relaxed text-ink/80">
-                {tour.summary}
-              </p>
-            </div>
-
+            </nav>
+            <h1 className="mt-3 text-[clamp(2.5rem,min(5vw,9svh),6rem)] leading-[0.98] tracking-[-0.04em]">
+              {tour.title}
+            </h1>
+            {tour.gyg && (
+              <a
+                href={SITE.socials.getyourguide}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="mt-4 inline-flex items-center gap-2 text-[15px] text-white/80 hover:text-white"
+              >
+                <Star size={16} className="fill-brand text-brand" aria-hidden />
+                {tour.gyg.rating.toFixed(1)} on GetYourGuide (
+                {tour.gyg.reviews.toLocaleString("en-US")} reviews)
+              </a>
+            )}
+            <p className="mt-4 max-w-2xl text-[clamp(1.05rem,1.4vw,1.35rem)] leading-snug text-white/85">
+              {tour.summary}
+            </p>
             {facts.length > 0 && (
-              <dl className="mt-8 grid grid-cols-2 gap-x-6 gap-y-5 border-y border-line py-6 sm:grid-cols-3">
+              <dl className="mt-6 grid grid-cols-2 gap-x-6 gap-y-4 border-t border-white/15 pt-5 sm:grid-cols-3">
                 {facts.map((f) => (
                   <div key={f.label}>
-                    <dt className="text-sm text-ink/60">{f.label}</dt>
-                    <dd className="mt-0.5 font-semibold text-ink">{f.value}</dd>
+                    <dt className="text-sm text-white/55">{f.label}</dt>
+                    <dd className="mt-0.5 font-medium">{f.value}</dd>
                   </div>
                 ))}
               </dl>
             )}
+          </div>
+        </div>
+      </section>
 
+      <Container className="pb-32 lg:pb-[clamp(5rem,8vw,9rem)]">
+        <div className="grid gap-10 lg:grid-cols-[minmax(0,1fr)_minmax(22rem,27rem)] lg:gap-[clamp(3rem,6vw,8rem)]">
+          <div className="min-w-0 pt-[clamp(2.5rem,5vw,5rem)]">
             {tour.includes.length > 0 && <List title="What's included" items={tour.includes} />}
             {tour.extras && tour.extras.length > 0 && (
               <List title="Available at extra cost" items={tour.extras} />
@@ -184,16 +179,16 @@ export default async function TourPage({
             )}
 
             {tour.includes.length === 0 && (
-              <section className="mt-12 rounded-2xl border border-line p-6">
-                <h2 className="text-xl font-semibold text-ink">Want the full details?</h2>
-                <p className="mt-2 max-w-xl text-ink/75">
+              <section className="on-ink mt-[clamp(2.5rem,5vw,4.5rem)] rounded-[var(--radius-card)] bg-ink p-[clamp(1.5rem,3vw,3rem)] text-white first:mt-0">
+                <h2 className="text-[clamp(1.75rem,3vw,3rem)] leading-none">Want the full details?</h2>
+                <p className="mt-3 max-w-xl text-white/75">
                   Send us a message and we will tell you what the tour includes, the
                   timings and the price for your group.
                 </p>
                 <Button
                   href={whatsappLink(`Hello ${SITE.name}, I would like details about: ${tour.title}`)}
-                  variant="outline"
-                  className="mt-4"
+                  className="mt-5"
+                  icon={<MessageCircle size={18} />}
                 >
                   Ask on WhatsApp
                 </Button>
@@ -201,19 +196,19 @@ export default async function TourPage({
             )}
           </div>
 
-          <aside className="min-w-0">
+          <aside data-booking-panel className="relative z-10 min-w-0 lg:-mt-[clamp(7rem,20svh,14rem)]">
             <BookingPanel tour={tour} />
           </aside>
         </div>
 
         {related.length > 0 && (
-          <section className="mt-20 border-t border-line pt-12">
-            <h2 className="text-2xl font-semibold text-ink sm:text-3xl">
+          <section className="mt-[clamp(4rem,8vw,8rem)]">
+            <h2 className="display-lg">
               {related.some((t) => t.category === tour.category) && category
                 ? `More ${category.name.toLowerCase()}`
                 : "You may also like"}
             </h2>
-            <div className="mt-8 grid gap-x-6 gap-y-10 sm:grid-cols-2 lg:grid-cols-3">
+            <div className="mt-[clamp(1.5rem,3vw,3rem)] grid sm:grid-cols-2 xl:grid-cols-4 gap-[clamp(0.75rem,1.2vw,1.5rem)]">
               {related.map((t) => (
                 <TourCard key={t.slug} tour={t} />
               ))}

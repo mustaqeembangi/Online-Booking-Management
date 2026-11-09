@@ -3,7 +3,7 @@ import type { ButtonHTMLAttributes, ReactNode } from "react";
 
 interface Props {
   href?: string;
-  variant?: "primary" | "outline" | "ink";
+  variant?: "primary" | "outline" | "ink" | "white" | "glass";
   size?: "md" | "lg";
   icon?: ReactNode;
   children: ReactNode;
@@ -15,11 +15,13 @@ interface Props {
 }
 
 const variants = {
-  primary: "bg-brand text-ink hover:bg-[#82cd58]",
-  outline: "border-2 border-ink text-ink hover:bg-ink hover:text-white",
-  ink: "bg-ink text-white hover:bg-[#1f3329]",
+  primary: "bg-brand text-ink hover:bg-white",
+  outline: "border border-ink/25 text-ink hover:bg-ink hover:text-white hover:border-ink",
+  ink: "bg-ink text-white hover:bg-brand hover:text-ink",
+  white: "bg-white text-ink hover:bg-brand",
+  glass: "glass text-white hover:bg-white hover:text-ink",
 };
-const sizes = { md: "h-11 px-5 text-[15px]", lg: "h-14 px-7 text-base" };
+const sizes = { md: "h-12 px-6 text-[15px]", lg: "h-14 px-8 text-base" };
 
 export default function Button({
   href,
@@ -33,7 +35,7 @@ export default function Button({
   onClick,
   disabled,
 }: Props) {
-  const cls = `inline-flex items-center justify-center gap-2 rounded-full font-semibold whitespace-nowrap transition-colors disabled:opacity-50 ${variants[variant]} ${sizes[size]} ${className}`;
+  const cls = `inline-flex items-center justify-center gap-2 rounded-full font-semibold whitespace-nowrap transition-[background-color,color,border-color,transform] duration-300 active:scale-[0.97] disabled:opacity-50 ${variants[variant]} ${sizes[size]} ${className}`;
   const inner = (
     <>
       {icon}

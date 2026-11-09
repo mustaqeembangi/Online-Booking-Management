@@ -1,55 +1,126 @@
 @import "tailwindcss";
 
 @theme {
-  --color-ink: #12201a;
-  --color-brand: #6fbf44;
+  --color-ink: #0b120e;
+  --color-brand: #8fdc55;
   --color-brand-deep: #2f6b2a;
   --color-dune: #c65a1e;
-  --color-line: #e4e7e2;
-  --font-display: var(--font-bricolage), ui-sans-serif, system-ui, sans-serif;
-  --font-body: var(--font-instrument), ui-sans-serif, system-ui, sans-serif;
+  --color-line: #e7e9e4;
+  --font-display: var(--font-funnel), ui-sans-serif, system-ui, sans-serif;
+  --font-accent: var(--font-serif-accent), ui-serif, Georgia, serif;
+  --font-body: var(--font-geist), ui-sans-serif, system-ui, sans-serif;
 }
 
 :root {
   --fab-offset: 0px;
+  /* One gutter for every width: grows with the screen, then centres the page on ultrawide monitors. */
+  --gutter: max(clamp(1.25rem, 4vw, 4rem), calc((100vw - 1760px) / 2));
+  --radius-card: clamp(1.25rem, 2vw, 2.25rem);
   color-scheme: light;
 }
 
 html {
   scroll-behavior: smooth;
   scrollbar-width: thin;
-  scrollbar-color: #b9c2b8 transparent;
+  scrollbar-color: #9aa59b transparent;
+  -webkit-text-size-adjust: 100%;
 }
 
 body {
   background: #fff;
   color: var(--color-ink);
   font-family: var(--font-body);
-  overflow-x: hidden;
+  overflow-x: clip;
   -webkit-font-smoothing: antialiased;
 }
 
 h1, h2, h3, h4 {
   font-family: var(--font-display);
-  letter-spacing: -0.02em;
+  font-weight: 600;
+  letter-spacing: -0.03em;
+  text-wrap: balance;
 }
+
+p { text-wrap: pretty; }
 
 * {
   scrollbar-width: thin;
-  scrollbar-color: #b9c2b8 transparent;
+  scrollbar-color: #9aa59b transparent;
 }
 *::-webkit-scrollbar { width: 8px; height: 8px; }
 *::-webkit-scrollbar-track { background: transparent; }
-*::-webkit-scrollbar-thumb { background: #b9c2b8; border-radius: 8px; }
+*::-webkit-scrollbar-thumb { background: #9aa59b; border-radius: 8px; }
 
 :focus-visible {
   outline: 2px solid var(--color-brand-deep);
-  outline-offset: 2px;
-  border-radius: 4px;
+  outline-offset: 3px;
+  border-radius: 6px;
 }
 .on-ink :focus-visible, .on-ink:focus-visible {
   outline-color: var(--color-brand);
 }
+
+@utility glass {
+  background: rgb(255 255 255 / 0.16);
+  border: 1px solid rgb(255 255 255 / 0.24);
+  backdrop-filter: blur(16px) saturate(160%);
+  -webkit-backdrop-filter: blur(16px) saturate(160%);
+}
+@utility section-y {
+  padding-block: clamp(4.5rem, 9vw, 10rem);
+}
+@utility display-xl {
+  font-size: clamp(2.75rem, 7vw, 8rem);
+  line-height: 0.95;
+  letter-spacing: -0.045em;
+}
+@utility display-lg {
+  font-size: clamp(2.25rem, 5vw, 5.5rem);
+  line-height: 1;
+  letter-spacing: -0.04em;
+}
+@utility no-scrollbar {
+  scrollbar-width: none;
+  &::-webkit-scrollbar { display: none; }
+}
+
+.accent-word {
+  font-family: var(--font-accent);
+  font-style: italic;
+  font-weight: 400;
+  letter-spacing: -0.02em;
+}
+
+/* Sized by width and height, so it also fits phones held sideways and short laptops. */
+.hero-title {
+  font-size: clamp(3rem, min(20vw, 11.5svh), 8rem);
+  line-height: 0.88;
+  letter-spacing: -0.05em;
+}
+@media (min-width: 768px) {
+  .hero-title { font-size: min(12.5vw, 18svh); }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .hero-photo { animation: hero-drift 24s ease-out both; }
+  .hero-in { animation: hero-in 0.9s cubic-bezier(0.2, 0.7, 0.2, 1) both; }
+  .marquee-track { animation: marquee 48s linear infinite; }
+
+  @supports (animation-timeline: view()) {
+    .reveal {
+      animation: reveal linear both;
+      animation-timeline: view();
+      animation-range: entry 0% entry 30%;
+    }
+  }
+}
+
+@keyframes hero-drift { from { transform: scale(1.12); } to { transform: scale(1); } }
+@keyframes hero-in { from { opacity: 0; transform: translateY(28px); } to { opacity: 1; transform: none; } }
+@keyframes marquee { to { transform: translateX(-50%); } }
+@keyframes reveal { from { opacity: 0; transform: translateY(36px); } to { opacity: 1; transform: none; } }
+@keyframes sheet-up { from { transform: translateY(100%); } to { transform: none; } }
+@keyframes fade-in { from { opacity: 0; } to { opacity: 1; } }
 
 /* react-day-picker theming */
 .rdp-root {
@@ -71,3 +142,16 @@ h1, h2, h3, h4 {
 .rdp-root .rdp-today:not(.rdp-selected) { color: var(--color-brand-deep); font-weight: 700; }
 .rdp-root .rdp-chevron { fill: var(--color-ink); }
 .rdp-root .rdp-caption_label { font-family: var(--font-display); font-weight: 600; }
+
+/* Chapter cards stack on tall enough screens. On phones and short laptops they simply scroll. */
+@media (min-width: 768px) and (min-height: 760px) {
+  .chapter {
+    position: sticky;
+    top: calc(6.25rem + var(--i) * 1.25rem);
+  }
+}
+
+/* Tour pages already show a WhatsApp booking button in the side panel on wide screens. */
+@media (min-width: 1024px) {
+  body:has([data-booking-panel]) .whatsapp-fab { display: none; }
+}

@@ -25,57 +25,56 @@ export default async function ToursPage({
   const sorted = [...list].sort((a, b) => Number(!!b.gyg) - Number(!!a.gyg));
 
   const chip = (isActive: boolean) =>
-    `inline-flex h-11 items-center whitespace-nowrap rounded-full px-5 text-[15px] font-semibold transition-colors ${
-      isActive
-        ? "bg-ink text-white"
-        : "border border-line text-ink hover:border-ink"
+    `inline-flex h-11 shrink-0 items-center whitespace-nowrap rounded-full px-5 text-[15px] font-medium transition-colors ${
+      isActive ? "bg-ink text-white" : "text-ink hover:bg-ink/10"
     }`;
 
   return (
-    <Container className="pb-20 pt-12 sm:pt-16">
-      <h1 className="text-4xl font-semibold text-ink sm:text-5xl">
-        {active ? active.name : "All tours"}
-      </h1>
-      <p className="mt-3 max-w-2xl text-lg text-ink/70">
-        {active
-          ? active.blurb
-          : "Pick a tour, choose your date and send us your booking on WhatsApp. We confirm the details with you there."}
-      </p>
+    <>
+      <section className="on-ink bg-ink pb-[clamp(2.5rem,5vw,5rem)] pt-[clamp(8rem,14vw,14rem)] text-white">
+        <Container>
+          <h1 className="hero-title">
+            {active ? active.name : (<>All <span className="accent-word text-brand">tours</span></>)}
+          </h1>
+          <p className="mt-5 max-w-2xl text-[clamp(1.05rem,1.4vw,1.35rem)] text-white/75">
+            {active
+              ? active.blurb
+              : "Pick a tour, choose your date and send us your booking on WhatsApp. We confirm the details with you there."}
+          </p>
+        </Container>
+      </section>
 
-      <nav
-        aria-label="Filter tours by type"
-        className="-mx-5 mt-8 flex gap-2 overflow-x-auto px-5 pb-2 sm:mx-0 sm:flex-wrap sm:overflow-visible sm:px-0"
-      >
-        <Link
-          href="/tours"
-          scroll={false}
-          aria-current={!active ? "page" : undefined}
-          className={chip(!active)}
+      <Container className="pb-[clamp(4rem,8vw,8rem)]">
+        <nav
+          aria-label="Filter tours by type"
+          className="sticky top-[5.5rem] z-20 -mt-[1.75rem] flex w-fit max-w-full gap-1 overflow-x-auto rounded-full border border-line bg-white/90 p-1 shadow-[0_16px_40px_-20px_rgb(11_18_14/0.45)] backdrop-blur-xl no-scrollbar"
         >
-          All
-        </Link>
-        {CATEGORIES.map((c) => (
-          <Link
-            key={c.id}
-            href={`/tours?category=${c.id satisfies CategoryId}`}
-            scroll={false}
-            aria-current={active?.id === c.id ? "page" : undefined}
-            className={chip(active?.id === c.id)}
-          >
-            {c.name}
+          <Link href="/tours" scroll={false} aria-current={!active ? "page" : undefined} className={chip(!active)}>
+            All
           </Link>
-        ))}
-      </nav>
+          {CATEGORIES.map((c) => (
+            <Link
+              key={c.id}
+              href={`/tours?category=${c.id satisfies CategoryId}`}
+              scroll={false}
+              aria-current={active?.id === c.id ? "page" : undefined}
+              className={chip(active?.id === c.id)}
+            >
+              {c.name}
+            </Link>
+          ))}
+        </nav>
 
-      <p className="mt-6 text-sm text-ink/60" aria-live="polite">
-        {sorted.length} {sorted.length === 1 ? "tour" : "tours"}
-      </p>
+        <p className="mt-8 text-sm text-ink/60" aria-live="polite">
+          {sorted.length} {sorted.length === 1 ? "tour" : "tours"}
+        </p>
 
-      <div className="mt-4 grid gap-x-6 gap-y-12 sm:grid-cols-2 lg:grid-cols-3">
-        {sorted.map((t) => (
-          <TourCard key={t.slug} tour={t} />
-        ))}
-      </div>
-    </Container>
+        <div className="mt-4 grid grid-cols-[repeat(auto-fill,minmax(min(100%,19rem),1fr))] gap-[clamp(0.75rem,1.2vw,1.5rem)]">
+          {sorted.map((t) => (
+            <TourCard key={t.slug} tour={t} />
+          ))}
+        </div>
+      </Container>
+    </>
   );
 }

@@ -1,25 +1,30 @@
-import Button from "@/components/ui/Button";
-import Container from "@/components/ui/Container";
-import TourCard from "@/components/tours/TourCard";
 import { getFeaturedTours } from "@/data/tours";
+import Button from "@/components/ui/Button";
+import Rail from "@/components/ui/Rail";
+import TourCard from "@/components/tours/TourCard";
 
 export default function FeaturedTours() {
-  const tours = getFeaturedTours();
   return (
-    <section className="border-t border-line py-20 sm:py-28">
-      <Container>
-        <div className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
-          <h2 className="max-w-2xl text-3xl font-semibold sm:text-5xl">Popular tours</h2>
-          <Button href="/tours" variant="outline">
-            See all tours
-          </Button>
-        </div>
-        <div className="mt-10 grid grid-cols-1 gap-x-6 gap-y-12 sm:grid-cols-2 lg:grid-cols-3">
-          {tours.map((t) => (
-            <TourCard key={t.slug} tour={t} />
-          ))}
-        </div>
-      </Container>
+    <section className="section-y on-ink bg-ink text-white">
+      <Rail
+        label="Popular tours"
+        heading={
+          <h2 className="display-xl reveal">
+            A good place <span className="accent-word text-brand">to start</span>
+          </h2>
+        }
+      >
+        {getFeaturedTours().map((t) => (
+          <TourCard
+            key={t.slug}
+            tour={t}
+            className="w-[min(82vw,22rem)] shrink-0 snap-start lg:w-[clamp(20rem,27vw,30rem)]"
+          />
+        ))}
+      </Rail>
+      <div className="mt-[clamp(2rem,4vw,3.5rem)] px-[var(--gutter)]">
+        <Button href="/tours" size="lg" variant="white">See all tours</Button>
+      </div>
     </section>
   );
 }

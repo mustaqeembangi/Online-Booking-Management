@@ -11,13 +11,12 @@ export const metadata: Metadata = {
 
 export default function NotFound() {
   return (
-    <Container className="py-24 sm:py-32">
-      <p className="font-semibold text-dune">Error 404</p>
-      <h1 className="mt-3 max-w-2xl text-4xl font-semibold leading-tight sm:text-5xl">
-        We could not find that page
+    <Container className="flex min-h-[85svh] flex-col justify-end pb-[clamp(3rem,6vw,6rem)] pt-32">
+      <h1 className="hero-title">
+        Lost in the <span className="accent-word text-brand-deep">dunes.</span>
       </h1>
       <p className="mt-4 max-w-xl text-lg text-ink/80">
-        The link may be old or mistyped. You can look at all our tours, or ask us on WhatsApp and we will help.
+        We could not find that page. The link may be old or mistyped. You can look at all our tours, or ask us on WhatsApp and we will help.
       </p>
       <div className="mt-8 flex flex-wrap gap-3">
         <Button href="/tours" size="lg">

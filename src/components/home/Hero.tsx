@@ -1,6 +1,6 @@
 import Image from "next/image";
+import { MessageCircle, Star } from "lucide-react";
 import Button from "@/components/ui/Button";
-import Container from "@/components/ui/Container";
 import { SITE } from "@/data/site";
 import { GYG_TOTAL_REVIEWS } from "@/data/tours";
 import { whatsappLink } from "@/lib/whatsapp";
@@ -8,45 +8,44 @@ import { whatsappLink } from "@/lib/whatsapp";
 export default function Hero() {
   const rounded = Math.floor(GYG_TOTAL_REVIEWS / 10000) * 10000;
   return (
-    <section className="relative isolate flex min-h-[640px] items-end overflow-hidden bg-ink text-white sm:min-h-[720px] lg:h-[86vh] lg:max-h-[860px]">
+    <section className="on-ink relative isolate flex min-h-[100svh] items-end overflow-hidden bg-ink text-white">
       <Image
         src="/images/tours/dune-bashing.jpg"
         alt="A 4x4 driving over a red sand dune in the Dubai desert"
         fill
         priority
         sizes="100vw"
-        className="-z-20 object-cover"
+        className="hero-photo -z-20 object-cover object-[62%_center]"
       />
-      <div className="absolute inset-0 -z-10 bg-gradient-to-t from-ink/90 via-ink/45 to-ink/20" />
-      <Container className="pb-12 pt-32 sm:pb-16 lg:pb-20">
-        <h1 className="max-w-3xl text-5xl font-semibold leading-[1.02] sm:text-6xl lg:text-7xl">
-          Dubai, seen from the dunes to the water
+      <div className="absolute inset-0 -z-10 bg-gradient-to-t from-ink via-ink/35 to-ink/10" />
+
+      <div className="grid w-full items-end gap-[clamp(1.25rem,3vw,3rem)] px-[var(--gutter)] pb-[clamp(1.5rem,4svh,3.5rem)] pt-24 md:grid-cols-[1fr_minmax(280px,380px)]">
+        <h1 className="hero-title hero-in">
+          <span className="block">Desert.</span>
+          <span className="block">Sea.</span>
+          <span className="accent-word block text-brand">City.</span>
         </h1>
-        <p className="mt-5 max-w-xl text-lg text-white/85 sm:text-xl">
-          Desert safaris, dhow cruises and city tours with hotel pickup. Choose a tour and book by WhatsApp.
-        </p>
-        <div className="on-ink mt-8 flex flex-col gap-3 sm:flex-row">
-          <Button href="/tours" size="lg">
-            View tours
-          </Button>
+        <div className="hero-in [animation-delay:150ms]">
+          <p className="text-[clamp(1.05rem,1.35vw,1.35rem)] leading-snug text-white/90">
+            Safaris, dhow cruises and city tours with hotel pickup. Pick a tour and book it in one WhatsApp message.
+          </p>
+          <div className="mt-5 flex flex-wrap gap-2.5">
+            <Button href="/tours" size="lg">View tours</Button>
+            <Button href={whatsappLink()} size="lg" variant="glass" icon={<MessageCircle size={20} />}>
+              WhatsApp
+            </Button>
+          </div>
           <a
-            href={whatsappLink()}
+            href={SITE.socials.getyourguide}
             target="_blank"
             rel="noopener noreferrer"
-            className="inline-flex h-14 items-center justify-center rounded-full border-2 border-white px-7 text-base font-semibold text-white transition-colors hover:bg-white hover:text-ink"
+            className="mt-4 inline-flex max-w-[calc(100%-4.5rem)] items-center gap-1.5 text-sm text-white/80 hover:text-white md:max-w-none"
           >
-            Book on WhatsApp
+            <Star size={15} className="fill-brand text-brand" aria-hidden />
+            More than {rounded.toLocaleString("en-US")} reviews on GetYourGuide
           </a>
         </div>
-        <a
-          href={SITE.socials.getyourguide}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="on-ink mt-6 inline-block text-[15px] text-white/80 underline decoration-white/40 underline-offset-4 hover:text-white"
-        >
-          Rated by more than {rounded.toLocaleString("en-US")} guests on GetYourGuide
-        </a>
-      </Container>
+      </div>
     </section>
   );
 }
