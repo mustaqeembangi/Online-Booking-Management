@@ -10,7 +10,7 @@
 
 **Checks run:** 9 routes at 14 screen sizes from 320x568 to 3440x1440: no horizontal overflow or broken images. Hero text clear of the menu at 320x568 and 844x390. Phone booking flow opened WhatsApp with the right message. Scroll animations leave content fully visible. `tsc --noEmit`, `npm run lint` and `npm run build` passed.
 
-**Delivery:** committed on `design/2026`. Not pushed or deployed.
+**Delivery:** approved by the operator on the preview and pushed to `main`.
 
 ## 2026-11-09: new Ammar Tours website
 
