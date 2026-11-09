@@ -1,23 +1,37 @@
-import React from "react";
-import I404Png from "@/images/404.png";
-import Image from "next/image";
-import ButtonPrimary from "@/shared/ButtonPrimary";
+import type { Metadata } from "next";
+import { MessageCircle } from "lucide-react";
+import Container from "@/components/ui/Container";
+import Button from "@/components/ui/Button";
+import { whatsappLink } from "@/lib/whatsapp";
 
-const Page404 = () => (
-  <div className="nc-Page404">
-    <div className="container relative pt-5 pb-16 lg:pb-20 lg:pt-5">
-      {/* HEADER */}
-      <header className="text-center max-w-2xl mx-auto space-y-2">
-        <Image src={I404Png} alt="not-found" />
-        <span className="block text-sm text-neutral-800 sm:text-base dark:text-neutral-200 tracking-wider font-medium">
-          {`THE PAGE YOU WERE LOOKING FOR DOESN'T EXIST.`}{" "}
-        </span>
-        <div className="pt-8">
-          <ButtonPrimary href="/">Return Home Page</ButtonPrimary>
-        </div>
-      </header>
-    </div>
-  </div>
-);
+export const metadata: Metadata = {
+  title: "Page not found",
+  robots: { index: false },
+};
 
-export default Page404;
+export default function NotFound() {
+  return (
+    <Container className="py-24 sm:py-32">
+      <p className="font-semibold text-dune">Error 404</p>
+      <h1 className="mt-3 max-w-2xl text-4xl font-semibold leading-tight sm:text-5xl">
+        We could not find that page
+      </h1>
+      <p className="mt-4 max-w-xl text-lg text-ink/80">
+        The link may be old or mistyped. You can look at all our tours, or ask us on WhatsApp and we will help.
+      </p>
+      <div className="mt-8 flex flex-wrap gap-3">
+        <Button href="/tours" size="lg">
+          See all tours
+        </Button>
+        <Button
+          href={whatsappLink("Hello Ammar Tours, I need some help.")}
+          variant="outline"
+          size="lg"
+          icon={<MessageCircle size={20} aria-hidden />}
+        >
+          Ask on WhatsApp
+        </Button>
+      </div>
+    </Container>
+  );
+}

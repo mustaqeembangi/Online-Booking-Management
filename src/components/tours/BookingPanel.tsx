@@ -1,0 +1,272 @@
+"use client";
+
+import { useEffect, useState } from "react";
+import { MessageCircle, X } from "lucide-react";
+import Button from "@/components/ui/Button";
+import DatePicker from "@/components/ui/DatePicker";
+import Stepper from "@/components/ui/Stepper";
+import Select from "@/components/ui/Select";
+import TextField from "@/components/ui/TextField";
+import { formatPrice, type Tour } from "@/data/tours";
+import { bookingMessage, whatsappLink } from "@/lib/whatsapp";
+
+const dateFmt = new Intl.DateTimeFormat("en-GB", {
+  weekday: "long",
+  day: "numeric",
+  month: "long",
+  year: "numeric",
+});
+
+type Errors = Partial<
+  Record<"date" | "type" | "pickup" | "name" | "guests", string>
+>;
+
+export default function BookingPanel({ tour }: { tour: Tour }) {
+  const min = tour.minGuests ?? 1;
+  const [date, setDate] = useState<Date | undefined>();
+  const [adults, setAdults] = useState(Math.max(2, min));
+  const [children, setChildren] = useState(0);
+  const [type, setType] = useState(tour.types.length === 1 ? tour.types[0] : "");
+  const [pickup, setPickup] = useState("");
+  const [name, setName] = useState("");
+  const [note, setNote] = useState("");
+  const [errors, setErrors] = useState<Errors>({});
+  const [sent, setSent] = useState(false);
+  const [open, setOpen] = useState(false);
+
+  const price = tour.price;
+  const guests = adults + children;
+  const estimate = price
+    ? price.amount * adults + (price.childAmount ?? price.amount) * children
+    : null;
+  const estimateText =
+    price && estimate !== null ? formatPrice({ ...price, amount: estimate }) : null;
+
+  // Keep the WhatsApp button clear of the bottom bar on phones.
+  useEffect(() => {
+    const mq = window.matchMedia("(max-width: 1023px)");
+    const apply = () =>
+      document.documentElement.style.setProperty(
+        "--fab-offset",
+        mq.matches ? "5.5rem" : "0px",
+      );
+    apply();
+    mq.addEventListener("change", apply);
+    return () => {
+      mq.removeEventListener("change", apply);
+      document.documentElement.style.removeProperty("--fab-offset");
+    };
+  }, []);
+
+  // Sheet: close on Escape and stop the page scrolling behind it.
+  useEffect(() => {
+    if (!open) return;
+    const onKey = (e: KeyboardEvent) => e.key === "Escape" && setOpen(false);
+    document.addEventListener("keydown", onKey);
+    const prev = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+    return () => {
+      document.removeEventListener("keydown", onKey);
+      document.body.style.overflow = prev;
+    };
+  }, [open]);
+
+  function validate(): Errors {
+    const e: Errors = {};
+    if (!date) e.date = "Please choose a date.";
+    if (tour.types.length > 1 && !type) e.type = "Please choose shared or private.";
+    if (!pickup.trim()) e.pickup = "Tell us your hotel or area for pickup.";
+    if (!name.trim()) e.name = "Please tell us your name.";
+    if (tour.minGuests && guests < tour.minGuests)
+      e.guests = `This tour needs at least ${tour.minGuests} guests (adults and children together).`;
+    return e;
+  }
+
+  function submit(ev: React.FormEvent) {
+    ev.preventDefault();
+    const e = validate();
+    setErrors(e);
+    if (Object.keys(e).length > 0) return;
+    const msg = bookingMessage({
+      tourTitle: tour.title,
+      date: dateFmt.format(date!),
+      adults,
+      children,
+      tourType: type || undefined,
+      pickup: pickup.trim(),
+      name: name.trim(),
+      note: note.trim() || undefined,
+      estimate: estimateText ?? undefined,
+    });
+    window.open(whatsappLink(msg), "_blank", "noopener,noreferrer");
+    setSent(true);
+  }
+
+  const err = (m?: string) =>
+    m ? (
+      <p role="alert" className="mt-1.5 text-sm font-medium text-[#B3261E]">
+        {m}
+      </p>
+    ) : null;
+
+  const priceLine = price ? (
+    <>
+      <span className="text-sm text-ink/60">{price.unit ? "" : "From "}</span>
+      <span className="font-display text-2xl font-semibold text-dune">
+        {formatPrice(price)}
+      </span>
+      <span className="text-sm text-ink/60">
+        {price.unit ? ` ${price.unit}` : ""}
+      </span>
+    </>
+  ) : (
+    <span className="font-display text-xl font-semibold text-dune">Ask for price</span>
+  );
+
+  const form = (
+    <form onSubmit={submit} noValidate className="space-y-5">
+      <div>
+        <DatePicker label="Date" value={date} onChange={setDate} />
+        {err(errors.date)}
+      </div>
+
+      <div className="space-y-4">
+        <Stepper label="Adults" value={adults} min={1} onChange={setAdults} />
+        <Stepper label="Children" value={children} min={0} onChange={setChildren} />
+        {err(errors.guests)}
+        {tour.minGuests && !errors.guests && (
+          <p className="text-sm text-ink/60">
+            Minimum {tour.minGuests} guests for this tour.
+          </p>
+        )}
+      </div>
+
+      {tour.types.length > 1 && (
+        <div>
+          <Select
+            label="Tour type"
+            value={type}
+            onChange={setType}
+            options={tour.types.map((t) => ({ value: t, label: t }))}
+            placeholder="Shared or private"
+          />
+          {err(errors.type)}
+        </div>
+      )}
+
+      <div>
+        <TextField
+          label="Pickup hotel or area"
+          required
+          value={pickup}
+          onChange={setPickup}
+          placeholder="Hotel name or area"
+          autoComplete="off"
+        />
+        {err(errors.pickup)}
+      </div>
+      <div>
+        <TextField
+          label="Your name"
+          required
+          value={name}
+          onChange={setName}
+          autoComplete="name"
+        />
+        {err(errors.name)}
+      </div>
+      <TextField
+        label="Note"
+        multiline
+        rows={2}
+        value={note}
+        onChange={setNote}
+        placeholder="Anything we should know"
+      />
+
+      <div className="border-t border-line pt-4">
+        {estimateText ? (
+          <div className="flex items-baseline justify-between gap-3">
+            <span className="text-[15px] text-ink/70">Estimated total</span>
+            <span className="font-display text-2xl font-semibold text-dune">
+              {estimateText}
+            </span>
+          </div>
+        ) : (
+          <div className="flex items-baseline justify-between gap-3">
+            <span className="text-[15px] text-ink/70">Price</span>
+            <span className="font-semibold text-dune">Ask for price</span>
+          </div>
+        )}
+        {estimateText && (
+          <p className="mt-1 text-sm text-ink/60">
+            This is an estimate. We confirm the final price with you on WhatsApp.
+          </p>
+        )}
+      </div>
+
+      <Button
+        type="submit"
+        size="lg"
+        className="w-full"
+        icon={<MessageCircle size={20} />}
+      >
+        Send booking on WhatsApp
+      </Button>
+      <p className="text-center text-sm text-ink/60">
+        Nothing is charged here. Our team confirms your booking with you on WhatsApp.
+      </p>
+      {sent && (
+        <p role="status" className="text-center text-sm font-semibold text-brand-deep">
+          WhatsApp should now be open in a new tab. If not, press the button again.
+        </p>
+      )}
+    </form>
+  );
+
+  return (
+    <>
+      {/* Desktop and iPad landscape: sticky card in the side column */}
+      <div className="sticky top-24 hidden max-h-[calc(100dvh-7rem)] overflow-y-auto rounded-2xl border border-line bg-white p-6 shadow-sm lg:block">
+        <div className="mb-5">{priceLine}</div>
+        {form}
+      </div>
+
+      {/* Phones and iPad portrait: sticky bottom bar */}
+      <div className="fixed inset-x-0 bottom-0 z-40 border-t border-line bg-white lg:hidden">
+        <div className="mx-auto flex max-w-7xl items-center justify-between gap-4 px-5 py-3 sm:px-8">
+          <div className="min-w-0 leading-tight">{priceLine}</div>
+          <Button onClick={() => setOpen(true)} size="md" className="shrink-0">
+            Book
+          </Button>
+        </div>
+      </div>
+
+      {open && (
+        <div className="fixed inset-0 z-50 lg:hidden" role="dialog" aria-modal="true" aria-label={`Book ${tour.title}`}>
+          <button
+            type="button"
+            aria-label="Close booking form"
+            className="absolute inset-0 bg-ink/60"
+            onClick={() => setOpen(false)}
+          />
+          <div className="absolute inset-x-0 bottom-0 flex max-h-[92dvh] animate-[sheet-up_.25s_ease-out] flex-col rounded-t-3xl bg-white shadow-2xl">
+            <div className="flex items-center justify-between gap-3 border-b border-line px-5 py-4">
+              <h2 className="text-lg font-semibold leading-snug text-ink">Book this tour</h2>
+              <button
+                type="button"
+                onClick={() => setOpen(false)}
+                aria-label="Close"
+                className="grid h-10 w-10 shrink-0 place-items-center rounded-full border border-line text-ink hover:border-ink"
+              >
+                <X size={18} />
+              </button>
+            </div>
+            <div className="overflow-y-auto overscroll-contain px-5 pb-8 pt-5">{form}</div>
+          </div>
+          <style>{`@keyframes sheet-up{from{transform:translateY(100%)}to{transform:none}}`}</style>
+        </div>
+      )}
+    </>
+  );
+}

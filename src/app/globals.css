@@ -1,3 +1,73 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import "tailwindcss";
+
+@theme {
+  --color-ink: #12201a;
+  --color-brand: #6fbf44;
+  --color-brand-deep: #2f6b2a;
+  --color-dune: #c65a1e;
+  --color-line: #e4e7e2;
+  --font-display: var(--font-bricolage), ui-sans-serif, system-ui, sans-serif;
+  --font-body: var(--font-instrument), ui-sans-serif, system-ui, sans-serif;
+}
+
+:root {
+  --fab-offset: 0px;
+  color-scheme: light;
+}
+
+html {
+  scroll-behavior: smooth;
+  scrollbar-width: thin;
+  scrollbar-color: #b9c2b8 transparent;
+}
+
+body {
+  background: #fff;
+  color: var(--color-ink);
+  font-family: var(--font-body);
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+}
+
+h1, h2, h3, h4 {
+  font-family: var(--font-display);
+  letter-spacing: -0.02em;
+}
+
+* {
+  scrollbar-width: thin;
+  scrollbar-color: #b9c2b8 transparent;
+}
+*::-webkit-scrollbar { width: 8px; height: 8px; }
+*::-webkit-scrollbar-track { background: transparent; }
+*::-webkit-scrollbar-thumb { background: #b9c2b8; border-radius: 8px; }
+
+:focus-visible {
+  outline: 2px solid var(--color-brand-deep);
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+.on-ink :focus-visible, .on-ink:focus-visible {
+  outline-color: var(--color-brand);
+}
+
+/* react-day-picker theming */
+.rdp-root {
+  --rdp-accent-color: var(--color-brand);
+  --rdp-accent-background-color: var(--color-brand);
+  --rdp-day-height: 40px;
+  --rdp-day-width: 40px;
+  --rdp-day_button-height: 38px;
+  --rdp-day_button-width: 38px;
+  --rdp-selected-border: 2px solid var(--color-ink);
+  font-family: var(--font-body);
+  color: var(--color-ink);
+}
+.rdp-root .rdp-selected .rdp-day_button {
+  background: var(--color-brand);
+  color: var(--color-ink);
+  font-weight: 700;
+}
+.rdp-root .rdp-today:not(.rdp-selected) { color: var(--color-brand-deep); font-weight: 700; }
+.rdp-root .rdp-chevron { fill: var(--color-ink); }
+.rdp-root .rdp-caption_label { font-family: var(--font-display); font-weight: 600; }
