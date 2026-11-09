@@ -10,6 +10,7 @@ import BookingPanel from "@/components/tours/BookingPanel";
 import { CATEGORIES, TOURS, getTour } from "@/data/tours";
 import { SITE } from "@/data/site";
 import { whatsappLink } from "@/lib/whatsapp";
+import { pageMeta, tourDescription, tourTitle } from "@/lib/seo";
 
 export function generateStaticParams() {
   return TOURS.map((t) => ({ slug: t.slug }));
@@ -23,24 +24,12 @@ export async function generateMetadata({
   const { slug } = await params;
   const tour = getTour(slug);
   if (!tour) return {};
-  return {
-    title: tour.title,
-    description: tour.summary,
-    alternates: { canonical: `/tours/${tour.slug}` },
-    openGraph: {
-      title: tour.title,
-      description: tour.summary,
-      url: `/tours/${tour.slug}`,
-      type: "website",
-      images: [{ url: tour.image, alt: tour.title }],
-    },
-    twitter: {
-      card: "summary_large_image",
-      title: tour.title,
-      description: tour.summary,
-      images: [tour.image],
-    },
-  };
+  return pageMeta({
+    title: tourTitle(tour),
+    description: tourDescription(tour),
+    path: `/tours/${tour.slug}`,
+    image: `/tours/${tour.slug}/opengraph-image`,
+  });
 }
 
 function List({ title, items }: { title: string; items: string[] }) {
@@ -84,6 +73,16 @@ export default async function TourPage({
     ...TOURS.filter((t) => t.category !== tour.category && t.featured && t.slug !== tour.slug),
   ].slice(0, 4);
 
+  const breadcrumbs = {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    itemListElement: [
+      { name: "Home", item: SITE.url },
+      { name: "Tours", item: `${SITE.url}/tours` },
+      { name: tour.title, item: `${SITE.url}/tours/${tour.slug}` },
+    ].map((b, i) => ({ "@type": "ListItem", position: i + 1, ...b })),
+  };
+
   const jsonLd = {
     "@context": "https://schema.org",
     "@type": "TouristTrip",
@@ -108,7 +107,7 @@ export default async function TourPage({
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{
-          __html: JSON.stringify(jsonLd).replace(/</g, "\\u003c"),
+          __html: JSON.stringify([jsonLd, breadcrumbs]).replace(/</g, "\\u003c"),
         }}
       />
       <section className="on-ink bg-ink text-white">

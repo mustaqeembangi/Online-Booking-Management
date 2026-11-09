@@ -2,6 +2,7 @@ import type { Metadata, Viewport } from "next";
 import { Funnel_Display, Geist, Instrument_Serif } from "next/font/google";
 import { Analytics } from "@vercel/analytics/next";
 import { SITE } from "@/data/site";
+import { HOME_DESCRIPTION } from "@/lib/seo";
 import Header from "@/components/layout/Header";
 import Footer from "@/components/layout/Footer";
 import WhatsAppFab from "@/components/layout/WhatsAppFab";
@@ -29,16 +30,12 @@ const serifAccent = Instrument_Serif({
 export const metadata: Metadata = {
   metadataBase: new URL(SITE.url),
   title: {
-    default: `${SITE.name} | ${SITE.tagline}`,
+    default: `Dubai Desert Safari, Dhow Cruises & City Tours | ${SITE.name}`,
     template: `%s | ${SITE.name}`,
   },
-  description: `${SITE.name}: desert safaris, dhow cruises, city tours and attractions in Dubai. Book by WhatsApp.`,
-  openGraph: {
-    type: "website",
-    siteName: SITE.name,
-    url: SITE.url,
-    images: ["/images/tours/dune-bashing.jpg"],
-  },
+  description: HOME_DESCRIPTION,
+  applicationName: SITE.name,
+  formatDetection: { telephone: false },
 };
 
 export const viewport: Viewport = {
@@ -52,9 +49,15 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html lang="en" className={`${funnel.variable} ${geist.variable} ${serifAccent.variable}`}>
       <body>
+        <a
+          href="#main"
+          className="sr-only focus:not-sr-only focus:fixed focus:left-3 focus:top-3 focus:z-[60] focus:rounded-full focus:bg-ink focus:px-5 focus:py-3 focus:text-white"
+        >
+          Skip to content
+        </a>
         <SiteJsonLd />
         <Header />
-        <main>{children}</main>
+        <main id="main">{children}</main>
         <Footer />
         <WhatsAppFab />
         <Analytics />

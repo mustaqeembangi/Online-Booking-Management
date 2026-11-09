@@ -55,10 +55,8 @@ export default function Footer() {
       </Container>
       <div
         aria-hidden
-        className="mt-6 select-none whitespace-nowrap text-center font-display text-[13.9vw] font-semibold leading-[0.74] tracking-[-0.05em] text-white/[0.09]"
-      >
-        AMMAR TOURS
-      </div>
+        className="footer-wordmark mt-6 select-none whitespace-nowrap text-center font-display text-[13.9vw] font-semibold leading-[0.74] tracking-[-0.05em] text-white/[0.09]"
+      />
     </footer>
   );
 }

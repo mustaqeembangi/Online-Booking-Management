@@ -2,7 +2,7 @@
 
 Updated 2026-11-09.
 
-**State:** the 2026 redesign is on `main`, approved by the operator on 2026-11-09. Vercel deploys from `main`.
+**State:** the 2026 redesign is live on `main` at https://travel.ammartours.com. SEO and share-image work is committed on `seo/optimizations`, not yet live.
 
 **Needs the operator**
 - Confirm whether the number on the car in the home page photo (04-345 88 99) is current.
@@ -15,4 +15,4 @@ Updated 2026-11-09.
 
 **Decisions:** no database in v1, booking is a prefilled WhatsApp message, no online payment.
 
-**Next action:** work through the items above.
+**Next action:** after the operator approves, push `seo/optimizations` to `main`, then submit the sitemap in Google Search Console.

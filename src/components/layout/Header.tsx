@@ -35,8 +35,8 @@ export default function Header() {
           <Image
             src="/images/logo.png"
             alt="Ammar Tours"
-            width={160}
-            height={127}
+            width={56}
+            height={44}
             priority
             className="h-11 w-auto"
           />

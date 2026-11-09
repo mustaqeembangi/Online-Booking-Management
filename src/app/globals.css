@@ -155,3 +155,6 @@ p { text-wrap: pretty; }
 @media (min-width: 1024px) {
   body:has([data-booking-panel]) .whatsapp-fab { display: none; }
 }
+
+/* Decorative only, so it lives in CSS and is not part of the page text. */
+.footer-wordmark::before { content: "AMMAR TOURS"; }

@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import { pageMeta } from "@/lib/seo";
 import Image from "next/image";
 import Link from "next/link";
 import Container from "@/components/ui/Container";
@@ -7,11 +7,11 @@ import { SITE } from "@/data/site";
 import { GYG_TOTAL_REVIEWS } from "@/data/tours";
 import { whatsappLink } from "@/lib/whatsapp";
 
-export const metadata: Metadata = {
-  title: "About",
-  description: `${SITE.name} is a tour operator in Dubai. Desert safaris, city tours, cruises, hotel stays, visas and more, with flexible programmes.`,
-  alternates: { canonical: "/about" },
-};
+export const metadata = pageMeta({
+  title: "About Us",
+  description: `${SITE.name} is a Dubai tour operator offering desert safaris, city tours, dhow cruises, visas and flexible tour packages around the UAE.`,
+  path: "/about",
+});
 
 const SERVICES = [
   "Hotel accommodation",

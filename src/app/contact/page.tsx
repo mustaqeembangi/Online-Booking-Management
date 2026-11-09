@@ -1,15 +1,15 @@
-import type { Metadata } from "next";
+import { pageMeta } from "@/lib/seo";
 import { Clock, Mail, MapPin, MessageCircle, Phone } from "lucide-react";
 import Container from "@/components/ui/Container";
 import ContactForm from "@/components/info/ContactForm";
 import { SITE } from "@/data/site";
 import { whatsappLink } from "@/lib/whatsapp";
 
-export const metadata: Metadata = {
-  title: "Contact",
-  description: `Call, WhatsApp or email ${SITE.name} in Dubai. Ask about a tour, a date or a price. ${SITE.hours}.`,
-  alternates: { canonical: "/contact" },
-};
+export const metadata = pageMeta({
+  title: "Contact Us",
+  description: `Call, WhatsApp or email ${SITE.name} in Dubai to ask about a tour, a date or a price. ${SITE.hours}.`,
+  path: "/contact",
+});
 
 const linkCls =
   "font-semibold text-brand-deep underline underline-offset-4 hover:text-ink break-words";

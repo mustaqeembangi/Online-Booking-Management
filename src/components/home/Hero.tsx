@@ -15,6 +15,7 @@ export default function Hero() {
         fill
         priority
         sizes="100vw"
+        quality={70}
         className="hero-photo -z-20 object-cover object-[62%_center]"
       />
       <div className="absolute inset-0 -z-10 bg-gradient-to-t from-ink via-ink/35 to-ink/10" />

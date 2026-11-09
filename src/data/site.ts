@@ -2,7 +2,7 @@ export const SITE = {
   name: "Ammar Tours",
   legalName: "Ammar Tours",
   tagline: "Tours & Safari in Dubai",
-  url: "https://ammartours.com",
+  url: "https://travel.ammartours.com",
   phone: "+971 55 231 3157",
   phoneHref: "tel:+971552313157",
   whatsappNumber: "971552313157",

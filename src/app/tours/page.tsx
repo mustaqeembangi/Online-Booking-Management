@@ -3,22 +3,43 @@ import Link from "next/link";
 import Container from "@/components/ui/Container";
 import TourCard from "@/components/tours/TourCard";
 import { CATEGORIES, TOURS, type CategoryId } from "@/data/tours";
+import { SITE } from "@/data/site";
+import { pageMeta } from "@/lib/seo";
 
-export const metadata: Metadata = {
-  title: "Tours",
-  description:
-    "Desert safaris, dhow cruises, city tours and attractions in Dubai with Ammar Tours. Pick a tour and send your booking on WhatsApp.",
-  alternates: { canonical: "/tours" },
+type SearchParams = Promise<{ [key: string]: string | string[] | undefined }>;
+
+const activeCategory = async (searchParams: SearchParams) => {
+  const sp = await searchParams;
+  const raw = Array.isArray(sp.category) ? sp.category[0] : sp.category;
+  return CATEGORIES.find((c) => c.id === raw);
 };
+
+export async function generateMetadata({
+  searchParams,
+}: {
+  searchParams: SearchParams;
+}): Promise<Metadata> {
+  const active = await activeCategory(searchParams);
+  if (active) {
+    return pageMeta({
+      title: `${active.name} in Dubai`,
+      description: `${active.name} in Dubai with ${SITE.name}: ${active.blurb.charAt(0).toLowerCase()}${active.blurb.slice(1)}. Compare the tours and send your booking on WhatsApp.`,
+      path: `/tours?category=${active.id}`,
+    });
+  }
+  return pageMeta({
+    title: "Dubai Tours & Desert Safaris",
+    description: `Browse ${TOURS.length} Dubai tours from ${SITE.name}: desert safaris, quad and buggy rides, dhow cruises, city tours and attractions. Book on WhatsApp.`,
+    path: "/tours",
+  });
+}
 
 export default async function ToursPage({
   searchParams,
 }: {
-  searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
+  searchParams: SearchParams;
 }) {
-  const sp = await searchParams;
-  const raw = Array.isArray(sp.category) ? sp.category[0] : sp.category;
-  const active = CATEGORIES.find((c) => c.id === raw);
+  const active = await activeCategory(searchParams);
 
   const list = active ? TOURS.filter((t) => t.category === active.id) : TOURS;
   // Tours with a GetYourGuide rating first, then the rest in the order of the data.
