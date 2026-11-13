@@ -8,11 +8,13 @@
 
 **Checks run:** `tsc --noEmit`, eslint, `npm run build` passed (stale `.next/dev` types from an old dev server were moved to /tmp; they referenced the old page paths). Built site: 18 URLs checked for status, `lang`/`dir` and title; hreflang tags on an Arabic tour; 404s in both languages; old tour redirect 308; Arabic home, tour page and phone booking sheet with calendar screenshotted; Arabic booking produced the expected WhatsApp text; language switch maps tour ↔ /ar tour; 12 pages × 8 sizes with no sideways scrolling or broken images. The "View all photos" badge moved to the corner the booking card does not cover on desktop.
 
-**Delivery:** committed with the reviews / GetYourGuide work; push waits for the operator's OK.
+**Delivery:** pushed to `main` (ec3ec47) after the operator's OK, together with the reviews / GetYourGuide work. Live check: 10 pages in both languages return 200 with the right `lang`/`dir`, Arabic 404, share images, sitemap (24), old-tour redirect.
 
 ## 2026-11-13: real guest reviews and "Book on GetYourGuide"
 
 **What changed:** real GetYourGuide reviews (from the operator's saved pages) on each tour ("Guest reviews" row with a link to all reviews on that tour's GetYourGuide page) and a "What guests say" section on the home page (3 reviews, each linking to its tour). Data in `src/data/reviews.ts`; cards in `src/components/tours/ReviewCard.tsx` (long ones fold at 5 lines with Read more). Star counts per review are not shown: the saved pages draw every star the same, so a per-review rating could not be read. Left out: Slovenian-language, mixed, and Qasr Al Watan list reviews from 2023 that describe a Dubai tour (Zabeel Palace, Bastakiya); Qasr Al Watan shows its 2025 featured review, cut at a sentence. Each tour now has its GetYourGuide URL (`tour.gyg.url`): the header rating and a "Prefer to pay online? Book on GetYourGuide" line in the booking card / phone sheet link to it. Booking card made shorter (tighter spacing, note behind "Add a note") so it fits a 1440×900 screen.
+
+**Delivery:** live with the Arabic release (ec3ec47).
 
 **Checks run:** `tsc --noEmit`, eslint, `npm run build` passed. Built site: reviews render on tour and home pages, Read more expands, GetYourGuide link present on desktop and in the phone sheet with the right URL; card height 729 px of 729 px available at 1440×900 (1280×800: 38 px scroll inside the card); 6 pages × 8 sizes with no sideways scrolling or broken images (a 320 px overflow from review cards was found and fixed).
 

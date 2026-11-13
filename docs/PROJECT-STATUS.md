@@ -2,9 +2,7 @@
 
 Updated 2026-11-13.
 
-**State:** live on `main` at https://travel.ammartours.com since 2026-11-13: the 2026 redesign, the SEO and share-image work, and only the six GetYourGuide tours, each with its GetYourGuide photo gallery and full text, on a GetYourGuide-style tour page. The 22 old tours were removed and redirect to `/tours`.
-
-**Ready, not live:** Arabic version (`/ar`), real guest reviews and "Book on GetYourGuide" are committed on `content/gyg-tours`, waiting for the operator's OK to push.
+**State:** live on `main` at https://travel.ammartours.com since 2026-11-13: the 2026 redesign, the SEO and share-image work, and only the six GetYourGuide tours, each with its GetYourGuide photo gallery and full text, on a GetYourGuide-style tour page; real guest reviews and a "Book on GetYourGuide" link; the whole site in Arabic under `/ar` (since 2026-11-13). The 22 old tours were removed and redirect to `/tours`.
 
 **Needs the operator**
 - Confirm +971 55 231 3157 is also the WhatsApp number.
