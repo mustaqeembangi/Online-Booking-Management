@@ -24,7 +24,7 @@ const en = {
   fab: "Chat with us on WhatsApp",
   price: { from: "From", ask: "Ask for price" },
   hero: {
-    words: ["Dunes.", "Desert.", "City."],
+    words: ["Desert Safari", "Quad Biking", "Dune Buggy", "City Tours"],
     text: "Desert safaris and Abu Dhabi city tours with hotel pickup. Pick a tour and book it in one WhatsApp message.",
     viewTours: "View tours",
     moreThan: (n: string) => `More than ${n} reviews on GetYourGuide`,
@@ -307,7 +307,7 @@ const ar: UIStrings = {
   fab: "راسلنا على واتساب",
   price: { from: "ابتداءً من", ask: "اسأل عن السعر" },
   hero: {
-    words: ["كثبان.", "صحراء.", "مدينة."],
+    words: ["سفاري الصحراء", "الدراجات الرباعية", "الدون باجي", "جولات المدن"],
     text: "رحلات سفاري في صحراء دبي وجولات في مدينة أبوظبي مع التوصيل من الفندق. اختر جولتك واحجزها برسالة واتساب واحدة.",
     viewTours: "شاهد الجولات",
     moreThan: (n: string) => `أكثر من ${n} تقييم على GetYourGuide`,

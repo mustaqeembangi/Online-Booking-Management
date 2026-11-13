@@ -20,17 +20,20 @@ export default function Hero({ lang }: { lang: Lang }) {
   const t = UI[lang];
   const rounded = Math.floor(GYG_TOTAL_REVIEWS / 10000) * 10000;
   const slides: HeroSlide[] = SLIDES.map((s, i) => ({ ...s, href: lp(lang, s.href), ...t.hero.slides[i] }));
-  const [w1, w2, w3] = t.hero.words;
+  const words = t.hero.words;
+  const last = words.length - 1;
   return (
     <section className="on-ink relative isolate flex min-h-[100svh] items-end overflow-hidden bg-ink text-white">
       <HeroSlides slides={slides} lang={lang} />
       <div className="pointer-events-none absolute inset-0 -z-10 bg-gradient-to-t from-ink via-ink/35 to-ink/25" />
 
       <div className="grid w-full items-end gap-[clamp(1.25rem,3vw,3rem)] px-[var(--gutter)] pb-[clamp(1.5rem,4svh,3.5rem)] pt-24 md:grid-cols-[1fr_minmax(280px,380px)]">
-        <h1 className="hero-title hero-in">
-          <span className="block">{w1}</span>
-          <span className="block">{w2}</span>
-          <span className="accent-word block text-brand">{w3}</span>
+        <h1 className="hero-title hero-title-list hero-in">
+          {words.map((w, i) => (
+            <span key={w} className={`block ${i === last ? "accent-word text-brand" : ""}`}>
+              {w}
+            </span>
+          ))}
         </h1>
         <div className="hero-in [animation-delay:150ms]">
           <p className="text-[clamp(1.05rem,1.35vw,1.35rem)] leading-snug text-white/90">{t.hero.text}</p>

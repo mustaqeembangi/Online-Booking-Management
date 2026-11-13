@@ -64,7 +64,7 @@ export default function HeroSlides({ slides, lang }: { slides: HeroSlide[]; lang
         ))}
       </div>
 
-      <div className="absolute left-[var(--gutter)] right-[var(--gutter)] top-[calc(5.5rem+env(safe-area-inset-top))] z-10 flex items-center gap-3 md:top-28">
+      <div className="absolute left-[var(--gutter)] right-[var(--gutter)] top-[calc(5.5rem+env(safe-area-inset-top))] z-10 flex items-center gap-3 md:top-28 [@media(max-height:640px)]:hidden">
         <div className="flex gap-1.5" role="group" aria-label={chooseLabel}>
           {slides.map((sl, n) => (
             <button

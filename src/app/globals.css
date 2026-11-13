@@ -100,6 +100,11 @@ p { text-wrap: pretty; }
 @media (min-width: 768px) {
   .hero-title { font-size: min(12.5vw, 18svh); }
 }
+/* Home hero with four two-word lines: smaller so each line fits on one row. */
+.hero-title.hero-title-list { font-size: clamp(2.3rem, min(11.5vw, 8svh), 6.5rem); line-height: 0.95; }
+@media (min-width: 768px) {
+  .hero-title.hero-title-list { font-size: min(7.2vw, 11.5svh); }
+}
 
 @media (prefers-reduced-motion: no-preference) {
   html { scroll-behavior: smooth; }
@@ -183,8 +188,10 @@ body:has([data-booking-panel]) .whatsapp-fab { display: none; }
 /* Arabic letters are taller than Latin ones; tight Latin line heights clip them. */
 [dir="rtl"] h1, [dir="rtl"] h2, [dir="rtl"] h3 { font-weight: 700; line-height: 1.25; }
 [dir="rtl"] .hero-title { line-height: 1.12; font-size: clamp(2.6rem, min(16vw, 10svh), 7rem); }
+[dir="rtl"] .hero-title.hero-title-list { line-height: 1.2; font-size: clamp(2.1rem, min(10.5vw, 7.5svh), 6rem); }
 @media (min-width: 768px) {
   [dir="rtl"] .hero-title { font-size: min(10vw, 15svh); }
+  [dir="rtl"] .hero-title.hero-title-list { font-size: min(6.4vw, 10svh); }
 }
 [dir="rtl"] .display-xl, [dir="rtl"] .display-lg { line-height: 1.2; }
 /* The Latin accent is an italic serif; Arabic uses the heading font in a lighter weight instead. */

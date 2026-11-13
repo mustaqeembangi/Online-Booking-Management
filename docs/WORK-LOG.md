@@ -1,5 +1,13 @@
 # Work log
 
+## 2026-11-13: new home headline
+
+**What changed:** home hero headline is now four lines: "Desert Safari / Quad Biking / Dune Buggy / City Tours" (last line in the green accent), Arabic "سفاري الصحراء / الدراجات الرباعية / الدون باجي / جولات المدن". Smaller headline size (`.hero-title-list`) so each line stays on one row; slideshow bars hidden on screens under 640 px tall, where they touched the headline. Note: no tour on the site offers a dune buggy (operator's wording, flagged to them).
+
+**Checks run:** `npm run build` passed; each line on one row with no overflow at 320×568, 390×844, 768×1024, 1440×900, 1920×1080 and in Arabic; 12 pages × 8 sizes with no sideways scrolling.
+
+**Delivery:** committed on `content/gyg-tours` with the unpublished GetYourGuide-style tour pages; not pushed.
+
 ## 2026-11-13: tour pages laid out like GetYourGuide (client request)
 
 **What changed:** tour pages follow the client's GetYourGuide screenshots: light header with breadcrumb, title, "★ 4.9 · N reviews · Activity provider: Ammar Tours"; photo mosaic (1 large + 4 small, "View all" opens the viewer; one photo on phones); booking card beside it ("From $27 per person"); summary; key-feature grid (duration, live guide, pickup, nothing to pay online); rows Highlights, Full description (GetYourGuide text, folded with See more), Includes (ticks, 7-hour extras, crosses for not included), Route, Not suitable for, Important information (What to bring, Not allowed, Know before you go); Customer reviews with overall rating /5, stars (half stars), "Based on N reviews", review summary bars (Guide, Transportation, Value for money) and the reviews with 5 stars each. The big photo grid was replaced by the mosaic + viewer.
