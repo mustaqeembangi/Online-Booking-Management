@@ -2,7 +2,7 @@
 
 Updated 2026-11-13.
 
-**State:** the 2026 redesign is live on `main` at https://travel.ammartours.com. SEO and share-image work is committed on `seo/optimizations`, not yet live. GetYourGuide photos and full text for the six GetYourGuide tours are committed on `content/gyg-tours` (built on top of the SEO branch), not yet live.
+**State:** live on `main` at https://travel.ammartours.com since 2026-11-13: the 2026 redesign, the SEO and share-image work, and GetYourGuide photos and full text for the six GetYourGuide tours.
 
 **Needs the operator**
 - Confirm whether the number on the car in the home page photo (04-345 88 99) is current.
@@ -15,4 +15,4 @@ Updated 2026-11-13.
 
 **Decisions:** no database in v1, booking is a prefilled WhatsApp message, no online payment.
 
-**Next action:** after the operator approves the preview, push `content/gyg-tours` (includes the SEO work) to `main`, then submit the sitemap in Google Search Console.
+**Next action:** submit the sitemap (https://travel.ammartours.com/sitemap.xml) in Google Search Console.

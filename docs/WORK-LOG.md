@@ -8,9 +8,9 @@
 
 **Paths:** `src/data/tours.ts` (new optional fields `photos`, `highlights`, `optionIncludes`, `stops`, `notIncluded`, `notSuitableFor`, `whatToBring`), `src/app/tours/[slug]/page.tsx`, `public/images/tours/<slug>.jpg` and `<slug>-2.jpg`.
 
-**Checks run:** `tsc --noEmit` and eslint on the changed files passed. Dev server on 5181: all six tour pages, one other tour and home return 200; desktop and phone screenshots checked.
+**Checks run:** `tsc --noEmit` and eslint on the changed files passed. Dev server on 5181: all six tour pages, one other tour and home return 200; desktop and phone screenshots checked. `npm run build` passed. After deploy: all six live pages, their second photos and the home page return 200 and show the new sections.
 
-**Delivery:** committed on `content/gyg-tours` (on top of the unpushed `seo/optimizations`). Not pushed or deployed; waiting for the operator's OK on the preview.
+**Delivery:** the operator approved going live without viewing the preview. Pushed `content/gyg-tours` to `main` (e6cecf6, includes the SEO work 3f65e8f); Vercel deployed it to travel.ammartours.com on 2026-11-13.
 
 ## 2026-11-09: SEO, share images and small optimisations
 
