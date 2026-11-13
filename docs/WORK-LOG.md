@@ -1,5 +1,15 @@
 # Work log
 
+## 2026-11-13: less empty space, photo viewer, smoother feel
+
+**What changed:** section spacing cut from up to 10rem to 6.5rem; home contact band, "chapters" cards and category tiles made shorter (home at 1440 px: chapters 1943 → 1604 px, contact band 810 → 576 px). Tour header shorter on laptops, smaller photo on phones. Tour galleries are a 3-column grid on every screen and open a full-screen viewer (tap, swipe, arrow keys, Esc; `src/components/tours/Gallery.tsx`). Floating WhatsApp button hidden on tour pages (they have the Book bar / booking card), so it no longer covers text on phones. Smooth scrolling and photo hover zoom (off with reduced motion). The sample booking message names a current tour.
+
+**Why:** the operator found too much white space and asked for better, smoother UI on every screen size.
+
+**Checks run:** `tsc --noEmit`, `npm run lint`, `npm run build` passed. Built site: section heights measured at 1440 and 390 px; desktop and phone screenshots checked; viewer opened, stepped and closed on a phone; 6 pages × 8 sizes (320 to 2560 px) with no sideways scrolling and no broken images.
+
+**Delivery:** pushed to `main` (d6fa6f4) after the operator's OK; live pages return 200 and show the viewer.
+
 ## 2026-11-13: full GetYourGuide galleries for the other five tours
 
 **What changed:** the operator saved the other five GetYourGuide pages (.mht). Galleries found: Red Dune BBQ 25, Safari BBQ Buffet 24, Evening Tour 31, Abu Dhabi Sheikh Zayed 13, Qasr Al Watan 13. Curated to 20 / 20 / 26 / 8 / 8 (counts that fill the grid evenly; dropped near-duplicates, empty-sand shots and dune-buggy shots, which are not part of these tours). Home "chapters" third chapter is "The camp" again, with a real fire show photo. About hero uses the plain dunes photo (`red-dune-safari-quad-camel-bbq-20.jpg`).
