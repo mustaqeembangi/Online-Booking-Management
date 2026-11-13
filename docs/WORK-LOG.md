@@ -1,5 +1,11 @@
 # Work log
 
+## 2026-11-13: new Facebook link
+
+**What changed:** Facebook link set to https://www.facebook.com/profile.php?id=61595509272753 (operator supplied). One setting in `src/data/site.ts`, used by the contact page, footer and the site's structured data (`sameAs`).
+
+**Checks run:** `tsc --noEmit` and `npm run build` passed.
+
 ## 2026-11-13: clickable photos everywhere, hero slideshow, motion on every browser
 
 **What changed:** home hero is a crossfading slideshow of 5 GetYourGuide photos with a slow zoom (`src/components/home/HeroSlides.tsx`); each slide links to its tour, with progress bars to pick one; pauses on hover, in hidden tabs and for reduced motion. Tour pages: the main photo opens the full-screen viewer ("View all N photos"), the viewer has a thumbnail strip and preloads neighbours (`src/components/tours/Gallery.tsx`: `PhotoViewer`, `PhotoTrigger`, `GalleryGrid`). Route stops open Google Maps. Clickable now: home chapter cards (tour), booking steps (tours / WhatsApp), sample message (WhatsApp with that text), facts strip (GetYourGuide, tours, WhatsApp; pauses on hover), About dunes photo and matching services (category pages). Hover lift / press feedback on cards and tiles. Scroll-in animation now also on Safari and Firefox via `src/components/layout/RevealOnScroll.tsx` (IntersectionObserver fallback; nothing hidden without JavaScript); tour page sections and gallery photos animate in.

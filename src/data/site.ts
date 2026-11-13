@@ -14,7 +14,7 @@ export const SITE = {
   hours: "24 hours service available",
   socials: {
     instagram: "https://www.instagram.com/ammartours/",
-    facebook: "https://www.facebook.com/Ammartoursdesertsafari/",
+    facebook: "https://www.facebook.com/profile.php?id=61595509272753",
     tripadvisor:
       "https://www.tripadvisor.com/Attraction_Review-g295424-d9564323-Reviews-Ammar_Tours-Dubai_Emirate_of_Dubai.html",
     getyourguide: "https://www.getyourguide.com/ammar-tours-s17608/",
