@@ -8,6 +8,8 @@
 
 **Checks run:** `tsc --noEmit`, eslint and `npm run build` passed. Built site: slideshow advances (7 s) and a slide click opens its tour; tour main photo opens photo 1 of 26 and the left arrow wraps to 26; chapter card opens its tour; reveal fallback forced in Chromium revealed 13 of 13 sections while scrolling (WebKit not installed here, so Safari itself not tested); 6 pages × 8 sizes with no sideways scrolling or broken images; phone screenshots checked.
 
+**Delivery:** pushed to `main` (e0e61ec) after the operator's OK; live home shows the slideshow and tour pages the photo viewer.
+
 ## 2026-11-13: less empty space, photo viewer, smoother feel
 
 **What changed:** section spacing cut from up to 10rem to 6.5rem; home contact band, "chapters" cards and category tiles made shorter (home at 1440 px: chapters 1943 → 1604 px, contact band 810 → 576 px). Tour header shorter on laptops, smaller photo on phones. Tour galleries are a 3-column grid on every screen and open a full-screen viewer (tap, swipe, arrow keys, Esc; `src/components/tours/Gallery.tsx`). Floating WhatsApp button hidden on tour pages (they have the Book bar / booking card), so it no longer covers text on phones. Smooth scrolling and photo hover zoom (off with reduced motion). The sample booking message names a current tour.
