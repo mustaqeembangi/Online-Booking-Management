@@ -10,6 +10,8 @@
 
 **Checks run:** `tsc --noEmit`, eslint, `npm run build` passed; desktop, phone and Arabic screenshots; "View all" opens photo 1 of 20; See more expands; 12 pages × 8 sizes with no sideways scrolling or broken images.
 
+**Delivery:** committed on `content/gyg-tours` (c72fbde). Not pushed: the operator chose to keep it unpublished for now.
+
 ## 2026-11-13: Arabic version of the whole site
 
 **What changed:** every page now exists in Arabic under `/ar` (home, tours, categories, all six tours, about, contact, not found), right-to-left with `<html lang="ar" dir="rtl">`, Cairo + IBM Plex Sans Arabic fonts (loaded only on Arabic pages), no letter spacing, taller line heights, mirrored arrows, RTL photo viewer (next on the left, swipe and arrow keys follow), RTL carousel, Arabic calendar (react-day-picker `ar` locale). Header has an English / عربي switch that keeps the page. Arabic WhatsApp booking messages use Arabic labels and date and show the Arabic and English tour names. Reviews stay in the guests' English with a note. SEO: canonical + hreflang (en, ar, x-default) on every page, Arabic titles/descriptions, `og:locale` ar_AE, sitemap lists both languages (24 entries). Unknown addresses show the styled 404 in the right language (catch-all routes). English URLs unchanged.
