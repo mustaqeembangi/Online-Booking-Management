@@ -30,7 +30,7 @@ const serifAccent = Instrument_Serif({
 export const metadata: Metadata = {
   metadataBase: new URL(SITE.url),
   title: {
-    default: `Dubai Desert Safari, Dhow Cruises & City Tours | ${SITE.name}`,
+    default: `Dubai Desert Safari & Abu Dhabi City Tours | ${SITE.name}`,
     template: `%s | ${SITE.name}`,
   },
   description: HOME_DESCRIPTION,

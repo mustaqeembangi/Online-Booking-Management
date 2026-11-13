@@ -3,7 +3,7 @@ import { SITE } from "@/data/site";
 import { formatPrice, type Tour } from "@/data/tours";
 
 export const HOME_DESCRIPTION =
-  "Book desert safaris, quad biking, dhow cruises and city tours in Dubai with hotel pickup. Rated 4.9 on GetYourGuide. Send your booking on WhatsApp.";
+  "Book Dubai desert safaris with quad biking, camel rides and a BBQ dinner, and Abu Dhabi city tours, with hotel pickup. Rated 4.9 on GetYourGuide. Send your booking on WhatsApp.";
 
 function clip(text: string, max = 158) {
   if (text.length <= max) return text;
@@ -16,7 +16,7 @@ export function tourDescription(tour: Tour) {
   return `${summary}${price} Book on WhatsApp.`;
 }
 
-const PLACE = /Dubai|Abu Dhabi|Sharjah|Al Ain|Hatta|Musandam|Lahbab/;
+const PLACE = /Dubai|Abu Dhabi|Sharjah|Lahbab/;
 
 // Long titles drop the brand so search results do not cut them off.
 export function tourTitle(tour: Tour): string | { absolute: string } {

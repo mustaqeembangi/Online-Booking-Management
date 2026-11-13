@@ -9,23 +9,15 @@ import { whatsappLink } from "@/lib/whatsapp";
 
 export const metadata = pageMeta({
   title: "About Us",
-  description: `${SITE.name} is a Dubai tour operator offering desert safaris, city tours, dhow cruises, visas and flexible tour packages around the UAE.`,
+  description: `${SITE.name} is a Dubai tour operator offering desert safaris from Dubai, Abu Dhabi city tours, visas and flexible tour packages.`,
   path: "/about",
 });
 
 const SERVICES = [
   "Hotel accommodation",
   "Visas",
-  "Inter-emirates city tours",
+  "Abu Dhabi city tours",
   "Desert safari",
-  "Musandam trips",
-  "Hatta mountain safari",
-  "Water sports",
-  "Fishing trips",
-  "Golf",
-  "Scuba diving",
-  "Helicopter tours",
-  "Dhow cruise dinner",
   "Airport meet and assist",
   "Multilingual guides",
 ];
@@ -39,8 +31,8 @@ export default function AboutPage() {
     <>
       <section className="on-ink relative isolate flex min-h-[min(82svh,52rem)] items-end overflow-hidden bg-ink text-white">
         <Image
-          src="/images/tours/evening-desert-safari.jpg"
-          alt="Guests watching the sunset beside a safari vehicle in the Dubai desert"
+          src="/images/tours/red-dune-safari-quad-camel-bbq-2.jpg"
+          alt="Red sand dunes of the desert near Dubai"
           fill
           priority
           sizes="100vw"
@@ -81,8 +73,8 @@ export default function AboutPage() {
         <div className="grid lg:grid-cols-2">
           <div className="relative aspect-[4/3] lg:aspect-auto lg:min-h-[min(80svh,48rem)]">
             <Image
-              src="/images/tours/sand-boarding.jpg"
-              alt="A guest sandboarding down a dune"
+              src="/images/tours/desert-safari-quad-camel-sandboarding-2.jpg"
+              alt="An Ammar Tours 4x4 and guests riding quad bikes in the dunes"
               fill
               sizes="(min-width: 1024px) 50vw, 100vw"
               className="object-cover"

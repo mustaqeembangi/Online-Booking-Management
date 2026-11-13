@@ -7,7 +7,7 @@ import Button from "@/components/ui/Button";
 export default function ContactBand() {
   return (
     <section className="on-ink relative isolate flex min-h-[min(90svh,56rem)] items-end overflow-hidden bg-ink text-white">
-      <Image src="/images/tours/musandam-dibba-cruise.jpg" alt="" fill sizes="100vw" className="-z-20 object-cover" />
+      <Image src="/images/tours/safari-quad-camel-bbq-buffet-2.jpg" alt="" fill sizes="100vw" className="-z-20 object-cover" />
       <div className="absolute inset-0 -z-10 bg-gradient-to-t from-ink via-ink/40 to-ink/10" />
       <div className="w-full px-[var(--gutter)] py-[clamp(3rem,6vw,6rem)]">
         <h2 className="hero-title reveal">

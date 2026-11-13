@@ -9,7 +9,7 @@ import HowBooking from "@/components/home/HowBooking";
 import ContactBand from "@/components/home/ContactBand";
 
 export const metadata = pageMeta({
-  title: { absolute: `Dubai Desert Safari, Dhow Cruises & City Tours | ${SITE.name}` },
+  title: { absolute: `Dubai Desert Safari & Abu Dhabi City Tours | ${SITE.name}` },
   description: HOME_DESCRIPTION,
   path: "/",
 });

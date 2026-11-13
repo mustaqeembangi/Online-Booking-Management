@@ -29,7 +29,7 @@ export async function generateMetadata({
   }
   return pageMeta({
     title: "Dubai Tours & Desert Safaris",
-    description: `Browse ${TOURS.length} Dubai tours from ${SITE.name}: desert safaris, quad and buggy rides, dhow cruises, city tours and attractions. Book on WhatsApp.`,
+    description: `Browse ${TOURS.length} tours from ${SITE.name}: Dubai desert safaris with quad bikes, camels and BBQ, and Abu Dhabi city tours. Book on WhatsApp.`,
     path: "/tours",
   });
 }

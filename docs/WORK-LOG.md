@@ -1,5 +1,19 @@
 # Work log
 
+## 2026-11-13: site cut down to the six GetYourGuide tours
+
+**What changed:** the 22 tours taken from the old ammartours.com were removed, with their photos; their URLs redirect (308) to `/tours`. Two categories remain: Desert safaris (4) and City tours (2). Home hero is now the GetYourGuide photo of an Ammar 4x4 with sandboarders ("Dunes. Desert. City."). The "chapters" section now uses the Red Dune Safari's GetYourGuide lists in three chapters (drive, dunes, evening). About page, contact band and share image use GetYourGuide photos. Dhow cruise and other removed tour wording taken out of titles, descriptions and the About services list (Musandam, Hatta, water sports, fishing, golf, scuba, helicopter, dhow cruise removed from it).
+
+**Why:** the operator asked to keep only what is on GetYourGuide and to use the new photos for the hero.
+
+**More photos:** also tried Apify actors `vanderleicatanzaro/getyourguide` (needs a paid plan), `tortuga/getyourguide-scraper` and `parsebird/getyourguide-scraper`: none return more than the main photo. More photos need the GetYourGuide supplier account.
+
+**Paths:** `src/data/tours.ts`, `next.config.ts`, `src/components/home/*`, `src/app/about/page.tsx`, `src/app/opengraph-image.tsx`, `src/lib/seo.ts`, `src/app/layout.tsx`, `src/app/page.tsx`, `src/app/tours/page.tsx`, `public/images/tours`.
+
+**Checks run:** `tsc --noEmit`, `npm run lint`, `npm run build` passed. Production build served locally: home (desktop and phone), category tiles, about and tours list screenshots checked; an old tour URL returns 308 to `/tours`.
+
+**Delivery:** pushed to `main` on the operator's instruction (no preview); see the live check below in the status.
+
 ## 2026-11-13: GetYourGuide photos and full text for the six GetYourGuide tours
 
 **What changed:** each of the six tours now has its own two GetYourGuide photos (2560 px originals, saved at 1920 px) and the full GetYourGuide text: highlights, what's included, what the 7-hour option adds, stops (Abu Dhabi tours), not included, good to know, not suitable for, what to bring. Review counts updated. GetYourGuide filler lines ("Guide 5.0/5", guide-marketing blurbs) and a desert-sunset line wrongly on an Abu Dhabi listing were left out. Qasr Al Watan lists exist only in Spanish on GetYourGuide and were translated.

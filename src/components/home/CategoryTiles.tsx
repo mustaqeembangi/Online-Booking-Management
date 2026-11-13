@@ -4,13 +4,7 @@ import { ArrowUpRight } from "lucide-react";
 import { CATEGORIES, getToursByCategory } from "@/data/tours";
 import Container from "@/components/ui/Container";
 
-const layout = [
-  "sm:col-span-2 lg:col-span-7 lg:row-span-2",
-  "lg:col-span-5",
-  "lg:col-span-5",
-  "lg:col-span-5",
-  "sm:col-span-2 lg:col-span-7",
-];
+const layout = ["lg:col-span-7 lg:row-span-2", "lg:col-span-5 lg:row-span-2"];
 
 export default function CategoryTiles() {
   return (
