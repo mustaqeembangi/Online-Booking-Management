@@ -1,5 +1,15 @@
 # Work log
 
+## 2026-11-13: tour pages laid out like GetYourGuide (client request)
+
+**What changed:** tour pages follow the client's GetYourGuide screenshots: light header with breadcrumb, title, "★ 4.9 · N reviews · Activity provider: Ammar Tours"; photo mosaic (1 large + 4 small, "View all" opens the viewer; one photo on phones); booking card beside it ("From $27 per person"); summary; key-feature grid (duration, live guide, pickup, nothing to pay online); rows Highlights, Full description (GetYourGuide text, folded with See more), Includes (ticks, 7-hour extras, crosses for not included), Route, Not suitable for, Important information (What to bring, Not allowed, Know before you go); Customer reviews with overall rating /5, stars (half stars), "Based on N reviews", review summary bars (Guide, Transportation, Value for money) and the reviews with 5 stars each. The big photo grid was replaced by the mosaic + viewer.
+
+**Data:** full descriptions (`src/data/descriptions.ts`, Arabic `descriptions-ar.ts`), `notAllowed` and `gyg.scores` from the operator's saved pages. Review stars: every shown review has 5 filled stars in the saved pages and in the operator's screenshot, so `rating` defaults to 5.
+
+**Left out on purpose:** the struck-through "was" price (site rule: no discounts) and "Free cancellation / Reserve now & pay later" (cancellation rule for WhatsApp bookings not confirmed).
+
+**Checks run:** `tsc --noEmit`, eslint, `npm run build` passed; desktop, phone and Arabic screenshots; "View all" opens photo 1 of 20; See more expands; 12 pages × 8 sizes with no sideways scrolling or broken images.
+
 ## 2026-11-13: Arabic version of the whole site
 
 **What changed:** every page now exists in Arabic under `/ar` (home, tours, categories, all six tours, about, contact, not found), right-to-left with `<html lang="ar" dir="rtl">`, Cairo + IBM Plex Sans Arabic fonts (loaded only on Arabic pages), no letter spacing, taller line heights, mirrored arrows, RTL photo viewer (next on the left, swipe and arrow keys follow), RTL carousel, Arabic calendar (react-day-picker `ar` locale). Header has an English / عربي switch that keeps the page. Arabic WhatsApp booking messages use Arabic labels and date and show the Arabic and English tour names. Reviews stay in the guests' English with a note. SEO: canonical + hreflang (en, ar, x-default) on every page, Arabic titles/descriptions, `og:locale` ar_AE, sitemap lists both languages (24 entries). Unknown addresses show the styled 404 in the right language (catch-all routes). English URLs unchanged.

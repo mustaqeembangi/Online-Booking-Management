@@ -1,12 +1,14 @@
 // Real guest reviews copied from the tours' GetYourGuide pages (pages saved by the operator, 2026-11-13).
 // Text is as written by the guest; a long review may be cut at a sentence and end in "…".
-// GetYourGuide's page did not make each review's star rating readable, so none is shown.
 
 export interface Review {
   name: string;
   country?: string;
   date: string;
   text: string;
+  // Star rating the guest gave. Every review used here shows 5 of 5 stars on GetYourGuide
+  // (counted in the saved pages and seen in the operator's screenshot, 2026-11-13).
+  rating?: number;
 }
 
 export const REVIEWS: Record<string, Review[]> = {

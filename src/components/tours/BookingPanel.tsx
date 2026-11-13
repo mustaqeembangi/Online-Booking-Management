@@ -124,7 +124,7 @@ export default function BookingPanel({ tour, lang }: { tour: Tour; lang: Lang })
         {formatPrice(price)}
       </span>
       <span className="text-sm text-ink/60">
-        {price.unit ? ` ${price.unit}` : ""}
+        {price.unit ? ` ${price.unit}` : ` ${UI[lang].tour.perPerson}`}
       </span>
     </>
   ) : (

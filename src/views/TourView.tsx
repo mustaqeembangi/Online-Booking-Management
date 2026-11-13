@@ -1,17 +1,20 @@
 import type { Metadata } from "next";
-import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { ArrowUpRight, Car, Check, Clock, Languages, MessageCircle, Plus, Star, Wallet, X } from "lucide-react";
+import Stars from "@/components/ui/Stars";
+import Expandable from "@/components/ui/Expandable";
+import ReviewList from "@/components/tours/ReviewList";
+import { DESCRIPTIONS, type DescBlock } from "@/data/descriptions";
+import { DESCRIPTIONS_AR } from "@/data/descriptions-ar";
 import Container from "@/components/ui/Container";
 import Button from "@/components/ui/Button";
 import TourCard from "@/components/tours/TourCard";
 import BookingPanel from "@/components/tours/BookingPanel";
-import { GalleryGrid, PhotoCount, PhotoTrigger, PhotoViewer } from "@/components/tours/Gallery";
+import { Mosaic, PhotoViewer } from "@/components/tours/Gallery";
 import { TOURS, getCategories, getTour, getTours, localizeTour } from "@/data/tours";
 import { UI, lp, num, type Lang } from "@/i18n";
 import { REVIEWS, reviewDate } from "@/data/reviews";
-import ReviewCard from "@/components/tours/ReviewCard";
 import { SITE } from "@/data/site";
 import { whatsappLink } from "@/lib/whatsapp";
 import { pageMeta, tourDescription, tourTitle } from "@/lib/seo";
@@ -67,7 +70,7 @@ function Row({ title, children }: { title: string; children: React.ReactNode }) 
 }
 
 function SubHead({ children }: { children: React.ReactNode }) {
-  return <h3 className="mb-3 mt-7 text-[15px] font-semibold uppercase tracking-[0.06em] text-ink/60 first:mt-0">{children}</h3>;
+  return <h3 className="mb-2.5 mt-6 font-body text-[17px] font-semibold first:mt-0">{children}</h3>;
 }
 
 function Route({ stops, lang }: { stops: string[]; lang: Lang }) {
@@ -104,6 +107,36 @@ function Route({ stops, lang }: { stops: string[]; lang: Lang }) {
   );
 }
 
+function Description({ blocks }: { blocks: DescBlock[] }) {
+  return (
+    <div className="space-y-4 text-[17px] leading-relaxed">
+      {blocks.map((b, i) =>
+        "h" in b ? (
+          <h3 key={i} className="pt-2 font-body text-[17px] font-semibold first:pt-0">{b.h}</h3>
+        ) : "p" in b ? (
+          <p key={i}>{b.p}</p>
+        ) : (
+          <ul key={i} className="list-disc space-y-1.5 ps-5 marker:text-ink/40">
+            {b.ul.map((li) => <li key={li}>{li}</li>)}
+          </ul>
+        ),
+      )}
+    </div>
+  );
+}
+
+function ScoreBar({ label, value }: { label: string; value: number }) {
+  return (
+    <div className="grid grid-cols-[minmax(0,8rem)_1fr_auto] items-center gap-3 text-[15px]">
+      <span>{label}</span>
+      <span className="h-1.5 overflow-hidden rounded-full bg-line">
+        <span className="block h-full rounded-full bg-ink" style={{ width: `${(value / 5) * 100}%` }} />
+      </span>
+      <span className="tabular-nums text-ink/70">{value.toFixed(1)}/5</span>
+    </div>
+  );
+}
+
 export default async function TourView({ params, lang }: { params: TourParams; lang: Lang }) {
   const { slug } = await params;
   const base = getTour(slug);
@@ -113,16 +146,18 @@ export default async function TourView({ params, lang }: { params: TourParams; l
   const r = UI[lang].reviews;
 
   const category = getCategories(lang).find((c) => c.id === tour.category);
-
   const photos = tour.photos ?? [tour.image];
   const reviews = REVIEWS[tour.slug] ?? [];
+  const description = (lang === "ar" ? DESCRIPTIONS_AR : DESCRIPTIONS)[tour.slug];
+
+  // Key features, as on GetYourGuide. Pickup and guide are read from the English lists.
   const has = (re: RegExp) => base.includes.some((i) => re.test(i));
-  const quick = [
-    tour.duration && { icon: Clock, label: t.duration, value: tour.duration },
-    has(/pick-?up/i) && { icon: Car, label: t.pickup, value: t.pickupValue },
-    has(/english/i) && { icon: Languages, label: t.guide, value: t.guideValue },
-    { icon: Wallet, label: t.payment, value: t.paymentValue },
-  ].filter((q): q is { icon: typeof Clock; label: string; value: string } => !!q);
+  const features = [
+    tour.duration && { icon: Clock, title: t.featDuration(tour.duration), sub: t.featDurationSub },
+    has(/english/i) && { icon: Languages, title: t.featGuide, sub: t.guideValue },
+    has(/pick-?up/i) && { icon: Car, title: t.featPickup, sub: t.featPickupSub },
+    { icon: Wallet, title: t.featPay, sub: t.featPaySub },
+  ].filter((f): f is { icon: typeof Clock; title: string; sub: string } => !!f);
 
   const all = getTours(lang);
   const related = [
@@ -146,87 +181,68 @@ export default async function TourView({ params, lang }: { params: TourParams; l
     "@type": "TouristTrip",
     name: tour.title,
     description: tour.summary,
-    image: (tour.photos ?? [tour.image]).map((src) => `${SITE.url}${src}`),
+    image: photos.map((src) => `${SITE.url}${src}`),
     url: pageUrl,
     inLanguage: lang,
     touristType: tour.types.length ? tour.types : undefined,
     provider: { "@type": "TravelAgency", name: SITE.name, url: SITE.url },
     ...(tour.price && {
-      offers: {
-        "@type": "Offer",
-        price: tour.price.amount,
-        priceCurrency: tour.price.currency,
-        url: pageUrl,
-      },
+      offers: { "@type": "Offer", price: tour.price.amount, priceCurrency: tour.price.currency, url: pageUrl },
     }),
   };
+
+  const importantInfo = tour.whatToBring || tour.notAllowed || (tour.notes && tour.notes.length > 0);
 
   return (
     <PhotoViewer photos={photos} title={tour.title} lang={lang}>
       <script
         type="application/ld+json"
-        dangerouslySetInnerHTML={{
-          __html: JSON.stringify([jsonLd, breadcrumbs]).replace(/</g, "\\u003c"),
-        }}
+        dangerouslySetInnerHTML={{ __html: JSON.stringify([jsonLd, breadcrumbs]).replace(/</g, "\\u003c") }}
       />
-      <section className="on-ink bg-ink text-white">
-        <div className="grid lg:min-h-[min(72svh,46rem)] lg:grid-cols-2">
-          <div className="relative aspect-[16/11] max-h-[60svh] w-full sm:aspect-[16/9] lg:order-2 lg:aspect-auto lg:max-h-none">
-            <PhotoTrigger index={0} label={t.openPhotos(photos.length)} className="group absolute inset-0 overflow-hidden">
-              <Image
-                src={tour.image}
-                alt={tour.title}
-                fill
-                priority
-                sizes="(min-width: 1024px) 50vw, 100vw"
-                className="object-cover transition-transform duration-700 ease-out group-hover:scale-105"
-              />
-              {photos.length > 1 && <PhotoCount label={t.viewAll(photos.length)} />}
-            </PhotoTrigger>
-          </div>
-          <div className="flex flex-col justify-end px-[var(--gutter)] pb-[clamp(2rem,4vw,4rem)] pt-6 lg:pe-[clamp(2rem,4vw,5rem)] lg:pt-28">
-            <nav aria-label={t.breadcrumb} className="text-sm text-white/60">
-              <Link href={lp(lang, "/tours")} className="hover:text-white">{t.breadcrumb}</Link>
-              {category && (
-                <>
-                  <span aria-hidden> / </span>
-                  <Link href={lp(lang, `/tours?category=${category.id}`)} className="hover:text-white">
-                    {category.name}
-                  </Link>
-                </>
-              )}
-            </nav>
-            <h1 className="mt-3 text-[clamp(2.5rem,min(5vw,9svh),6rem)] leading-[0.98] tracking-[-0.04em]">
-              {tour.title}
-            </h1>
-            {tour.gyg && (
-              <a
-                href={tour.gyg.url}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="mt-4 inline-flex items-center gap-2 text-[15px] text-white/80 hover:text-white"
-              >
-                <Star size={16} className="fill-brand text-brand" aria-hidden />
-                {t.onGyg(tour.gyg.rating.toFixed(1), num(lang, tour.gyg.reviews))}
-              </a>
-            )}
-            <p className="mt-4 max-w-2xl text-[clamp(1.05rem,1.4vw,1.35rem)] leading-snug text-white/85">
-              {tour.summary}
-            </p>
-          </div>
+      <Container className="pb-32 pt-[clamp(6rem,9vw,8rem)] lg:pb-[clamp(5rem,8vw,8rem)]">
+        <nav aria-label={t.breadcrumb} className="text-sm text-ink/60">
+          <Link href={lp(lang, "/tours")} className="hover:text-ink">{t.breadcrumb}</Link>
+          {category && (
+            <>
+              <span aria-hidden> / </span>
+              <Link href={lp(lang, `/tours?category=${category.id}`)} className="hover:text-ink">
+                {category.name}
+              </Link>
+            </>
+          )}
+        </nav>
+        <h1 className="mt-2 max-w-5xl text-[clamp(1.75rem,3.2vw,2.75rem)] font-bold leading-[1.1] tracking-[-0.02em]">
+          {tour.title}
+        </h1>
+        <div className="mt-3 flex flex-wrap items-center gap-x-3 gap-y-1 text-[15px]">
+          {tour.gyg && (
+            <a href="#reviews" className="inline-flex items-center gap-1.5 hover:text-brand-deep">
+              <Star size={17} className="fill-dune text-dune" aria-hidden />
+              <span className="font-semibold">{tour.gyg.rating.toFixed(1)}</span>
+              <span className="underline decoration-1 underline-offset-4">{t.reviewCount(num(lang, tour.gyg.reviews))}</span>
+            </a>
+          )}
+          <span aria-hidden className="text-ink/30">•</span>
+          <span className="text-ink/70">
+            {t.provider}: {SITE.name}
+          </span>
         </div>
-      </section>
 
-      <Container className="pb-32 lg:pb-[clamp(5rem,8vw,9rem)]">
-        <div className="grid gap-10 lg:grid-cols-[minmax(0,1fr)_minmax(22rem,27rem)] lg:gap-[clamp(3rem,6vw,8rem)]">
-          <div className="min-w-0 pt-[clamp(1.75rem,3.5vw,3.5rem)]">
-            <ul className="reveal grid grid-cols-2 gap-x-6 gap-y-5 border-b border-line pb-[clamp(1.75rem,3vw,2.5rem)] sm:grid-cols-4">
-              {quick.map(({ icon: Icon, label, value }) => (
-                <li key={label} className="flex gap-3">
-                  <Icon size={22} className="mt-0.5 shrink-0 text-brand-deep" aria-hidden />
+        <div className="mt-[clamp(1rem,2vw,1.75rem)] grid gap-10 lg:grid-cols-[minmax(0,1fr)_minmax(21rem,24rem)] lg:gap-[clamp(2rem,3.5vw,3.5rem)]">
+          <div className="min-w-0">
+            <Mosaic photos={photos} title={tour.title} lang={lang} />
+
+            <p className="mt-6 max-w-3xl text-[clamp(1.05rem,1.3vw,1.2rem)] leading-relaxed">{tour.summary}</p>
+
+            <ul className="reveal mt-7 grid gap-x-8 gap-y-5 border-b border-line pb-[clamp(1.75rem,3vw,2.5rem)] sm:grid-cols-2">
+              {features.map(({ icon: Icon, title, sub }) => (
+                <li key={title} className="flex gap-3.5">
+                  <span className="grid h-11 w-11 shrink-0 place-items-center rounded-xl border border-line">
+                    <Icon size={21} className="text-ink" aria-hidden />
+                  </span>
                   <div>
-                    <p className="text-sm text-ink/60">{label}</p>
-                    <p className="font-medium leading-snug">{value}</p>
+                    <p className="font-semibold leading-snug">{title}</p>
+                    <p className="mt-0.5 text-sm text-ink/60">{sub}</p>
                   </div>
                 </li>
               ))}
@@ -235,30 +251,31 @@ export default async function TourView({ params, lang }: { params: TourParams; l
             <div className="pt-[clamp(1.75rem,3vw,2.5rem)]">
               {tour.highlights && (
                 <Row title={t.highlights}>
-                  <Bullets items={tour.highlights} mark="yes" />
+                  <Bullets items={tour.highlights} mark="dot" />
                 </Row>
               )}
 
-              {tour.photos && tour.photos.length > 1 && (
-                <div className="pb-[clamp(1.75rem,3vw,2.5rem)]">
-                  <GalleryGrid photos={tour.photos.slice(1)} offset={1} title={tour.title} lang={lang} />
-                </div>
+              {description && (
+                <Row title={t.fullDescription}>
+                  <Expandable more={t.seeMore} less={t.seeLess}>
+                    <Description blocks={description} />
+                  </Expandable>
+                </Row>
               )}
 
               {tour.includes.length > 0 && (
-                <Row title={t.included}>
+                <Row title={t.includes}>
                   <Bullets items={tour.includes} mark="yes" />
                   {tour.optionIncludes && (
                     <>
                       <SubHead>{tour.optionIncludes.title}</SubHead>
-                      <Bullets items={tour.optionIncludes.items} mark="plus" />
+                      <Bullets items={tour.optionIncludes.items} mark="yes" />
                     </>
                   )}
                   {tour.notIncluded && (
-                    <>
-                      <SubHead>{t.notIncluded}</SubHead>
+                    <div className="mt-3">
                       <Bullets items={tour.notIncluded} mark="no" />
-                    </>
+                    </div>
                   )}
                 </Row>
               )}
@@ -269,44 +286,29 @@ export default async function TourView({ params, lang }: { params: TourParams; l
                 </Row>
               )}
 
-              {reviews.length > 0 && tour.gyg && (
-                <Row title={r.row}>
-                  {r.note && <p className="mb-4 text-ink/60">{r.note}</p>}
-                  <div className="grid gap-[clamp(0.75rem,1.2vw,1.25rem)] sm:grid-cols-2">
-                    {reviews.map((rv) => (
-                      <ReviewCard key={rv.name + rv.date} review={rv} date={reviewDate(rv.date, lang)} labels={{ verified: r.verified, more: r.more, less: r.less }} />
-                    ))}
-                  </div>
-                  <a
-                    href={tour.gyg.url}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="group mt-5 inline-flex items-center gap-1.5 font-semibold text-brand-deep underline decoration-2 underline-offset-4 hover:text-ink"
-                  >
-                    <Star size={16} className="fill-brand text-brand" aria-hidden />
-                    {r.all(num(lang, tour.gyg.reviews))}
-                    <ArrowUpRight size={16} aria-hidden className="transition-transform duration-300 group-hover:-translate-y-0.5 group-hover:translate-x-0.5 rtl:group-hover:-translate-x-0.5" />
-                  </a>
-                </Row>
-              )}
-
               {tour.notSuitableFor && (
                 <Row title={t.notSuitable}>
-                  <Bullets items={tour.notSuitableFor} mark="no" />
+                  <Bullets items={tour.notSuitableFor} mark="dot" />
                 </Row>
               )}
 
-              {(tour.whatToBring || tour.notes) && (
+              {importantInfo && (
                 <Row title={t.important}>
                   {tour.whatToBring && (
                     <>
                       <SubHead>{t.bring}</SubHead>
-                      <Bullets items={tour.whatToBring} mark="yes" />
+                      <Bullets items={tour.whatToBring} mark="dot" />
+                    </>
+                  )}
+                  {tour.notAllowed && (
+                    <>
+                      <SubHead>{t.notAllowed}</SubHead>
+                      <Bullets items={tour.notAllowed} mark="dot" />
                     </>
                   )}
                   {tour.notes && tour.notes.length > 0 && (
                     <>
-                      <SubHead>{t.goodToKnow}</SubHead>
+                      <SubHead>{t.knowBefore}</SubHead>
                       <Bullets items={tour.notes} mark="dot" />
                     </>
                   )}
@@ -315,21 +317,63 @@ export default async function TourView({ params, lang }: { params: TourParams; l
             </div>
 
             {tour.includes.length === 0 && (
-              <section className="on-ink mt-[clamp(2.5rem,5vw,4.5rem)] rounded-[var(--radius-card)] bg-ink p-[clamp(1.5rem,3vw,3rem)] text-white first:mt-0">
+              <section className="on-ink mt-[clamp(2.5rem,5vw,4.5rem)] rounded-[var(--radius-card)] bg-ink p-[clamp(1.5rem,3vw,3rem)] text-white">
                 <h2 className="text-[clamp(1.75rem,3vw,3rem)] leading-none">{t.fullDetails}</h2>
                 <p className="mt-3 max-w-xl text-white/75">{t.fullDetailsText}</p>
-                <Button
-                  href={whatsappLink(t.askMessage(SITE.name, tour.title))}
-                  className="mt-5"
-                  icon={<MessageCircle size={18} />}
-                >
+                <Button href={whatsappLink(t.askMessage(SITE.name, tour.title))} className="mt-5" icon={<MessageCircle size={18} />}>
                   {t.askWhatsapp}
                 </Button>
               </section>
             )}
+
+            {tour.gyg && reviews.length > 0 && (
+              <section id="reviews" className="scroll-mt-28 border-t border-line pt-[clamp(2rem,4vw,3rem)]">
+                <div className="grid gap-8 md:grid-cols-[minmax(13rem,16rem)_minmax(0,1fr)] md:gap-10">
+                  <div className="reveal">
+                    <h2 className="text-[1.6rem] font-bold leading-tight">{r.customer}</h2>
+                    <p className="mt-5 font-semibold">{r.overall}</p>
+                    <p className="mt-2 font-display text-[2.6rem] font-bold leading-none">
+                      {tour.gyg.rating.toFixed(1)}
+                      <span className="text-xl text-ink/50">/5</span>
+                    </p>
+                    <div className="mt-2">
+                      <Stars value={tour.gyg.rating} size={30} label={r.stars(tour.gyg.rating)} />
+                    </div>
+                    <p className="mt-2 text-sm text-ink/60">{r.basedOn(num(lang, tour.gyg.reviews))}</p>
+                    {tour.gyg.scores && (
+                      <>
+                        <p className="mt-6 font-semibold">{r.summary}</p>
+                        <div className="mt-3 space-y-2.5">
+                          <ScoreBar label={r.guide} value={tour.gyg.scores.guide} />
+                          <ScoreBar label={r.transport} value={tour.gyg.scores.transport} />
+                          <ScoreBar label={r.value} value={tour.gyg.scores.value} />
+                        </div>
+                      </>
+                    )}
+                  </div>
+                  <div className="min-w-0">
+                    {r.note && <p className="mb-5 text-sm text-ink/60">{r.note}</p>}
+                    <ReviewList
+                      reviews={reviews}
+                      dates={reviews.map((x) => reviewDate(x.date, lang))}
+                      labels={{ verified: r.verified, more: r.more, less: r.less, stars: r.stars(5) }}
+                    />
+                    <a
+                      href={tour.gyg.url}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="group mt-6 inline-flex items-center gap-1.5 font-semibold underline decoration-2 underline-offset-4 hover:text-brand-deep"
+                    >
+                      {r.all(num(lang, tour.gyg.reviews))}
+                      <ArrowUpRight size={16} aria-hidden className="transition-transform duration-300 group-hover:-translate-y-0.5 group-hover:translate-x-0.5 rtl:group-hover:-translate-x-0.5" />
+                    </a>
+                  </div>
+                </div>
+              </section>
+            )}
           </div>
 
-          <aside data-booking-panel className="relative z-10 min-w-0 lg:-mt-[clamp(7rem,20svh,14rem)]">
+          <aside data-booking-panel className="relative z-10 min-w-0">
             <BookingPanel tour={tour} lang={lang} />
           </aside>
         </div>
@@ -337,11 +381,9 @@ export default async function TourView({ params, lang }: { params: TourParams; l
         {related.length > 0 && (
           <section className="mt-[clamp(3rem,6vw,6rem)]">
             <h2 className="display-lg">
-              {related.every((x) => x.category === tour.category) && category
-                ? t.more(category.name)
-                : t.alsoLike}
+              {related.every((x) => x.category === tour.category) && category ? t.more(category.name) : t.alsoLike}
             </h2>
-            <div className="mt-[clamp(1.5rem,3vw,3rem)] grid sm:grid-cols-2 xl:grid-cols-4 gap-[clamp(0.75rem,1.2vw,1.5rem)]">
+            <div className="mt-[clamp(1.5rem,3vw,3rem)] grid gap-[clamp(0.75rem,1.2vw,1.5rem)] sm:grid-cols-2 xl:grid-cols-4">
               {related.map((x) => (
                 <TourCard key={x.slug} tour={x} lang={lang} />
               ))}

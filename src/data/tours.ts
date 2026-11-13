@@ -40,7 +40,14 @@ export interface Tour {
   extras?: string[];
   notes?: string[];
   featured?: boolean;
-  gyg?: { rating: number; reviews: number; url: string };
+  gyg?: {
+    rating: number;
+    reviews: number;
+    url: string;
+    // GetYourGuide's review summary bars, out of 5.
+    scores?: { guide: number; transport: number; value: number };
+  };
+  notAllowed?: string[];
   photos?: string[];
   highlights?: string[];
   optionIncludes?: { title: string; items: string[] };
@@ -166,10 +173,12 @@ export const TOURS: Tour[] = [
     ],
     whatToBring: ["Sunglasses", "Sun hat", "Sunscreen"],
     featured: true,
+    notAllowed: ["Luggage or large bags"],
     gyg: {
       rating: 4.9,
       reviews: 45778,
       url: "https://www.getyourguide.com/dubai-l173/dubai-red-dunes-evening-desert-safari-w-bbq-dinner-t74766/",
+      scores: { guide: 5.0, transport: 5.0, value: 4.9 },
     },
   },
   {
@@ -205,10 +214,12 @@ export const TOURS: Tour[] = [
     ],
     whatToBring: DESERT_BRING,
     featured: true,
+    notAllowed: ["Luggage or large bags"],
     gyg: {
       rating: 4.9,
       reviews: 32979,
       url: "https://www.getyourguide.com/dubai-l173/dubai-red-dune-safari-quad-bike-camel-ride-bbq-dinner-t74550/",
+      scores: { guide: 4.9, transport: 4.9, value: 4.9 },
     },
   },
   {
@@ -250,10 +261,12 @@ export const TOURS: Tour[] = [
     ],
     whatToBring: DESERT_BRING,
     featured: true,
+    notAllowed: ["Luggage or large bags"],
     gyg: {
       rating: 4.9,
       reviews: 33634,
       url: "https://www.getyourguide.com/dubai-l173/dubai-safari-quad-bike-camel-ride-and-more-t188052/",
+      scores: { guide: 5.0, transport: 4.9, value: 4.9 },
     },
   },
   {
@@ -288,10 +301,12 @@ export const TOURS: Tour[] = [
     ],
     whatToBring: DESERT_BRING,
     featured: true,
+    notAllowed: ["Luggage or large bags"],
     gyg: {
       rating: 5.0,
       reviews: 281,
       url: "https://www.getyourguide.com/dubai-l173/dubai-evening-tour-with-quad-biking-camel-ride-and-bbq-t80286/",
+      scores: { guide: 5.0, transport: 5.0, value: 4.9 },
     },
   },
   {
@@ -336,10 +351,12 @@ export const TOURS: Tour[] = [
     notSuitableFor: ["Wheelchair users"],
     whatToBring: ["Sunglasses", "Sun hat"],
     featured: true,
+    notAllowed: ["Luggage or large bags", "Sleeveless shirts"],
     gyg: {
       rating: 4.8,
       reviews: 955,
       url: "https://www.getyourguide.com/dubai-l173/from-dubai-abu-dhabi-tour-with-sheikh-zayed-mosque-t74721/",
+      scores: { guide: 4.9, transport: 4.9, value: 4.8 },
     },
   },
   {
@@ -378,10 +395,12 @@ export const TOURS: Tour[] = [
     notIncluded: ["Meals", "Tips"],
     notSuitableFor: ["Wheelchair users"],
     featured: true,
+    notAllowed: ["Pets", "Luggage or large bags"],
     gyg: {
       rating: 4.5,
       reviews: 14,
       url: "https://www.getyourguide.com/abu-dhabi-l494/abu-dhabi-city-tour-with-qasr-al-watan-t61823/",
+      scores: { guide: 5.0, transport: 5.0, value: 5.0 },
     },
   },
 ];

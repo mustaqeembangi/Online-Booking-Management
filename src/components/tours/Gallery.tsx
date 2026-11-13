@@ -204,3 +204,47 @@ export function PhotoCount({ label }: { label: string }) {
     </span>
   );
 }
+
+// GetYourGuide-style mosaic: one large photo and four small ones on wider screens, one photo on phones.
+// Every photo opens the full-screen viewer; "View all" opens it at the first photo.
+export function Mosaic({ photos, title, lang }: { photos: string[]; title: string; lang: Lang }) {
+  const g = UI[lang].gallery;
+  const t = UI[lang].tour;
+  const shown = photos.slice(0, 5);
+  const tile = "group relative overflow-hidden bg-line";
+  const img = "object-cover transition-transform duration-700 ease-out group-hover:scale-105";
+  return (
+    <div className="relative">
+      <div className="grid aspect-[4/3] grid-cols-4 grid-rows-2 gap-1.5 overflow-hidden rounded-[clamp(1rem,1.6vw,1.5rem)] sm:aspect-[16/8] md:gap-2">
+        {shown.map((src, i) => (
+          <PhotoTrigger
+            key={src}
+            index={i}
+            label={g.open(i + 1)}
+            className={`${tile} ${i === 0 ? "col-span-4 row-span-2 sm:col-span-2" : "hidden sm:block"}`}
+          >
+            <Image
+              src={src}
+              alt={g.photo(title, i + 1)}
+              fill
+              priority={i === 0}
+              sizes={i === 0 ? "(min-width: 1024px) 34vw, (min-width: 640px) 50vw, 100vw" : "(min-width: 1024px) 17vw, 25vw"}
+              className={img}
+            />
+          </PhotoTrigger>
+        ))}
+      </div>
+      {photos.length > 1 && (
+        <PhotoTrigger
+          index={0}
+          label={t.openPhotos(photos.length)}
+          className="absolute bottom-3 end-3 inline-flex items-center gap-2 rounded-full bg-white px-4 py-2.5 text-sm font-semibold text-ink shadow-lg transition-[scale,background-color] duration-300 hover:bg-brand active:scale-95"
+        >
+          <Images size={16} aria-hidden />
+          <span className="sm:hidden">{t.viewAll(photos.length)}</span>
+          <span className="hidden sm:inline">{t.viewAllShort}</span>
+        </PhotoTrigger>
+      )}
+    </div>
+  );
+}
