@@ -6,8 +6,10 @@ import Button from "@/components/ui/Button";
 import TextField from "@/components/ui/TextField";
 import { SITE } from "@/data/site";
 import { whatsappLink } from "@/lib/whatsapp";
+import { UI, type Lang } from "@/i18n";
 
-export default function ContactForm() {
+export default function ContactForm({ lang }: { lang: Lang }) {
+  const f = UI[lang].contactPage.form;
   const [name, setName] = useState("");
   const [message, setMessage] = useState("");
   const [errors, setErrors] = useState<{ name?: string; message?: string }>({});
@@ -15,8 +17,8 @@ export default function ContactForm() {
 
   function validate(n: string, m: string) {
     const e: { name?: string; message?: string } = {};
-    if (!n.trim()) e.name = "Please tell us your name.";
-    if (!m.trim()) e.message = "Please write a short message.";
+    if (!n.trim()) e.name = f.errName;
+    if (!m.trim()) e.message = f.errMessage;
     return e;
   }
 
@@ -25,7 +27,7 @@ export default function ContactForm() {
     const e = validate(name, message);
     setErrors(e);
     if (e.name || e.message) return;
-    const text = `Hello ${SITE.name}, my name is ${name.trim()}.\n\n${message.trim()}`;
+    const text = `${UI[lang].message.contact(SITE.name, name.trim())}\n\n${message.trim()}`;
     window.open(whatsappLink(text), "_blank", "noopener,noreferrer");
     setSent(true);
   }
@@ -34,7 +36,7 @@ export default function ContactForm() {
     <form onSubmit={submit} noValidate className="space-y-5">
       <div>
         <TextField
-          label="Your name"
+          label={f.name}
           value={name}
           required
           autoComplete="name"
@@ -51,12 +53,12 @@ export default function ContactForm() {
       </div>
       <div>
         <TextField
-          label="Your message"
+          label={f.message}
           value={message}
           required
           multiline
           rows={5}
-          placeholder="Which tour, which date, how many people?"
+          placeholder={f.placeholder}
           onChange={(v) => {
             setMessage(v);
             if (errors.message) setErrors((p) => ({ ...p, message: undefined }));
@@ -69,12 +71,12 @@ export default function ContactForm() {
         )}
       </div>
       <Button type="submit" size="lg" icon={<MessageCircle size={20} aria-hidden />} className="w-full sm:w-auto">
-        Send on WhatsApp
+        {f.submit}
       </Button>
       <p aria-live="polite" className="text-sm text-ink/70">
         {sent
-          ? "WhatsApp should have opened with your message. If it did not, press the button again."
-          : "This opens WhatsApp with your message ready to send. Nothing is sent until you press send there."}
+          ? f.sent
+          : f.hint}
       </p>
     </form>
   );

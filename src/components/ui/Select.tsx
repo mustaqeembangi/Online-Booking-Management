@@ -26,7 +26,7 @@ export default function Select({
     <Listbox value={value} onChange={onChange}>
       <div className="relative">
         <span className="mb-1.5 block text-sm font-semibold text-ink">{label}</span>
-        <ListboxButton className="flex h-12 w-full items-center justify-between gap-2 rounded-xl border border-line bg-white px-4 text-left text-[15px] text-ink transition-colors hover:border-ink/40 focus:border-ink data-[open]:border-ink">
+        <ListboxButton className="flex h-12 w-full items-center justify-between gap-2 rounded-xl border border-line bg-white px-4 text-start text-[15px] text-ink transition-colors hover:border-ink/40 focus:border-ink data-[open]:border-ink">
           <span className={current ? "" : "text-ink/40"}>{current?.label ?? placeholder}</span>
           <ChevronDown size={18} className="shrink-0 text-ink/60" />
         </ListboxButton>

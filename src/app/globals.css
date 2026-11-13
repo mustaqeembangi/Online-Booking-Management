@@ -171,3 +171,25 @@ body:has([data-booking-panel]) .whatsapp-fab { display: none; }
 
 /* Decorative only, so it lives in CSS and is not part of the page text. */
 .footer-wordmark::before { content: "AMMAR TOURS"; }
+
+/* ---------- Arabic (/ar): right-to-left ---------- */
+:root[dir="rtl"] {
+  --font-display: var(--font-cairo), var(--font-funnel), ui-sans-serif, system-ui, sans-serif;
+  --font-body: var(--font-plex-arabic), var(--font-geist), ui-sans-serif, system-ui, sans-serif;
+  --font-accent: var(--font-cairo), ui-sans-serif, system-ui, sans-serif;
+}
+/* Letter spacing pulls Arabic letters apart, so none anywhere. */
+[dir="rtl"] * { letter-spacing: 0 !important; }
+/* Arabic letters are taller than Latin ones; tight Latin line heights clip them. */
+[dir="rtl"] h1, [dir="rtl"] h2, [dir="rtl"] h3 { font-weight: 700; line-height: 1.25; }
+[dir="rtl"] .hero-title { line-height: 1.12; font-size: clamp(2.6rem, min(16vw, 10svh), 7rem); }
+@media (min-width: 768px) {
+  [dir="rtl"] .hero-title { font-size: min(10vw, 15svh); }
+}
+[dir="rtl"] .display-xl, [dir="rtl"] .display-lg { line-height: 1.2; }
+/* The Latin accent is an italic serif; Arabic uses the heading font in a lighter weight instead. */
+[dir="rtl"] .accent-word { font-family: var(--font-display); font-style: normal; font-weight: 500; }
+/* Arrows and chevrons point the other way. */
+[dir="rtl"] :is(.lucide-arrow-up-right, .lucide-arrow-right, .lucide-arrow-left, .lucide-chevron-right, .lucide-chevron-left) {
+  scale: -1 1;
+}

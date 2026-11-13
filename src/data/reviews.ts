@@ -54,3 +54,12 @@ export const HOME_REVIEWS: { slug: string; review: Review }[] = [
   { slug: "evening-tour-quad-camel-bbq", review: REVIEWS["evening-tour-quad-camel-bbq"][1] },
   { slug: "abu-dhabi-tour-sheikh-zayed-mosque", review: REVIEWS["abu-dhabi-tour-sheikh-zayed-mosque"][1] },
 ];
+
+// "November 11, 2026" in the page's language (Western digits).
+export function reviewDate(date: string, lang: "en" | "ar") {
+  if (lang === "en") return date;
+  const d = new Date(`${date} 12:00 UTC`);
+  return Number.isNaN(d.getTime())
+    ? date
+    : new Intl.DateTimeFormat("ar-AE-u-nu-latn", { day: "numeric", month: "long", year: "numeric", timeZone: "UTC" }).format(d);
+}

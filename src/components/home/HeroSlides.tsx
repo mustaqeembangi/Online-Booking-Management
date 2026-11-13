@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { ArrowUpRight } from "lucide-react";
+import { UI, type Lang } from "@/i18n";
 
 export interface HeroSlide {
   src: string;
@@ -17,7 +18,9 @@ const EVERY_MS = 6500;
 
 // Crossfading photos with a slow zoom. Each slide links to its tour. Stops on hover, in a hidden tab
 // and for people who prefer reduced motion (they can still pick a slide with the buttons).
-export default function HeroSlides({ slides }: { slides: HeroSlide[] }) {
+export default function HeroSlides({ slides, lang }: { slides: HeroSlide[]; lang: Lang }) {
+  const chooseLabel = UI[lang].hero.choose;
+  const showLabel = UI[lang].hero.show;
   const [i, setI] = useState(0);
   const [paused, setPaused] = useState(false);
 
@@ -62,13 +65,13 @@ export default function HeroSlides({ slides }: { slides: HeroSlide[] }) {
       </div>
 
       <div className="absolute left-[var(--gutter)] right-[var(--gutter)] top-[calc(5.5rem+env(safe-area-inset-top))] z-10 flex items-center gap-3 md:top-28">
-        <div className="flex gap-1.5" role="group" aria-label="Choose a photo">
+        <div className="flex gap-1.5" role="group" aria-label={chooseLabel}>
           {slides.map((sl, n) => (
             <button
               key={sl.src}
               type="button"
               onClick={() => setI(n)}
-              aria-label={`Show photo: ${sl.label}`}
+              aria-label={showLabel(sl.label)}
               aria-current={n === i ? "true" : undefined}
               className="group grid h-8 place-items-center"
             >
@@ -86,7 +89,7 @@ export default function HeroSlides({ slides }: { slides: HeroSlide[] }) {
           className="group inline-flex min-w-0 items-center gap-1.5 text-sm font-medium text-white/85 [animation:fade-in_0.6s_ease-out] hover:text-white"
         >
           <span className="truncate">{s.label}</span>
-          <ArrowUpRight size={16} aria-hidden className="shrink-0 transition-transform duration-300 group-hover:-translate-y-0.5 group-hover:translate-x-0.5" />
+          <ArrowUpRight size={16} aria-hidden className="shrink-0 transition-transform duration-300 group-hover:-translate-y-0.5 group-hover:translate-x-0.5 rtl:group-hover:-translate-x-0.5" />
         </Link>
       </div>
     </>

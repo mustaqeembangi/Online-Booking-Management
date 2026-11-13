@@ -3,6 +3,7 @@
 import { createContext, useCallback, useContext, useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import { ChevronLeft, ChevronRight, Images, X } from "lucide-react";
+import { UI, type Lang } from "@/i18n";
 
 // One full-screen photo viewer per tour page. Any PhotoTrigger inside it opens the viewer at its photo:
 // swipe, arrow keys or the buttons move between photos, Esc or a tap outside the photo closes it.
@@ -12,12 +13,16 @@ const Ctx = createContext<(index: number) => void>(() => {});
 export function PhotoViewer({
   photos,
   title,
+  lang,
   children,
 }: {
   photos: string[];
   title: string;
+  lang: Lang;
   children: React.ReactNode;
 }) {
+  const g = UI[lang].gallery;
+  const rtl = lang === "ar";
   const [open, setOpen] = useState<number | null>(null);
   const touchX = useRef<number | null>(null);
   const closeRef = useRef<HTMLButtonElement>(null);
@@ -40,8 +45,8 @@ export function PhotoViewer({
     if (open === null) return;
     const onKey = (e: KeyboardEvent) => {
       if (e.key === "Escape") close();
-      if (e.key === "ArrowRight") step(1);
-      if (e.key === "ArrowLeft") step(-1);
+      if (e.key === "ArrowRight") step(rtl ? -1 : 1);
+      if (e.key === "ArrowLeft") step(rtl ? 1 : -1);
     };
     document.addEventListener("keydown", onKey);
     document.documentElement.style.overflow = "hidden";
@@ -50,7 +55,7 @@ export function PhotoViewer({
       document.removeEventListener("keydown", onKey);
       document.documentElement.style.overflow = "";
     };
-  }, [open, step, close]);
+  }, [open, step, close, rtl]);
 
   return (
     <Ctx.Provider value={show}>
@@ -59,13 +64,13 @@ export function PhotoViewer({
         <div
           role="dialog"
           aria-modal="true"
-          aria-label={`${title}: photo ${open + 1} of ${photos.length}`}
+          aria-label={g.counter(title, open + 1, photos.length)}
           className="fixed inset-0 z-[60] flex flex-col bg-ink/95 text-white backdrop-blur-sm [animation:fade-in_0.2s_ease-out]"
           onTouchStart={(e) => (touchX.current = e.touches[0].clientX)}
           onTouchEnd={(e) => {
             if (touchX.current === null) return;
             const dx = e.changedTouches[0].clientX - touchX.current;
-            if (Math.abs(dx) > 40) step(dx < 0 ? 1 : -1);
+            if (Math.abs(dx) > 40) step((dx < 0) !== rtl ? 1 : -1);
             touchX.current = null;
           }}
         >
@@ -74,13 +79,13 @@ export function PhotoViewer({
               <span className="font-semibold text-white">
                 {open + 1} / {photos.length}
               </span>
-              <span className="ml-3 hidden sm:inline">{title}</span>
+              <span className="ms-3 hidden sm:inline">{title}</span>
             </p>
             <button
               ref={closeRef}
               type="button"
               onClick={close}
-              aria-label="Close photos"
+              aria-label={g.close}
               className="grid h-11 w-11 shrink-0 place-items-center rounded-full bg-white text-ink transition-[background-color,transform] duration-300 hover:rotate-90 hover:bg-brand active:scale-95"
             >
               <X size={20} />
@@ -91,7 +96,7 @@ export function PhotoViewer({
             <Image
               key={photos[open]}
               src={photos[open]}
-              alt={`${title}, photo ${open + 1}`}
+              alt={g.photo(title, open + 1)}
               fill
               sizes="100vw"
               className="pointer-events-none object-contain px-2 [animation:photo-in_0.35s_cubic-bezier(0.2,0.7,0.2,1)]"
@@ -104,16 +109,16 @@ export function PhotoViewer({
             <button
               type="button"
               onClick={() => step(-1)}
-              aria-label="Previous photo"
-              className="absolute left-[max(0.75rem,calc(var(--gutter)-1rem))] top-1/2 hidden h-14 w-14 -translate-y-1/2 place-items-center rounded-full border border-white/30 bg-ink/40 backdrop-blur transition-[background-color,color,transform] duration-300 hover:bg-white hover:text-ink active:scale-95 md:grid"
+              aria-label={g.prev}
+              className="absolute start-[max(0.75rem,calc(var(--gutter)-1rem))] top-1/2 hidden h-14 w-14 -translate-y-1/2 place-items-center rounded-full border border-white/30 bg-ink/40 backdrop-blur transition-[background-color,color,transform] duration-300 hover:bg-white hover:text-ink active:scale-95 md:grid"
             >
               <ChevronLeft size={24} />
             </button>
             <button
               type="button"
               onClick={() => step(1)}
-              aria-label="Next photo"
-              className="absolute right-[max(0.75rem,calc(var(--gutter)-1rem))] top-1/2 hidden h-14 w-14 -translate-y-1/2 place-items-center rounded-full border border-white/30 bg-ink/40 backdrop-blur transition-[background-color,color,transform] duration-300 hover:bg-white hover:text-ink active:scale-95 md:grid"
+              aria-label={g.next}
+              className="absolute end-[max(0.75rem,calc(var(--gutter)-1rem))] top-1/2 hidden h-14 w-14 -translate-y-1/2 place-items-center rounded-full border border-white/30 bg-ink/40 backdrop-blur transition-[background-color,color,transform] duration-300 hover:bg-white hover:text-ink active:scale-95 md:grid"
             >
               <ChevronRight size={24} />
             </button>
@@ -126,7 +131,7 @@ export function PhotoViewer({
                 key={src}
                 type="button"
                 onClick={() => setOpen(i)}
-                aria-label={`Show photo ${i + 1}`}
+                aria-label={g.show(i + 1)}
                 aria-current={i === open ? "true" : undefined}
                 ref={(el) => {
                   if (el && i === open) el.scrollIntoView({ block: "nearest", inline: "center", behavior: "smooth" });
@@ -165,21 +170,22 @@ export function PhotoTrigger({
 }
 
 // Grid of the tour's other photos. `offset` is the position of the first one in the viewer.
-export function GalleryGrid({ photos, offset, title }: { photos: string[]; offset: number; title: string }) {
+export function GalleryGrid({ photos, offset, title, lang }: { photos: string[]; offset: number; title: string; lang: Lang }) {
+  const g = UI[lang].gallery;
   return (
     <div className="grid grid-cols-3 gap-1.5 sm:gap-[clamp(0.5rem,0.9vw,1rem)]">
       {photos.map((src, i) => (
         <PhotoTrigger
           key={src}
           index={i + offset}
-          label={`Open photo ${i + offset + 1}`}
+          label={g.open(i + offset + 1)}
           className={`reveal group relative aspect-[3/2] overflow-hidden rounded-[clamp(0.75rem,1.4vw,1.5rem)] bg-line transition-transform duration-300 active:scale-[0.97] ${
             i === 0 ? "col-span-3" : ""
           }`}
         >
           <Image
             src={src}
-            alt={`${title}, photo ${i + offset + 1}`}
+            alt={g.photo(title, i + offset + 1)}
             fill
             sizes={i === 0 ? "(min-width: 1024px) 55vw, 100vw" : "(min-width: 1024px) 18vw, 33vw"}
             className="object-cover transition-transform duration-700 ease-out group-hover:scale-110"
@@ -190,11 +196,11 @@ export function GalleryGrid({ photos, offset, title }: { photos: string[]; offse
   );
 }
 
-export function PhotoCount({ count }: { count: number }) {
+export function PhotoCount({ label }: { label: string }) {
   return (
-    <span className="pointer-events-none absolute bottom-4 right-4 inline-flex items-center gap-2 rounded-full bg-ink/80 px-4 py-2.5 text-sm font-semibold text-white backdrop-blur transition-transform duration-300 group-hover:scale-105">
+    <span className="pointer-events-none absolute bottom-4 end-4 lg:end-auto lg:start-4 inline-flex items-center gap-2 rounded-full bg-ink/80 px-4 py-2.5 text-sm font-semibold text-white backdrop-blur transition-transform duration-300 group-hover:scale-105">
       <Images size={16} aria-hidden />
-      View all {count} photos
+      {label}
     </span>
   );
 }

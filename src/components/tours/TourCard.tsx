@@ -2,11 +2,13 @@ import Image from "next/image";
 import Link from "next/link";
 import { ArrowUpRight, Star } from "lucide-react";
 import { formatPrice, type Tour } from "@/data/tours";
+import { UI, lp, num, type Lang } from "@/i18n";
 
-export default function TourCard({ tour, className = "" }: { tour: Tour; className?: string }) {
+export default function TourCard({ tour, lang, className = "" }: { tour: Tour; lang: Lang; className?: string }) {
+  const t = UI[lang];
   return (
     <Link
-      href={`/tours/${tour.slug}`}
+      href={lp(lang, `/tours/${tour.slug}`)}
       className={`group relative isolate block aspect-[4/5] overflow-hidden rounded-[var(--radius-card)] bg-ink text-white transition-[translate,scale,box-shadow] duration-500 ease-out hover:-translate-y-1.5 hover:shadow-[0_30px_60px_-30px_rgb(11_18_14/0.6)] active:scale-[0.98] ${className}`}
     >
       <Image
@@ -22,14 +24,14 @@ export default function TourCard({ tour, className = "" }: { tour: Tour; classNa
         <span className="inline-flex h-9 items-center rounded-full bg-ink px-3.5 text-sm font-semibold text-white">
           {tour.price ? (
             <>
-              {!tour.price.unit && <span className="mr-1 font-normal text-white/70">From</span>}
+              {!tour.price.unit && <span className="me-1 font-normal text-white/70">{t.price.from}</span>}
               {formatPrice(tour.price)}
             </>
           ) : (
-            "Ask for price"
+            t.price.ask
           )}
         </span>
-        <span className="grid h-10 w-10 shrink-0 place-items-center rounded-full bg-white text-ink transition-[background-color,transform] duration-300 group-hover:rotate-45 group-hover:bg-brand">
+        <span className="grid h-10 w-10 shrink-0 place-items-center rounded-full bg-white text-ink transition-[background-color,transform] duration-300 group-hover:rotate-45 rtl:group-hover:-rotate-45 group-hover:bg-brand">
           <ArrowUpRight size={20} aria-hidden />
         </span>
       </div>
@@ -42,7 +44,7 @@ export default function TourCard({ tour, className = "" }: { tour: Tour; classNa
               <Star size={14} className="fill-brand text-brand" aria-hidden />
               {tour.gyg.rating.toFixed(1)}
               <span className="font-normal text-white/70">
-                ({tour.gyg.reviews.toLocaleString("en-US")} on GetYourGuide)
+                ({num(lang, tour.gyg.reviews)} {lang === "ar" ? "على" : "on"} GetYourGuide)
               </span>
             </span>
           )}

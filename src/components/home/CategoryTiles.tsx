@@ -1,16 +1,19 @@
 import Image from "next/image";
 import Link from "next/link";
 import { ArrowUpRight } from "lucide-react";
-import { CATEGORIES, getToursByCategory } from "@/data/tours";
+import { getCategories, getToursByCategory } from "@/data/tours";
+import { UI, lp, type Lang } from "@/i18n";
 import Container from "@/components/ui/Container";
 
 const layout = ["lg:col-span-7 lg:row-span-2", "lg:col-span-5 lg:row-span-2"];
 
-export default function CategoryTiles() {
+export default function CategoryTiles({ lang }: { lang: Lang }) {
+  const t = UI[lang].tiles;
+  const CATEGORIES = getCategories(lang);
   return (
     <Container as="section" className="section-y">
       <h2 className="display-xl reveal max-w-5xl">
-        Pick your kind of <span className="accent-word text-brand-deep">day out</span>
+        {t.title[0]} <span className="accent-word text-brand-deep">{t.title[1]}</span>
       </h2>
       <div className="mt-[clamp(2rem,5vw,5rem)] grid auto-rows-[clamp(13rem,17vw,21rem)] gap-[clamp(0.75rem,1.2vw,1.5rem)] sm:grid-cols-2 lg:grid-cols-12">
         {CATEGORIES.map((c, i) => {
@@ -18,7 +21,7 @@ export default function CategoryTiles() {
           return (
             <Link
               key={c.id}
-              href={`/tours?category=${c.id}`}
+              href={lp(lang, `/tours?category=${c.id}`)}
               className={`reveal group relative isolate overflow-hidden rounded-[var(--radius-card)] bg-ink text-white transition-[box-shadow,scale] duration-500 ease-out hover:shadow-[0_30px_60px_-30px_rgb(11_18_14/0.6)] active:scale-[0.98] ${layout[i]}`}
             >
               <Image
@@ -31,9 +34,9 @@ export default function CategoryTiles() {
               <div className="absolute inset-0 -z-10 bg-gradient-to-t from-ink/85 via-ink/10 to-transparent" />
               <div className="flex items-start justify-between p-3.5">
                 <span className="inline-flex h-9 items-center rounded-full bg-ink px-3.5 text-sm font-semibold text-white">
-                  {count} {count === 1 ? "tour" : "tours"}
+                  {t.count(count)}
                 </span>
-                <span className="grid h-11 w-11 place-items-center rounded-full bg-white text-ink transition-[background-color,transform] duration-300 group-hover:rotate-45 group-hover:bg-brand">
+                <span className="grid h-11 w-11 place-items-center rounded-full bg-white text-ink transition-[background-color,transform] duration-300 group-hover:rotate-45 rtl:group-hover:-rotate-45 group-hover:bg-brand">
                   <ArrowUpRight size={20} aria-hidden />
                 </span>
               </div>

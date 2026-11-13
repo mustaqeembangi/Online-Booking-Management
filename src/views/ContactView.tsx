@@ -4,59 +4,63 @@ import Container from "@/components/ui/Container";
 import ContactForm from "@/components/info/ContactForm";
 import { SITE } from "@/data/site";
 import { whatsappLink } from "@/lib/whatsapp";
+import { UI, type Lang } from "@/i18n";
 
-export const metadata = pageMeta({
-  title: "Contact Us",
-  description: `Call, WhatsApp or email ${SITE.name} in Dubai to ask about a tour, a date or a price. ${SITE.hours}.`,
-  path: "/contact",
-});
+export const contactMeta = (lang: Lang) =>
+  pageMeta({
+    title: UI[lang].contactPage.metaTitle,
+    description: UI[lang].contactPage.metaDescription(SITE.name, UI[lang].hours),
+    path: "/contact",
+    lang,
+  });
 
 const linkCls =
   "font-semibold text-brand-deep underline underline-offset-4 hover:text-ink break-words";
 
-export default function ContactPage() {
+export default function ContactView({ lang }: { lang: Lang }) {
+  const t = UI[lang].contactPage;
   const rows = [
     {
       icon: Phone,
-      label: "Phone",
-      node: <a href={SITE.phoneHref} className={linkCls}>{SITE.phone}</a>,
+      label: t.phone,
+      node: <a href={SITE.phoneHref} className={linkCls} dir="ltr">{SITE.phone}</a>,
     },
     {
       icon: MessageCircle,
-      label: "WhatsApp",
+      label: t.whatsapp,
       node: (
         <a href={whatsappLink()} target="_blank" rel="noopener noreferrer" className={linkCls}>
-          Message {SITE.phone}
+          {t.messageNumber("")}<span dir="ltr">{SITE.phone}</span>
         </a>
       ),
     },
     {
       icon: Mail,
-      label: "Email",
+      label: t.email,
       node: <a href={SITE.emailHref} className={linkCls}>{SITE.email}</a>,
     },
     {
       icon: MapPin,
-      label: "Address",
+      label: t.address,
       node: (
         <>
           <p>{SITE.address}</p>
           <a href={SITE.mapHref} target="_blank" rel="noopener noreferrer" className={linkCls}>
-            Open in Google Maps
+            {t.maps}
           </a>
         </>
       ),
     },
-    { icon: Clock, label: "Hours", node: <p>{SITE.hours}</p> },
+    { icon: Clock, label: t.hours, node: <p>{UI[lang].hours}</p> },
   ];
 
   return (
     <Container className="pb-[clamp(4rem,8vw,8rem)] pt-[clamp(8rem,14vw,14rem)]">
       <h1 className="hero-title max-w-5xl">
-        Talk <span className="accent-word text-brand-deep">to us.</span>
+        {t.title[0]} <span className="accent-word text-brand-deep">{t.title[1]}</span>
       </h1>
       <p className="mt-5 max-w-2xl text-[clamp(1.05rem,1.4vw,1.35rem)] text-ink/70">
-        Ask about a tour, a date or a price. WhatsApp is the fastest way to reach us.
+        {t.intro}
       </p>
 
       <div className="mt-[clamp(2.5rem,5vw,5rem)] grid gap-10 lg:grid-cols-2 lg:gap-[clamp(3rem,6vw,8rem)]">
@@ -75,11 +79,11 @@ export default function ContactPage() {
             ))}
           </ul>
           <p className="mt-6 text-lg">
-            Follow us on{" "}
+            {t.follow}
             <a href={SITE.socials.instagram} target="_blank" rel="noopener noreferrer" className={linkCls}>
               Instagram
-            </a>{" "}
-            and{" "}
+            </a>
+            {t.and}
             <a href={SITE.socials.facebook} target="_blank" rel="noopener noreferrer" className={linkCls}>
               Facebook
             </a>
@@ -88,9 +92,9 @@ export default function ContactPage() {
         </div>
 
         <div className="rounded-[var(--radius-card)] border border-line p-[clamp(1.25rem,2.5vw,2.5rem)]">
-          <h2 className="text-[clamp(1.75rem,3vw,3rem)] leading-none">Send a message</h2>
+          <h2 className="text-[clamp(1.75rem,3vw,3rem)] leading-none">{t.send}</h2>
           <div className="mt-6">
-            <ContactForm />
+            <ContactForm lang={lang} />
           </div>
         </div>
       </div>

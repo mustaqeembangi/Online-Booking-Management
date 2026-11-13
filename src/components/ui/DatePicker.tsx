@@ -3,21 +3,25 @@
 import { Popover, PopoverButton, PopoverPanel } from "@headlessui/react";
 import { CalendarDays } from "lucide-react";
 import { DayPicker } from "react-day-picker";
+import { ar } from "react-day-picker/locale";
 import "react-day-picker/style.css";
 
-const fmt = new Intl.DateTimeFormat("en-GB", {
-  weekday: "short",
-  day: "numeric",
-  month: "long",
-  year: "numeric",
-});
+const fmt = (lang: "en" | "ar") =>
+  new Intl.DateTimeFormat(lang === "ar" ? "ar-AE-u-nu-latn" : "en-GB", {
+    weekday: "short",
+    day: "numeric",
+    month: "long",
+    year: "numeric",
+  });
 
 export default function DatePicker({
   label,
   value,
   onChange,
   placeholder = "Choose a date",
+  lang = "en",
 }: {
+  lang?: "en" | "ar";
   label: string;
   value: Date | undefined;
   onChange: (d: Date | undefined) => void;
@@ -28,8 +32,8 @@ export default function DatePicker({
   return (
     <Popover className="relative">
       <span className="mb-1.5 block text-sm font-semibold text-ink">{label}</span>
-      <PopoverButton className="flex h-12 w-full items-center justify-between gap-2 rounded-xl border border-line bg-white px-4 text-left text-[15px] text-ink transition-colors hover:border-ink/40 focus:border-ink data-[open]:border-ink">
-        <span className={value ? "" : "text-ink/40"}>{value ? fmt.format(value) : placeholder}</span>
+      <PopoverButton className="flex h-12 w-full items-center justify-between gap-2 rounded-xl border border-line bg-white px-4 text-start text-[15px] text-ink transition-colors hover:border-ink/40 focus:border-ink data-[open]:border-ink">
+        <span className={value ? "" : "text-ink/40"}>{value ? fmt(lang).format(value) : placeholder}</span>
         <CalendarDays size={18} className="shrink-0 text-ink/60" />
       </PopoverButton>
       <PopoverPanel
@@ -39,6 +43,7 @@ export default function DatePicker({
         {({ close }) => (
           <DayPicker
             mode="single"
+            {...(lang === "ar" && { locale: ar, dir: "rtl" as const })}
             selected={value}
             defaultMonth={value ?? today}
             disabled={{ before: today }}

@@ -9,8 +9,12 @@ export default function Stepper({
   min = 0,
   max = 99,
   hint,
+  fewerLabel,
+  moreLabel,
 }: {
   label: string;
+  fewerLabel?: string;
+  moreLabel?: string;
   value: number;
   onChange: (v: number) => void;
   min?: number;
@@ -29,7 +33,7 @@ export default function Stepper({
         <button
           type="button"
           className={btn}
-          aria-label={`Fewer ${label.toLowerCase()}`}
+          aria-label={fewerLabel ?? `Fewer ${label.toLowerCase()}`}
           disabled={value <= min}
           onClick={() => onChange(Math.max(min, value - 1))}
         >
@@ -41,7 +45,7 @@ export default function Stepper({
         <button
           type="button"
           className={btn}
-          aria-label={`More ${label.toLowerCase()}`}
+          aria-label={moreLabel ?? `More ${label.toLowerCase()}`}
           disabled={value >= max}
           onClick={() => onChange(Math.min(max, value + 1))}
         >

@@ -1,4 +1,6 @@
 import { SITE } from "@/data/site";
+import { UI, type Lang } from "@/i18n";
+import { getTour, localizeTour } from "@/data/tours";
 
 export interface BookingInput {
   tourTitle: string;
@@ -17,19 +19,29 @@ export function whatsappLink(message?: string): string {
   return message ? `${base}?text=${encodeURIComponent(message)}` : base;
 }
 
-export function bookingMessage(input: BookingInput): string {
+// Arabic messages keep the English tour name too, so the team recognises the tour at a glance.
+export function bookingMessage(input: BookingInput, lang: Lang = "en"): string {
+  const m = UI[lang].message;
   const lines = [
-    `Hello ${SITE.name}, I would like to book:`,
+    m.hello(SITE.name),
     "",
-    `Tour: ${input.tourTitle}`,
-    `Date: ${input.date}`,
-    `Adults: ${input.adults}`,
-    `Children: ${input.children}`,
+    `${m.tour}: ${input.tourTitle}`,
+    `${m.date}: ${input.date}`,
+    `${m.adults}: ${input.adults}`,
+    `${m.children}: ${input.children}`,
   ];
-  if (input.tourType) lines.push(`Type: ${input.tourType}`);
-  lines.push(`Pickup: ${input.pickup}`);
-  if (input.estimate) lines.push(`Estimated total: ${input.estimate}`);
-  if (input.note) lines.push(`Note: ${input.note}`);
-  lines.push("", `Name: ${input.name}`);
+  if (input.tourType) lines.push(`${m.type}: ${input.tourType}`);
+  lines.push(`${m.pickup}: ${input.pickup}`);
+  if (input.estimate) lines.push(`${m.estimate}: ${input.estimate}`);
+  if (input.note) lines.push(`${m.note}: ${input.note}`);
+  lines.push("", `${m.name}: ${input.name}`);
   return lines.join("\n");
+}
+
+// Tour name for the booking message: Arabic visitors' messages show the Arabic and the English name.
+export function bookingTourTitle(slug: string, lang: Lang) {
+  const tour = getTour(slug);
+  if (!tour) return slug;
+  const local = localizeTour(tour, lang).title;
+  return local === tour.title ? tour.title : `${local} (${tour.title})`;
 }

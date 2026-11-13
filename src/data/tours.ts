@@ -3,6 +3,9 @@
 // `price: null` means no price is published: the site shows "Ask for price".
 // Ratings exist only where GetYourGuide published them. Never add others, or any discounts.
 
+import type { Lang } from "@/i18n";
+import { CATEGORIES_AR, TOURS_AR } from "./tours-ar";
+
 export type Currency = "USD" | "AED";
 
 export type CategoryId = "desert-safari" | "city-tours";
@@ -384,6 +387,20 @@ export const TOURS: Tour[] = [
 ];
 
 export const getTour = (slug: string) => TOURS.find((t) => t.slug === slug);
+
+// Language versions. Arabic text comes from tours-ar.ts; everything else (prices, photos, ratings) is shared.
+export function localizeTour(tour: Tour, lang: Lang): Tour {
+  if (lang === "en") return tour;
+  const ar = TOURS_AR[tour.slug];
+  return ar ? { ...tour, ...ar } : tour;
+}
+export const getTours = (lang: Lang) => TOURS.map((t) => localizeTour(t, lang));
+export function getTourIn(slug: string, lang: Lang) {
+  const t = getTour(slug);
+  return t && localizeTour(t, lang);
+}
+export const getCategories = (lang: Lang): Category[] =>
+  lang === "en" ? CATEGORIES : CATEGORIES.map((c) => ({ ...c, ...CATEGORIES_AR[c.id] }));
 export const getToursByCategory = (id: CategoryId) =>
   TOURS.filter((t) => t.category === id);
 export const getFeaturedTours = () => TOURS.filter((t) => t.featured);

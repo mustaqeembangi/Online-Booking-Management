@@ -8,29 +8,27 @@ import Button from "@/components/ui/Button";
 import TourCard from "@/components/tours/TourCard";
 import BookingPanel from "@/components/tours/BookingPanel";
 import { GalleryGrid, PhotoCount, PhotoTrigger, PhotoViewer } from "@/components/tours/Gallery";
-import { CATEGORIES, TOURS, getTour } from "@/data/tours";
-import { REVIEWS } from "@/data/reviews";
+import { TOURS, getCategories, getTour, getTours, localizeTour } from "@/data/tours";
+import { UI, lp, num, type Lang } from "@/i18n";
+import { REVIEWS, reviewDate } from "@/data/reviews";
 import ReviewCard from "@/components/tours/ReviewCard";
 import { SITE } from "@/data/site";
 import { whatsappLink } from "@/lib/whatsapp";
 import { pageMeta, tourDescription, tourTitle } from "@/lib/seo";
 
-export function generateStaticParams() {
-  return TOURS.map((t) => ({ slug: t.slug }));
-}
+export const tourParams = () => TOURS.map((t) => ({ slug: t.slug }));
+export type TourParams = Promise<{ slug: string }>;
 
-export async function generateMetadata({
-  params,
-}: {
-  params: Promise<{ slug: string }>;
-}): Promise<Metadata> {
+export async function tourMeta(params: TourParams, lang: Lang): Promise<Metadata> {
   const { slug } = await params;
-  const tour = getTour(slug);
-  if (!tour) return {};
+  const base = getTour(slug);
+  if (!base) return {};
+  const tour = localizeTour(base, lang);
   return pageMeta({
-    title: tourTitle(tour),
-    description: tourDescription(tour),
+    title: tourTitle(tour, lang),
+    description: tourDescription(tour, lang),
     path: `/tours/${tour.slug}`,
+    lang,
     image: `/tours/${tour.slug}/opengraph-image`,
   });
 }
@@ -72,10 +70,12 @@ function SubHead({ children }: { children: React.ReactNode }) {
   return <h3 className="mb-3 mt-7 text-[15px] font-semibold uppercase tracking-[0.06em] text-ink/60 first:mt-0">{children}</h3>;
 }
 
-function Route({ stops }: { stops: string[] }) {
-  const all = ["Pickup in Dubai", ...stops, "Drop-off in Dubai"];
+function Route({ stops, lang }: { stops: string[]; lang: Lang }) {
+  const t = UI[lang].tour;
+  const all = [t.pickupStop, ...stops, t.dropoffStop];
+  const city = lang === "ar" ? "، أبوظبي" : ", Abu Dhabi";
   return (
-    <ol className="relative grid gap-5 before:absolute before:bottom-3 before:left-[9px] before:top-3 before:w-0.5 before:bg-line">
+    <ol className="relative grid gap-5 before:absolute before:bottom-3 before:start-[9px] before:top-3 before:w-0.5 before:bg-line">
       {all.map((s, i) => {
         const end = i === 0 || i === all.length - 1;
         return (
@@ -88,13 +88,13 @@ function Route({ stops }: { stops: string[] }) {
               <span className="text-ink/60">{s}</span>
             ) : (
               <a
-                href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(`${s}, Abu Dhabi`)}`}
+                href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(`${s}${city}`)}`}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="group inline-flex items-center gap-1.5 font-medium underline decoration-line decoration-2 underline-offset-4 transition-colors hover:text-brand-deep hover:decoration-brand"
               >
                 {s}
-                <ArrowUpRight size={16} aria-hidden className="transition-transform duration-300 group-hover:-translate-y-0.5 group-hover:translate-x-0.5" />
+                <ArrowUpRight size={16} aria-hidden className="transition-transform duration-300 group-hover:-translate-y-0.5 group-hover:translate-x-0.5 rtl:group-hover:-translate-x-0.5" />
               </a>
             )}
           </li>
@@ -104,39 +104,40 @@ function Route({ stops }: { stops: string[] }) {
   );
 }
 
-export default async function TourPage({
-  params,
-}: {
-  params: Promise<{ slug: string }>;
-}) {
+export default async function TourView({ params, lang }: { params: TourParams; lang: Lang }) {
   const { slug } = await params;
-  const tour = getTour(slug);
-  if (!tour) notFound();
+  const base = getTour(slug);
+  if (!base) notFound();
+  const tour = localizeTour(base, lang);
+  const t = UI[lang].tour;
+  const r = UI[lang].reviews;
 
-  const category = CATEGORIES.find((c) => c.id === tour.category);
+  const category = getCategories(lang).find((c) => c.id === tour.category);
 
   const photos = tour.photos ?? [tour.image];
   const reviews = REVIEWS[tour.slug] ?? [];
-  const has = (re: RegExp) => tour.includes.some((i) => re.test(i));
+  const has = (re: RegExp) => base.includes.some((i) => re.test(i));
   const quick = [
-    tour.duration && { icon: Clock, label: "Duration", value: tour.duration },
-    has(/pick-?up/i) && { icon: Car, label: "Pickup", value: "From your hotel" },
-    has(/english/i) && { icon: Languages, label: "Guide", value: "English" },
-    { icon: Wallet, label: "Payment", value: "Nothing to pay online" },
+    tour.duration && { icon: Clock, label: t.duration, value: tour.duration },
+    has(/pick-?up/i) && { icon: Car, label: t.pickup, value: t.pickupValue },
+    has(/english/i) && { icon: Languages, label: t.guide, value: t.guideValue },
+    { icon: Wallet, label: t.payment, value: t.paymentValue },
   ].filter((q): q is { icon: typeof Clock; label: string; value: string } => !!q);
 
+  const all = getTours(lang);
   const related = [
-    ...TOURS.filter((t) => t.category === tour.category && t.slug !== tour.slug),
-    ...TOURS.filter((t) => t.category !== tour.category && t.featured && t.slug !== tour.slug),
+    ...all.filter((x) => x.category === tour.category && x.slug !== tour.slug),
+    ...all.filter((x) => x.category !== tour.category && x.featured && x.slug !== tour.slug),
   ].slice(0, 4);
+  const pageUrl = `${SITE.url}${lp(lang, `/tours/${tour.slug}`)}`;
 
   const breadcrumbs = {
     "@context": "https://schema.org",
     "@type": "BreadcrumbList",
     itemListElement: [
-      { name: "Home", item: SITE.url },
-      { name: "Tours", item: `${SITE.url}/tours` },
-      { name: tour.title, item: `${SITE.url}/tours/${tour.slug}` },
+      { name: SITE.name, item: `${SITE.url}${lp(lang, "/")}` },
+      { name: t.breadcrumb, item: `${SITE.url}${lp(lang, "/tours")}` },
+      { name: tour.title, item: pageUrl },
     ].map((b, i) => ({ "@type": "ListItem", position: i + 1, ...b })),
   };
 
@@ -146,7 +147,8 @@ export default async function TourPage({
     name: tour.title,
     description: tour.summary,
     image: (tour.photos ?? [tour.image]).map((src) => `${SITE.url}${src}`),
-    url: `${SITE.url}/tours/${tour.slug}`,
+    url: pageUrl,
+    inLanguage: lang,
     touristType: tour.types.length ? tour.types : undefined,
     provider: { "@type": "TravelAgency", name: SITE.name, url: SITE.url },
     ...(tour.price && {
@@ -154,13 +156,13 @@ export default async function TourPage({
         "@type": "Offer",
         price: tour.price.amount,
         priceCurrency: tour.price.currency,
-        url: `${SITE.url}/tours/${tour.slug}`,
+        url: pageUrl,
       },
     }),
   };
 
   return (
-    <PhotoViewer photos={photos} title={tour.title}>
+    <PhotoViewer photos={photos} title={tour.title} lang={lang}>
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{
@@ -170,7 +172,7 @@ export default async function TourPage({
       <section className="on-ink bg-ink text-white">
         <div className="grid lg:min-h-[min(72svh,46rem)] lg:grid-cols-2">
           <div className="relative aspect-[16/11] max-h-[60svh] w-full sm:aspect-[16/9] lg:order-2 lg:aspect-auto lg:max-h-none">
-            <PhotoTrigger index={0} label={`Open the ${photos.length} photos of this tour`} className="group absolute inset-0 overflow-hidden">
+            <PhotoTrigger index={0} label={t.openPhotos(photos.length)} className="group absolute inset-0 overflow-hidden">
               <Image
                 src={tour.image}
                 alt={tour.title}
@@ -179,16 +181,16 @@ export default async function TourPage({
                 sizes="(min-width: 1024px) 50vw, 100vw"
                 className="object-cover transition-transform duration-700 ease-out group-hover:scale-105"
               />
-              {photos.length > 1 && <PhotoCount count={photos.length} />}
+              {photos.length > 1 && <PhotoCount label={t.viewAll(photos.length)} />}
             </PhotoTrigger>
           </div>
-          <div className="flex flex-col justify-end px-[var(--gutter)] pb-[clamp(2rem,4vw,4rem)] pt-6 lg:pr-[clamp(2rem,4vw,5rem)] lg:pt-28">
-            <nav aria-label="Breadcrumb" className="text-sm text-white/60">
-              <Link href="/tours" className="hover:text-white">Tours</Link>
+          <div className="flex flex-col justify-end px-[var(--gutter)] pb-[clamp(2rem,4vw,4rem)] pt-6 lg:pe-[clamp(2rem,4vw,5rem)] lg:pt-28">
+            <nav aria-label={t.breadcrumb} className="text-sm text-white/60">
+              <Link href={lp(lang, "/tours")} className="hover:text-white">{t.breadcrumb}</Link>
               {category && (
                 <>
                   <span aria-hidden> / </span>
-                  <Link href={`/tours?category=${category.id}`} className="hover:text-white">
+                  <Link href={lp(lang, `/tours?category=${category.id}`)} className="hover:text-white">
                     {category.name}
                   </Link>
                 </>
@@ -205,8 +207,7 @@ export default async function TourPage({
                 className="mt-4 inline-flex items-center gap-2 text-[15px] text-white/80 hover:text-white"
               >
                 <Star size={16} className="fill-brand text-brand" aria-hidden />
-                {tour.gyg.rating.toFixed(1)} on GetYourGuide (
-                {tour.gyg.reviews.toLocaleString("en-US")} reviews)
+                {t.onGyg(tour.gyg.rating.toFixed(1), num(lang, tour.gyg.reviews))}
               </a>
             )}
             <p className="mt-4 max-w-2xl text-[clamp(1.05rem,1.4vw,1.35rem)] leading-snug text-white/85">
@@ -233,19 +234,19 @@ export default async function TourPage({
 
             <div className="pt-[clamp(1.75rem,3vw,2.5rem)]">
               {tour.highlights && (
-                <Row title="Highlights">
+                <Row title={t.highlights}>
                   <Bullets items={tour.highlights} mark="yes" />
                 </Row>
               )}
 
               {tour.photos && tour.photos.length > 1 && (
                 <div className="pb-[clamp(1.75rem,3vw,2.5rem)]">
-                  <GalleryGrid photos={tour.photos.slice(1)} offset={1} title={tour.title} />
+                  <GalleryGrid photos={tour.photos.slice(1)} offset={1} title={tour.title} lang={lang} />
                 </div>
               )}
 
               {tour.includes.length > 0 && (
-                <Row title="What's included">
+                <Row title={t.included}>
                   <Bullets items={tour.includes} mark="yes" />
                   {tour.optionIncludes && (
                     <>
@@ -255,7 +256,7 @@ export default async function TourPage({
                   )}
                   {tour.notIncluded && (
                     <>
-                      <SubHead>Not included</SubHead>
+                      <SubHead>{t.notIncluded}</SubHead>
                       <Bullets items={tour.notIncluded} mark="no" />
                     </>
                   )}
@@ -263,16 +264,17 @@ export default async function TourPage({
               )}
 
               {tour.stops && (
-                <Row title="Route">
-                  <Route stops={tour.stops} />
+                <Row title={t.route}>
+                  <Route stops={tour.stops} lang={lang} />
                 </Row>
               )}
 
               {reviews.length > 0 && tour.gyg && (
-                <Row title="Guest reviews">
+                <Row title={r.row}>
+                  {r.note && <p className="mb-4 text-ink/60">{r.note}</p>}
                   <div className="grid gap-[clamp(0.75rem,1.2vw,1.25rem)] sm:grid-cols-2">
-                    {reviews.map((r) => (
-                      <ReviewCard key={r.name + r.date} review={r} />
+                    {reviews.map((rv) => (
+                      <ReviewCard key={rv.name + rv.date} review={rv} date={reviewDate(rv.date, lang)} labels={{ verified: r.verified, more: r.more, less: r.less }} />
                     ))}
                   </div>
                   <a
@@ -282,29 +284,29 @@ export default async function TourPage({
                     className="group mt-5 inline-flex items-center gap-1.5 font-semibold text-brand-deep underline decoration-2 underline-offset-4 hover:text-ink"
                   >
                     <Star size={16} className="fill-brand text-brand" aria-hidden />
-                    Read all {tour.gyg.reviews.toLocaleString("en-US")} reviews on GetYourGuide
-                    <ArrowUpRight size={16} aria-hidden className="transition-transform duration-300 group-hover:-translate-y-0.5 group-hover:translate-x-0.5" />
+                    {r.all(num(lang, tour.gyg.reviews))}
+                    <ArrowUpRight size={16} aria-hidden className="transition-transform duration-300 group-hover:-translate-y-0.5 group-hover:translate-x-0.5 rtl:group-hover:-translate-x-0.5" />
                   </a>
                 </Row>
               )}
 
               {tour.notSuitableFor && (
-                <Row title="Not suitable for">
+                <Row title={t.notSuitable}>
                   <Bullets items={tour.notSuitableFor} mark="no" />
                 </Row>
               )}
 
               {(tour.whatToBring || tour.notes) && (
-                <Row title="Important information">
+                <Row title={t.important}>
                   {tour.whatToBring && (
                     <>
-                      <SubHead>What to bring</SubHead>
+                      <SubHead>{t.bring}</SubHead>
                       <Bullets items={tour.whatToBring} mark="yes" />
                     </>
                   )}
                   {tour.notes && tour.notes.length > 0 && (
                     <>
-                      <SubHead>Good to know</SubHead>
+                      <SubHead>{t.goodToKnow}</SubHead>
                       <Bullets items={tour.notes} mark="dot" />
                     </>
                   )}
@@ -314,37 +316,34 @@ export default async function TourPage({
 
             {tour.includes.length === 0 && (
               <section className="on-ink mt-[clamp(2.5rem,5vw,4.5rem)] rounded-[var(--radius-card)] bg-ink p-[clamp(1.5rem,3vw,3rem)] text-white first:mt-0">
-                <h2 className="text-[clamp(1.75rem,3vw,3rem)] leading-none">Want the full details?</h2>
-                <p className="mt-3 max-w-xl text-white/75">
-                  Send us a message and we will tell you what the tour includes, the
-                  timings and the price for your group.
-                </p>
+                <h2 className="text-[clamp(1.75rem,3vw,3rem)] leading-none">{t.fullDetails}</h2>
+                <p className="mt-3 max-w-xl text-white/75">{t.fullDetailsText}</p>
                 <Button
-                  href={whatsappLink(`Hello ${SITE.name}, I would like details about: ${tour.title}`)}
+                  href={whatsappLink(t.askMessage(SITE.name, tour.title))}
                   className="mt-5"
                   icon={<MessageCircle size={18} />}
                 >
-                  Ask on WhatsApp
+                  {t.askWhatsapp}
                 </Button>
               </section>
             )}
           </div>
 
           <aside data-booking-panel className="relative z-10 min-w-0 lg:-mt-[clamp(7rem,20svh,14rem)]">
-            <BookingPanel tour={tour} />
+            <BookingPanel tour={tour} lang={lang} />
           </aside>
         </div>
 
         {related.length > 0 && (
           <section className="mt-[clamp(3rem,6vw,6rem)]">
             <h2 className="display-lg">
-              {related.every((t) => t.category === tour.category) && category
-                ? `More ${category.name.toLowerCase()}`
-                : "You may also like"}
+              {related.every((x) => x.category === tour.category) && category
+                ? t.more(category.name)
+                : t.alsoLike}
             </h2>
             <div className="mt-[clamp(1.5rem,3vw,3rem)] grid sm:grid-cols-2 xl:grid-cols-4 gap-[clamp(0.75rem,1.2vw,1.5rem)]">
-              {related.map((t) => (
-                <TourCard key={t.slug} tour={t} />
+              {related.map((x) => (
+                <TourCard key={x.slug} tour={x} lang={lang} />
               ))}
             </div>
           </section>

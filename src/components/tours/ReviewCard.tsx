@@ -6,7 +6,17 @@ import type { Review } from "@/data/reviews";
 
 const LONG = 240;
 
-export default function ReviewCard({ review, footer }: { review: Review; footer?: React.ReactNode }) {
+export default function ReviewCard({
+  review,
+  date,
+  labels,
+  footer,
+}: {
+  review: Review;
+  date: string;
+  labels: { verified: string; more: string; less: string };
+  footer?: React.ReactNode;
+}) {
   const [open, setOpen] = useState(false);
   const long = review.text.length > LONG;
   return (
@@ -22,11 +32,12 @@ export default function ReviewCard({ review, footer }: { review: Review; footer?
           </span>
           <span className="mt-0.5 flex items-center gap-1 text-sm text-ink/60">
             <BadgeCheck size={15} className="shrink-0 text-brand-deep" aria-hidden />
-            {review.date}, verified booking
+            {date} · {labels.verified}
           </span>
         </span>
       </figcaption>
-      <blockquote className={`mt-4 text-[16.5px] leading-relaxed ${long && !open ? "line-clamp-5" : ""}`}>
+      {/* Reviews are shown as the guest wrote them, in English. */}
+      <blockquote lang="en" dir="ltr" className={`mt-4 text-start text-[16.5px] leading-relaxed ${long && !open ? "line-clamp-5" : ""}`}>
         {review.text}
       </blockquote>
       {long && (
@@ -36,7 +47,7 @@ export default function ReviewCard({ review, footer }: { review: Review; footer?
           aria-expanded={open}
           className="mt-2 self-start text-sm font-semibold text-brand-deep underline decoration-2 underline-offset-4 hover:text-ink"
         >
-          {open ? "Show less" : "Read more"}
+          {open ? labels.less : labels.more}
         </button>
       )}
       {footer && <div className="mt-auto pt-4">{footer}</div>}

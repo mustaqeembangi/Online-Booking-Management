@@ -10,6 +10,7 @@ interface Props {
   rows?: number;
   placeholder?: string;
   required?: boolean;
+  optionalLabel?: string;
   type?: "text" | "email" | "tel";
   name?: string;
   autoComplete?: string;
@@ -26,6 +27,7 @@ export default function TextField({
   rows = 3,
   placeholder,
   required,
+  optionalLabel = "(optional)",
   type = "text",
   name,
   autoComplete,
@@ -35,7 +37,7 @@ export default function TextField({
     <div>
       <label htmlFor={id} className="mb-1.5 block text-sm font-semibold text-ink">
         {label}
-        {!required && <span className="font-normal text-ink/50"> (optional)</span>}
+        {!required && <span className="font-normal text-ink/50"> {optionalLabel}</span>}
       </label>
       {multiline ? (
         <textarea

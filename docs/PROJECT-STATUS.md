@@ -4,8 +4,11 @@ Updated 2026-11-13.
 
 **State:** live on `main` at https://travel.ammartours.com since 2026-11-13: the 2026 redesign, the SEO and share-image work, and only the six GetYourGuide tours, each with its GetYourGuide photo gallery and full text, on a GetYourGuide-style tour page. The 22 old tours were removed and redirect to `/tours`.
 
+**Ready, not live:** Arabic version (`/ar`), real guest reviews and "Book on GetYourGuide" are committed on `content/gyg-tours`, waiting for the operator's OK to push.
+
 **Needs the operator**
 - Confirm +971 55 231 3157 is also the WhatsApp number.
+- Ideally have a native Arabic speaker read the Arabic pages once (written by Claude).
 - Confirm whether the GetYourGuide cancellation rule (full refund up to 24 hours before) also applies to direct WhatsApp bookings; it is not shown on the site yet.
 - Revoke the Cloudinary key that was committed in the old `.env.local.example`.
 - Tell the owner ammartours.com is hacked (casino spam, broken forms).

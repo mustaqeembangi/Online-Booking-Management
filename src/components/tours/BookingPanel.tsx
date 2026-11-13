@@ -8,20 +8,24 @@ import Stepper from "@/components/ui/Stepper";
 import Select from "@/components/ui/Select";
 import TextField from "@/components/ui/TextField";
 import { formatPrice, type Tour } from "@/data/tours";
-import { bookingMessage, whatsappLink } from "@/lib/whatsapp";
+import { bookingMessage, bookingTourTitle, whatsappLink } from "@/lib/whatsapp";
+import { UI, type Lang } from "@/i18n";
 
-const dateFmt = new Intl.DateTimeFormat("en-GB", {
-  weekday: "long",
-  day: "numeric",
-  month: "long",
-  year: "numeric",
-});
+const dateFmt = (lang: Lang) =>
+  new Intl.DateTimeFormat(lang === "ar" ? "ar-AE-u-nu-latn" : "en-GB", {
+    weekday: "long",
+    day: "numeric",
+    month: "long",
+    year: "numeric",
+  });
 
 type Errors = Partial<
   Record<"date" | "type" | "pickup" | "name" | "guests", string>
 >;
 
-export default function BookingPanel({ tour }: { tour: Tour }) {
+export default function BookingPanel({ tour, lang }: { tour: Tour; lang: Lang }) {
+  const b = UI[lang].booking;
+  const p = UI[lang].price;
   const min = tour.minGuests ?? 1;
   const [date, setDate] = useState<Date | undefined>();
   const [adults, setAdults] = useState(Math.max(2, min));
@@ -74,12 +78,12 @@ export default function BookingPanel({ tour }: { tour: Tour }) {
 
   function validate(): Errors {
     const e: Errors = {};
-    if (!date) e.date = "Please choose a date.";
-    if (tour.types.length > 1 && !type) e.type = "Please choose shared or private.";
-    if (!pickup.trim()) e.pickup = "Tell us your hotel or area for pickup.";
-    if (!name.trim()) e.name = "Please tell us your name.";
+    if (!date) e.date = b.errDate;
+    if (tour.types.length > 1 && !type) e.type = b.errType;
+    if (!pickup.trim()) e.pickup = b.errPickup;
+    if (!name.trim()) e.name = b.errName;
     if (tour.minGuests && guests < tour.minGuests)
-      e.guests = `This tour needs at least ${tour.minGuests} guests (adults and children together).`;
+      e.guests = b.errGuests(tour.minGuests);
     return e;
   }
 
@@ -88,17 +92,20 @@ export default function BookingPanel({ tour }: { tour: Tour }) {
     const e = validate();
     setErrors(e);
     if (Object.keys(e).length > 0) return;
-    const msg = bookingMessage({
-      tourTitle: tour.title,
-      date: dateFmt.format(date!),
+    const msg = bookingMessage(
+      {
+      tourTitle: bookingTourTitle(tour.slug, lang),
+      date: dateFmt(lang).format(date!),
       adults,
       children,
-      tourType: type || undefined,
       pickup: pickup.trim(),
       name: name.trim(),
       note: note.trim() || undefined,
       estimate: estimateText ?? undefined,
-    });
+      tourType: type ? b.typeNames[type] ?? type : undefined,
+      },
+      lang,
+    );
     window.open(whatsappLink(msg), "_blank", "noopener,noreferrer");
     setSent(true);
   }
@@ -112,7 +119,7 @@ export default function BookingPanel({ tour }: { tour: Tour }) {
 
   const priceLine = price ? (
     <>
-      <span className="text-sm text-ink/60">{price.unit ? "" : "From "}</span>
+      <span className="text-sm text-ink/60">{price.unit ? "" : `${p.from} `}</span>
       <span className="font-display text-2xl font-semibold text-dune">
         {formatPrice(price)}
       </span>
@@ -121,23 +128,23 @@ export default function BookingPanel({ tour }: { tour: Tour }) {
       </span>
     </>
   ) : (
-    <span className="font-display text-xl font-semibold text-dune">Ask for price</span>
+    <span className="font-display text-xl font-semibold text-dune">{p.ask}</span>
   );
 
   const form = (
     <form onSubmit={submit} noValidate className="space-y-4">
       <div>
-        <DatePicker label="Date" value={date} onChange={setDate} />
+        <DatePicker label={b.date} placeholder={b.chooseDate} lang={lang} value={date} onChange={setDate} />
         {err(errors.date)}
       </div>
 
       <div className="space-y-3">
-        <Stepper label="Adults" value={adults} min={1} onChange={setAdults} />
-        <Stepper label="Children" value={children} min={0} onChange={setChildren} />
+        <Stepper label={b.adults} fewerLabel={b.fewer(b.adults)} moreLabel={b.more(b.adults)} value={adults} min={1} onChange={setAdults} />
+        <Stepper label={b.children} fewerLabel={b.fewer(b.children)} moreLabel={b.more(b.children)} value={children} min={0} onChange={setChildren} />
         {err(errors.guests)}
         {tour.minGuests && !errors.guests && (
           <p className="text-sm text-ink/60">
-            Minimum {tour.minGuests} guests for this tour.
+            {b.min(tour.minGuests)}
           </p>
         )}
       </div>
@@ -145,11 +152,11 @@ export default function BookingPanel({ tour }: { tour: Tour }) {
       {tour.types.length > 1 && (
         <div>
           <Select
-            label="Tour type"
+            label={b.type}
             value={type}
             onChange={setType}
-            options={tour.types.map((t) => ({ value: t, label: t }))}
-            placeholder="Shared or private"
+            options={tour.types.map((t) => ({ value: t, label: b.typeNames[t] ?? t }))}
+            placeholder={b.typePlaceholder}
           />
           {err(errors.type)}
         </div>
@@ -157,18 +164,18 @@ export default function BookingPanel({ tour }: { tour: Tour }) {
 
       <div>
         <TextField
-          label="Pickup hotel or area"
+          label={b.pickup}
           required
           value={pickup}
           onChange={setPickup}
-          placeholder="Hotel name or area"
+          placeholder={b.pickupPlaceholder}
           autoComplete="off"
         />
         {err(errors.pickup)}
       </div>
       <div>
         <TextField
-          label="Your name"
+          label={b.name}
           required
           value={name}
           onChange={setName}
@@ -178,12 +185,13 @@ export default function BookingPanel({ tour }: { tour: Tour }) {
       </div>
       {showNote ? (
         <TextField
-          label="Note"
+          label={b.note}
           multiline
           rows={2}
           value={note}
           onChange={setNote}
-          placeholder="Anything we should know"
+          placeholder={b.notePlaceholder}
+          optionalLabel={b.optional}
         />
       ) : (
         <button
@@ -192,27 +200,27 @@ export default function BookingPanel({ tour }: { tour: Tour }) {
           className="inline-flex items-center gap-1.5 text-sm font-semibold text-brand-deep underline decoration-2 underline-offset-4 hover:text-ink"
         >
           <Plus size={15} aria-hidden />
-          Add a note
+          {b.addNote}
         </button>
       )}
 
       <div className="border-t border-line pt-4">
         {estimateText ? (
           <div className="flex items-baseline justify-between gap-3">
-            <span className="text-[15px] text-ink/70">Estimated total</span>
+            <span className="text-[15px] text-ink/70">{b.estimate}</span>
             <span className="font-display text-2xl font-semibold text-dune">
               {estimateText}
             </span>
           </div>
         ) : (
           <div className="flex items-baseline justify-between gap-3">
-            <span className="text-[15px] text-ink/70">Price</span>
-            <span className="font-semibold text-dune">Ask for price</span>
+            <span className="text-[15px] text-ink/70">{b.price}</span>
+            <span className="font-semibold text-dune">{p.ask}</span>
           </div>
         )}
         {estimateText && (
           <p className="mt-1 text-sm text-ink/60">
-            An estimate. We confirm the final price on WhatsApp.
+            {b.estimateNote}
           </p>
         )}
       </div>
@@ -223,28 +231,28 @@ export default function BookingPanel({ tour }: { tour: Tour }) {
         className="w-full"
         icon={<MessageCircle size={20} />}
       >
-        Send booking on WhatsApp
+        {b.send}
       </Button>
       <p className="text-center text-sm text-ink/60">
-        Nothing is charged here. We confirm on WhatsApp.
+        {b.nothing}
       </p>
       {tour.gyg && (
         <p className="text-center text-sm text-ink/60">
-          Prefer to pay online?{" "}
+          {b.payOnline}{" "}
           <a
             href={tour.gyg.url}
             target="_blank"
             rel="noopener noreferrer"
             className="group inline-flex items-center gap-0.5 font-semibold text-ink underline decoration-brand decoration-2 underline-offset-4 hover:text-brand-deep"
           >
-            Book on GetYourGuide
-            <ArrowUpRight size={15} aria-hidden className="transition-transform duration-300 group-hover:-translate-y-0.5 group-hover:translate-x-0.5" />
+            {b.gyg}
+            <ArrowUpRight size={15} aria-hidden className="transition-transform duration-300 group-hover:-translate-y-0.5 group-hover:translate-x-0.5 rtl:group-hover:-translate-x-0.5" />
           </a>
         </p>
       )}
       {sent && (
         <p role="status" className="text-center text-sm font-semibold text-brand-deep">
-          WhatsApp should now be open in a new tab. If not, press the button again.
+          {b.sent}
         </p>
       )}
     </form>
@@ -260,29 +268,29 @@ export default function BookingPanel({ tour }: { tour: Tour }) {
 
       {/* Phones and iPad portrait: sticky bottom bar */}
       <div className="fixed inset-x-3 bottom-[max(0.75rem,env(safe-area-inset-bottom))] z-40 rounded-full border border-white/70 bg-white/90 shadow-[0_16px_40px_-16px_rgb(11_18_14/0.5)] backdrop-blur-xl lg:hidden">
-        <div className="flex items-center justify-between gap-4 py-2 pl-6 pr-2">
+        <div className="flex items-center justify-between gap-4 py-2 ps-6 pe-2">
           <div className="min-w-0 leading-tight">{priceLine}</div>
           <Button onClick={() => setOpen(true)} variant="ink" size="md" className="shrink-0">
-            Book
+            {b.book}
           </Button>
         </div>
       </div>
 
       {open && (
-        <div className="fixed inset-0 z-50 lg:hidden" role="dialog" aria-modal="true" aria-label={`Book ${tour.title}`}>
+        <div className="fixed inset-0 z-50 lg:hidden" role="dialog" aria-modal="true" aria-label={b.bookTitle(tour.title)}>
           <button
             type="button"
-            aria-label="Close booking form"
+            aria-label={b.closeForm}
             className="absolute inset-0 bg-ink/60"
             onClick={() => setOpen(false)}
           />
           <div className="absolute inset-x-0 bottom-0 flex max-h-[92dvh] animate-[sheet-up_.25s_ease-out] flex-col rounded-t-[2rem] bg-white pb-[env(safe-area-inset-bottom)] shadow-2xl">
             <div className="flex items-center justify-between gap-3 border-b border-line px-5 py-4">
-              <h2 className="text-lg font-semibold leading-snug text-ink">Book this tour</h2>
+              <h2 className="text-lg font-semibold leading-snug text-ink">{b.sheetTitle}</h2>
               <button
                 type="button"
                 onClick={() => setOpen(false)}
-                aria-label="Close"
+                aria-label={b.closeSheet}
                 className="grid h-10 w-10 shrink-0 place-items-center rounded-full border border-line text-ink hover:border-ink"
               >
                 <X size={18} />
