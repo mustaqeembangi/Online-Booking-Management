@@ -170,7 +170,7 @@ export const TOURS: Tour[] = [
     title: "Red Dune Safari, Quad Bike, Camel Riding and BBQ Dinner",
     category: "desert-safari",
     image: img("red-dune-safari-quad-camel-bbq"),
-    photos: photos("red-dune-safari-quad-camel-bbq"),
+    photos: photos("red-dune-safari-quad-camel-bbq", 20),
     summary:
       "Escape Dubai and drive across the red Lahbab Desert in a 4x4. Enjoy the sunset, sandboarding and a camel ride, with a BBQ dinner at the camp on the 7-hour option.",
     price: { amount: 27, currency: "USD" },
@@ -205,7 +205,7 @@ export const TOURS: Tour[] = [
     title: "Safari, Quad Biking, Camel Ride and BBQ Buffet Dinner",
     category: "desert-safari",
     image: img("safari-quad-camel-bbq-buffet"),
-    photos: photos("safari-quad-camel-bbq-buffet"),
+    photos: photos("safari-quad-camel-bbq-buffet", 20),
     summary:
       "A desert adventure with dune bashing, sandboarding and camel rides. Choose quad biking, or a traditional camp evening with a BBQ buffet dinner and shows.",
     price: { amount: 27, currency: "USD" },
@@ -246,7 +246,7 @@ export const TOURS: Tour[] = [
     title: "Evening Tour with Quad Biking, Camel Riding and BBQ",
     category: "desert-safari",
     image: img("evening-tour-quad-camel-bbq"),
-    photos: photos("evening-tour-quad-camel-bbq"),
+    photos: photos("evening-tour-quad-camel-bbq", 26),
     summary:
       "A desert trip with a little of everything: dune bashing, a camel ride, sandboarding, quad biking and a BBQ dinner at the camp.",
     price: { amount: 27, currency: "USD" },
@@ -280,7 +280,7 @@ export const TOURS: Tour[] = [
     title: "Abu Dhabi Tour with Sheikh Zayed Mosque, from Dubai",
     category: "city-tours",
     image: img("abu-dhabi-tour-sheikh-zayed-mosque"),
-    photos: photos("abu-dhabi-tour-sheikh-zayed-mosque"),
+    photos: photos("abu-dhabi-tour-sheikh-zayed-mosque", 8),
     summary:
       "A full-day guided tour of Abu Dhabi from Dubai. Visit the Sheikh Zayed Grand Mosque, drive along the Corniche, explore the Heritage Village and see the city's landmarks.",
     price: { amount: 54, currency: "USD" },
@@ -324,7 +324,7 @@ export const TOURS: Tour[] = [
     title: "Abu Dhabi City Tour with Qasr Al Watan",
     category: "city-tours",
     image: img("abu-dhabi-city-tour-qasr-al-watan"),
-    photos: photos("abu-dhabi-city-tour-qasr-al-watan"),
+    photos: photos("abu-dhabi-city-tour-qasr-al-watan", 8),
     summary:
       "A full day in the UAE's capital: the Sheikh Zayed Grand Mosque, the Corniche, Emirates Palace and a visit inside the Qasr Al Watan palace.",
     price: { amount: 81, currency: "USD" },

@@ -15,7 +15,7 @@ export default function EveningSequence() {
   const chapters = [
     { title: "The drive", items: [inc[0], inc[1], inc[2]], image: `/images/tours/${SLUG}.jpg` },
     { title: "The dunes", items: [inc[3], inc[4], inc[5], inc[10]], image: "/images/tours/desert-safari-quad-camel-sandboarding.jpg" },
-    { title: "The evening", items: [camp[0], camp[1], camp[5], camp[6], camp[7]], image: "/images/tours/evening-tour-quad-camel-bbq-2.jpg" },
+    { title: "The camp", items: [camp[0], camp[1], camp[5], camp[6], camp[7]], image: `/images/tours/${SLUG}-12.jpg` },
   ];
   return (
     <Container as="section" className="section-y">

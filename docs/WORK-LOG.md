@@ -1,5 +1,13 @@
 # Work log
 
+## 2026-11-13: full GetYourGuide galleries for the other five tours
+
+**What changed:** the operator saved the other five GetYourGuide pages (.mht). Galleries found: Red Dune BBQ 25, Safari BBQ Buffet 24, Evening Tour 31, Abu Dhabi Sheikh Zayed 13, Qasr Al Watan 13. Curated to 20 / 20 / 26 / 8 / 8 (counts that fill the grid evenly; dropped near-duplicates, empty-sand shots and dune-buggy shots, which are not part of these tours). Home "chapters" third chapter is "The camp" again, with a real fire show photo. About hero uses the plain dunes photo (`red-dune-safari-quad-camel-bbq-20.jpg`).
+
+**Paths:** `public/images/tours/<slug>[-N].jpg`, `src/data/tours.ts` (`photos(slug, count)`), `src/components/home/EveningSequence.tsx`, `src/app/about/page.tsx`. Originals: `/home/dev/uploads/gyg-photos/<tour id>-gallery/`.
+
+**Checks run:** `tsc --noEmit`, `npm run lint`, `npm run build` passed; local screenshots of two tour galleries and the camp chapter checked; no broken images on home.
+
 ## 2026-11-13: full photo gallery for the Desert Safari, Quad Bike, Camel and Sandboarding tour
 
 **What changed:** the operator saved the GetYourGuide page from their own browser (.mht). It lists the tour's 15 gallery photos; 14 are used (main photo + a gallery grid on the tour page: one large photo, then a 3-column grid, 2 on phones). Originals (2560 px) in `/home/dev/uploads/gyg-photos/t74766-gallery/`. About page now uses photo 3 of that set.
@@ -8,7 +16,7 @@
 
 **Checks run:** `tsc --noEmit`, `npm run build` passed; desktop screenshot checked.
 
-**Delivery:** committed on `content/gyg-tours`; not live.
+**Delivery:** pushed to `main` (9e83ff1).
 
 ## 2026-11-13: tour page redesigned in GetYourGuide style
 
@@ -20,7 +28,7 @@
 
 **Checks run:** `tsc --noEmit`, `npm run lint`, `npm run build` passed; desktop and phone screenshots of the built pages checked.
 
-**Delivery:** committed on `content/gyg-tours` with the GetYourGuide-only cut-down; push to `main` waiting for the operator's explicit OK.
+**Delivery:** pushed to `main` (9e83ff1).
 
 ## 2026-11-13: site cut down to the six GetYourGuide tours
 
@@ -34,7 +42,7 @@
 
 **Checks run:** `tsc --noEmit`, `npm run lint`, `npm run build` passed. Production build served locally: home (desktop and phone), category tiles, about and tours list screenshots checked; an old tour URL returns 308 to `/tours`.
 
-**Delivery:** committed; push to `main` waiting for the operator's explicit OK (an automatic safety check stopped the first push).
+**Delivery:** pushed to `main` (9e83ff1) after the operator's explicit OK.
 
 ## 2026-11-13: GetYourGuide photos and full text for the six GetYourGuide tours
 

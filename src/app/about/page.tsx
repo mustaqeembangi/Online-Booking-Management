@@ -31,7 +31,7 @@ export default function AboutPage() {
     <>
       <section className="on-ink relative isolate flex min-h-[min(82svh,52rem)] items-end overflow-hidden bg-ink text-white">
         <Image
-          src="/images/tours/red-dune-safari-quad-camel-bbq-2.jpg"
+          src="/images/tours/red-dune-safari-quad-camel-bbq-20.jpg"
           alt="Red sand dunes of the desert near Dubai"
           fill
           priority
