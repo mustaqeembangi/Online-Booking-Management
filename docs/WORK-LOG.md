@@ -6,7 +6,7 @@
 
 **Checks run:** `npm run build` passed; each line on one row with no overflow at 320×568, 390×844, 768×1024, 1440×900, 1920×1080 and in Arabic; 12 pages × 8 sizes with no sideways scrolling.
 
-**Delivery:** committed on `content/gyg-tours` with the unpublished GetYourGuide-style tour pages; not pushed.
+**Delivery:** pushed to `main` (a353efb) with the GetYourGuide-style tour pages after the operator's OK; live checked.
 
 ## 2026-11-13: tour pages laid out like GetYourGuide (client request)
 
@@ -18,7 +18,7 @@
 
 **Checks run:** `tsc --noEmit`, eslint, `npm run build` passed; desktop, phone and Arabic screenshots; "View all" opens photo 1 of 20; See more expands; 12 pages × 8 sizes with no sideways scrolling or broken images.
 
-**Delivery:** committed on `content/gyg-tours` (c72fbde). Not pushed: the operator chose to keep it unpublished for now.
+**Delivery:** first kept unpublished at the operator's choice, then pushed to `main` with the new headline (a353efb).
 
 ## 2026-11-13: Arabic version of the whole site
 
