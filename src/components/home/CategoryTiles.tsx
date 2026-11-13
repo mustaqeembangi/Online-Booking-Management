@@ -12,7 +12,7 @@ export default function CategoryTiles() {
       <h2 className="display-xl reveal max-w-5xl">
         Pick your kind of <span className="accent-word text-brand-deep">day out</span>
       </h2>
-      <div className="mt-[clamp(2rem,5vw,5rem)] grid auto-rows-[clamp(15rem,22vw,27rem)] gap-[clamp(0.75rem,1.2vw,1.5rem)] sm:grid-cols-2 lg:grid-cols-12">
+      <div className="mt-[clamp(2rem,5vw,5rem)] grid auto-rows-[clamp(13rem,17vw,21rem)] gap-[clamp(0.75rem,1.2vw,1.5rem)] sm:grid-cols-2 lg:grid-cols-12">
         {CATEGORIES.map((c, i) => {
           const count = getToursByCategory(c.id).length;
           return (

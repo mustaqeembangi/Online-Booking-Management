@@ -38,13 +38,13 @@ export default function EveningSequence() {
             style={{ "--i": i } as React.CSSProperties}
             className="on-ink chapter grid overflow-hidden rounded-[var(--radius-card)] bg-ink text-white shadow-[0_-20px_40px_-24px_rgb(11_18_14/0.55)] ring-1 ring-white/15 ring-inset md:grid-cols-2"
           >
-            <div className="relative aspect-[16/10] md:order-2 md:aspect-auto md:min-h-[clamp(20rem,34vw,34rem)]">
+            <div className="relative aspect-[16/10] md:order-2 md:aspect-auto md:min-h-[clamp(16rem,26vw,26rem)]">
               <Image src={c.image} alt="" fill sizes="(min-width: 768px) 50vw, 100vw" className="object-cover" />
             </div>
-            <div className="flex flex-col justify-between gap-8 p-[clamp(1.5rem,3.5vw,4rem)]">
+            <div className="flex flex-col justify-between gap-6 p-[clamp(1.25rem,3vw,3rem)]">
               <div className="flex items-baseline gap-4">
                 <span className="accent-word text-[clamp(1.5rem,2.5vw,2.75rem)] text-brand">{i + 1}</span>
-                <h3 className="text-[clamp(2.25rem,5vw,5.5rem)] leading-none">{c.title}</h3>
+                <h3 className="text-[clamp(2rem,4vw,4.25rem)] leading-none">{c.title}</h3>
               </div>
               <ul className="space-y-2.5 text-[clamp(1.05rem,1.4vw,1.4rem)] leading-snug text-white/85">
                 {c.items.map((item) => (

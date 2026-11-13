@@ -67,7 +67,7 @@ p { text-wrap: pretty; }
   -webkit-backdrop-filter: blur(16px) saturate(160%);
 }
 @utility section-y {
-  padding-block: clamp(4.5rem, 9vw, 10rem);
+  padding-block: clamp(3rem, 6vw, 6.5rem);
 }
 @utility display-xl {
   font-size: clamp(2.75rem, 7vw, 8rem);
@@ -102,6 +102,7 @@ p { text-wrap: pretty; }
 }
 
 @media (prefers-reduced-motion: no-preference) {
+  html { scroll-behavior: smooth; }
   .hero-photo { animation: hero-drift 24s ease-out both; }
   .hero-in { animation: hero-in 0.9s cubic-bezier(0.2, 0.7, 0.2, 1) both; }
   .marquee-track { animation: marquee 48s linear infinite; }
@@ -151,10 +152,8 @@ p { text-wrap: pretty; }
   }
 }
 
-/* Tour pages already show a WhatsApp booking button in the side panel on wide screens. */
-@media (min-width: 1024px) {
-  body:has([data-booking-panel]) .whatsapp-fab { display: none; }
-}
+/* Tour pages have their own WhatsApp booking (side card on wide screens, Book bar on phones). */
+body:has([data-booking-panel]) .whatsapp-fab { display: none; }
 
 /* Decorative only, so it lives in CSS and is not part of the page text. */
 .footer-wordmark::before { content: "AMMAR TOURS"; }

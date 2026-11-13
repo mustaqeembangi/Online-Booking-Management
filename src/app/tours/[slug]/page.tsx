@@ -7,6 +7,7 @@ import Container from "@/components/ui/Container";
 import Button from "@/components/ui/Button";
 import TourCard from "@/components/tours/TourCard";
 import BookingPanel from "@/components/tours/BookingPanel";
+import Gallery from "@/components/tours/Gallery";
 import { CATEGORIES, TOURS, getTour } from "@/data/tours";
 import { SITE } from "@/data/site";
 import { whatsappLink } from "@/lib/whatsapp";
@@ -151,8 +152,8 @@ export default async function TourPage({
         }}
       />
       <section className="on-ink bg-ink text-white">
-        <div className="grid lg:min-h-[min(90svh,58rem)] lg:grid-cols-2">
-          <div className="relative aspect-[4/3] max-h-[72svh] w-full sm:aspect-[16/9] lg:order-2 lg:aspect-auto lg:max-h-none">
+        <div className="grid lg:min-h-[min(72svh,46rem)] lg:grid-cols-2">
+          <div className="relative aspect-[16/11] max-h-[60svh] w-full sm:aspect-[16/9] lg:order-2 lg:aspect-auto lg:max-h-none">
             <Image
               src={tour.image}
               alt={tour.title}
@@ -162,7 +163,7 @@ export default async function TourPage({
               className="object-cover"
             />
           </div>
-          <div className="flex flex-col justify-end px-[var(--gutter)] pb-[clamp(2.5rem,5vw,5rem)] pt-8 lg:pr-[clamp(2rem,4vw,5rem)] lg:pt-32">
+          <div className="flex flex-col justify-end px-[var(--gutter)] pb-[clamp(2rem,4vw,4rem)] pt-6 lg:pr-[clamp(2rem,4vw,5rem)] lg:pt-28">
             <nav aria-label="Breadcrumb" className="text-sm text-white/60">
               <Link href="/tours" className="hover:text-white">Tours</Link>
               {category && (
@@ -198,7 +199,7 @@ export default async function TourPage({
 
       <Container className="pb-32 lg:pb-[clamp(5rem,8vw,9rem)]">
         <div className="grid gap-10 lg:grid-cols-[minmax(0,1fr)_minmax(22rem,27rem)] lg:gap-[clamp(3rem,6vw,8rem)]">
-          <div className="min-w-0 pt-[clamp(2.5rem,5vw,5rem)]">
+          <div className="min-w-0 pt-[clamp(1.75rem,3.5vw,3.5rem)]">
             <ul className="grid grid-cols-2 gap-x-6 gap-y-5 border-b border-line pb-[clamp(1.75rem,3vw,2.5rem)] sm:grid-cols-4">
               {quick.map(({ icon: Icon, label, value }) => (
                 <li key={label} className="flex gap-3">
@@ -219,23 +220,8 @@ export default async function TourPage({
               )}
 
               {tour.photos && tour.photos.length > 1 && (
-                <div className="grid grid-cols-2 gap-[clamp(0.5rem,0.9vw,1rem)] pb-[clamp(1.75rem,3vw,2.5rem)] sm:grid-cols-3">
-                  {tour.photos.slice(1).map((src, i) => (
-                    <div
-                      key={src}
-                      className={`relative aspect-[3/2] overflow-hidden rounded-[var(--radius-card)] ${
-                        i === 0 ? "col-span-2 sm:col-span-3" : ""
-                      }`}
-                    >
-                      <Image
-                        src={src}
-                        alt={`${tour.title}, photo ${i + 2}`}
-                        fill
-                        sizes={i === 0 ? "(min-width: 1024px) 55vw, 100vw" : "(min-width: 1024px) 18vw, (min-width: 640px) 33vw, 50vw"}
-                        className="object-cover"
-                      />
-                    </div>
-                  ))}
+                <div className="pb-[clamp(1.75rem,3vw,2.5rem)]">
+                  <Gallery photos={tour.photos.slice(1)} title={tour.title} />
                 </div>
               )}
 
@@ -311,7 +297,7 @@ export default async function TourPage({
         </div>
 
         {related.length > 0 && (
-          <section className="mt-[clamp(4rem,8vw,8rem)]">
+          <section className="mt-[clamp(3rem,6vw,6rem)]">
             <h2 className="display-lg">
               {related.every((t) => t.category === tour.category) && category
                 ? `More ${category.name.toLowerCase()}`

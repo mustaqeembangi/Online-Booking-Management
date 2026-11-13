@@ -10,7 +10,7 @@ const STEPS = [
 
 export default function HowBooking() {
   const sample = bookingMessage({
-    tourTitle: "Evening Desert Safari",
+    tourTitle: "Red Dune Safari, Quad Bike, Camel Riding and BBQ Dinner",
     date: "Saturday, 12 December 2026",
     adults: 2,
     children: 1,
@@ -18,7 +18,7 @@ export default function HowBooking() {
     name: "Your name",
   });
   return (
-    <Container as="section" className="pb-[clamp(4.5rem,9vw,10rem)]">
+    <Container as="section" className="pb-[clamp(3rem,6vw,6.5rem)]">
       <div className="grid gap-[clamp(2.5rem,6vw,7rem)] lg:grid-cols-[1.15fr_1fr]">
         <div>
           <h2 className="display-xl reveal">
