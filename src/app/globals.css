@@ -122,6 +122,20 @@ p { text-wrap: pretty; }
 @keyframes reveal { from { opacity: 0; transform: translateY(36px); } to { opacity: 1; transform: none; } }
 @keyframes sheet-up { from { transform: translateY(100%); } to { transform: none; } }
 @keyframes fade-in { from { opacity: 0; } to { opacity: 1; } }
+@keyframes photo-in { from { opacity: 0; transform: scale(0.97); } to { opacity: 1; transform: none; } }
+@keyframes ken-burns { from { transform: scale(1.14) translate3d(1.5%, 1%, 0); } to { transform: scale(1) translate3d(0, 0, 0); } }
+
+/* Browsers without scroll-driven animations (Safari, Firefox): RevealOnScroll adds .io-reveal to <html>
+   and .is-in to each .reveal as it comes into view. Without JavaScript nothing is hidden. */
+@media (prefers-reduced-motion: no-preference) {
+  .io-reveal .reveal {
+    opacity: 0;
+    transform: translateY(32px);
+    transition: opacity 0.8s cubic-bezier(0.2, 0.7, 0.2, 1), transform 0.8s cubic-bezier(0.2, 0.7, 0.2, 1);
+  }
+  .io-reveal .reveal.is-in { opacity: 1; transform: none; }
+  .hero-slide-active { animation: ken-burns 9s ease-out both; }
+}
 
 /* react-day-picker theming */
 .rdp-root {

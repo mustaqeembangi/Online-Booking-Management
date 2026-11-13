@@ -6,6 +6,7 @@ import { HOME_DESCRIPTION } from "@/lib/seo";
 import Header from "@/components/layout/Header";
 import Footer from "@/components/layout/Footer";
 import WhatsAppFab from "@/components/layout/WhatsAppFab";
+import RevealOnScroll from "@/components/layout/RevealOnScroll";
 import SiteJsonLd from "@/components/info/SiteJsonLd";
 import "./globals.css";
 
@@ -60,6 +61,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <main id="main">{children}</main>
         <Footer />
         <WhatsAppFab />
+        <RevealOnScroll />
         <Analytics />
       </body>
     </html>

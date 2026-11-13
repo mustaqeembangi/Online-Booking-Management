@@ -1,4 +1,5 @@
 import Image from "next/image";
+import Link from "next/link";
 import { ArrowUpRight } from "lucide-react";
 import { getTour } from "@/data/tours";
 import Container from "@/components/ui/Container";
@@ -33,18 +34,22 @@ export default function EveningSequence() {
 
       <div className="mt-[clamp(2rem,5vw,5rem)] grid gap-[clamp(0.75rem,1.2vw,1.5rem)]">
         {chapters.map((c, i) => (
-          <article
+          <Link
             key={c.title}
+            href={`/tours/${tour.slug}`}
             style={{ "--i": i } as React.CSSProperties}
-            className="on-ink chapter grid overflow-hidden rounded-[var(--radius-card)] bg-ink text-white shadow-[0_-20px_40px_-24px_rgb(11_18_14/0.55)] ring-1 ring-white/15 ring-inset md:grid-cols-2"
+            className="on-ink chapter group grid overflow-hidden rounded-[var(--radius-card)] bg-ink text-white shadow-[0_-20px_40px_-24px_rgb(11_18_14/0.55)] ring-1 ring-white/15 ring-inset transition-transform duration-300 active:scale-[0.99] md:grid-cols-2"
           >
             <div className="relative aspect-[16/10] md:order-2 md:aspect-auto md:min-h-[clamp(16rem,26vw,26rem)]">
-              <Image src={c.image} alt="" fill sizes="(min-width: 768px) 50vw, 100vw" className="object-cover" />
+              <Image src={c.image} alt="" fill sizes="(min-width: 768px) 50vw, 100vw" className="object-cover transition-transform duration-700 ease-out group-hover:scale-105" />
             </div>
             <div className="flex flex-col justify-between gap-6 p-[clamp(1.25rem,3vw,3rem)]">
               <div className="flex items-baseline gap-4">
                 <span className="accent-word text-[clamp(1.5rem,2.5vw,2.75rem)] text-brand">{i + 1}</span>
                 <h3 className="text-[clamp(2rem,4vw,4.25rem)] leading-none">{c.title}</h3>
+                <span className="ml-auto grid h-11 w-11 shrink-0 place-items-center self-center rounded-full bg-white text-ink transition-[background-color,transform] duration-300 group-hover:rotate-45 group-hover:bg-brand">
+                  <ArrowUpRight size={20} aria-hidden />
+                </span>
               </div>
               <ul className="space-y-2.5 text-[clamp(1.05rem,1.4vw,1.4rem)] leading-snug text-white/85">
                 {c.items.map((item) => (
@@ -52,7 +57,7 @@ export default function EveningSequence() {
                 ))}
               </ul>
             </div>
-          </article>
+          </Link>
         ))}
       </div>
     </Container>

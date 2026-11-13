@@ -1,5 +1,6 @@
 import { pageMeta } from "@/lib/seo";
 import Image from "next/image";
+import { ArrowUpRight } from "lucide-react";
 import Link from "next/link";
 import Container from "@/components/ui/Container";
 import Button from "@/components/ui/Button";
@@ -21,6 +22,11 @@ const SERVICES = [
   "Airport meet and assist",
   "Multilingual guides",
 ];
+
+const SERVICE_LINKS: Record<string, string> = {
+  "Abu Dhabi city tours": "/tours?category=city-tours",
+  "Desert safari": "/tours?category=desert-safari",
+};
 
 const linkCls =
   "font-semibold text-brand-deep underline underline-offset-4 hover:text-ink";
@@ -60,26 +66,36 @@ export default function AboutPage() {
             </p>
           </div>
           <ul className="grid sm:grid-cols-2 sm:gap-x-8">
-            {SERVICES.map((s) => (
-              <li key={s} className="border-t border-line py-3.5 text-lg">
-                {s}
-              </li>
-            ))}
+            {SERVICES.map((s) => {
+              const href = SERVICE_LINKS[s];
+              return (
+                <li key={s} className="reveal border-t border-line py-3.5 text-lg">
+                  {href ? (
+                    <Link href={href} className="group inline-flex items-center gap-1.5 font-medium text-brand-deep underline decoration-line decoration-2 underline-offset-4 hover:decoration-brand">
+                      {s}
+                      <ArrowUpRight size={17} aria-hidden className="transition-transform duration-300 group-hover:-translate-y-0.5 group-hover:translate-x-0.5" />
+                    </Link>
+                  ) : (
+                    s
+                  )}
+                </li>
+              );
+            })}
           </ul>
         </div>
       </Container>
 
       <section className="on-ink bg-ink text-white">
         <div className="grid lg:grid-cols-2">
-          <div className="relative aspect-[4/3] lg:aspect-auto lg:min-h-[min(80svh,48rem)]">
+          <Link href="/tours?category=desert-safari" aria-label="See the desert safaris" className="group relative block aspect-[4/3] overflow-hidden lg:aspect-auto lg:min-h-[min(80svh,48rem)]">
             <Image
               src="/images/tours/desert-safari-quad-camel-sandboarding-3.jpg"
               alt="An Ammar Tours 4x4 and guests riding quad bikes in the dunes"
               fill
               sizes="(min-width: 1024px) 50vw, 100vw"
-              className="object-cover"
+              className="object-cover transition-transform duration-700 ease-out group-hover:scale-105"
             />
-          </div>
+          </Link>
           <div className="flex flex-col justify-center px-[var(--gutter)] py-[clamp(3rem,6vw,6rem)]">
             <h2 className="display-xl reveal">
               On the <span className="accent-word text-brand">dunes</span>

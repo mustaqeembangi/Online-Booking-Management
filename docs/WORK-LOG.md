@@ -1,5 +1,13 @@
 # Work log
 
+## 2026-11-13: clickable photos everywhere, hero slideshow, motion on every browser
+
+**What changed:** home hero is a crossfading slideshow of 5 GetYourGuide photos with a slow zoom (`src/components/home/HeroSlides.tsx`); each slide links to its tour, with progress bars to pick one; pauses on hover, in hidden tabs and for reduced motion. Tour pages: the main photo opens the full-screen viewer ("View all N photos"), the viewer has a thumbnail strip and preloads neighbours (`src/components/tours/Gallery.tsx`: `PhotoViewer`, `PhotoTrigger`, `GalleryGrid`). Route stops open Google Maps. Clickable now: home chapter cards (tour), booking steps (tours / WhatsApp), sample message (WhatsApp with that text), facts strip (GetYourGuide, tours, WhatsApp; pauses on hover), About dunes photo and matching services (category pages). Hover lift / press feedback on cards and tiles. Scroll-in animation now also on Safari and Firefox via `src/components/layout/RevealOnScroll.tsx` (IntersectionObserver fallback; nothing hidden without JavaScript); tour page sections and gallery photos animate in.
+
+**Why:** the operator asked for clickable photos and elements, more animation and fluid design, and a more beautiful hero.
+
+**Checks run:** `tsc --noEmit`, eslint and `npm run build` passed. Built site: slideshow advances (7 s) and a slide click opens its tour; tour main photo opens photo 1 of 26 and the left arrow wraps to 26; chapter card opens its tour; reveal fallback forced in Chromium revealed 13 of 13 sections while scrolling (WebKit not installed here, so Safari itself not tested); 6 pages × 8 sizes with no sideways scrolling or broken images; phone screenshots checked.
+
 ## 2026-11-13: less empty space, photo viewer, smoother feel
 
 **What changed:** section spacing cut from up to 10rem to 6.5rem; home contact band, "chapters" cards and category tiles made shorter (home at 1440 px: chapters 1943 → 1604 px, contact band 810 → 576 px). Tour header shorter on laptops, smaller photo on phones. Tour galleries are a 3-column grid on every screen and open a full-screen viewer (tap, swipe, arrow keys, Esc; `src/components/tours/Gallery.tsx`). Floating WhatsApp button hidden on tour pages (they have the Book bar / booking card), so it no longer covers text on phones. Smooth scrolling and photo hover zoom (off with reduced motion). The sample booking message names a current tour.

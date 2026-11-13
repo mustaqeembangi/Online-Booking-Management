@@ -2,12 +2,12 @@ import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { Car, Check, Clock, Languages, MessageCircle, Plus, Star, Wallet, X } from "lucide-react";
+import { ArrowUpRight, Car, Check, Clock, Languages, MessageCircle, Plus, Star, Wallet, X } from "lucide-react";
 import Container from "@/components/ui/Container";
 import Button from "@/components/ui/Button";
 import TourCard from "@/components/tours/TourCard";
 import BookingPanel from "@/components/tours/BookingPanel";
-import Gallery from "@/components/tours/Gallery";
+import { GalleryGrid, PhotoCount, PhotoTrigger, PhotoViewer } from "@/components/tours/Gallery";
 import { CATEGORIES, TOURS, getTour } from "@/data/tours";
 import { SITE } from "@/data/site";
 import { whatsappLink } from "@/lib/whatsapp";
@@ -59,7 +59,7 @@ function Bullets({ items, mark }: { items: string[]; mark: Mark }) {
 
 function Row({ title, children }: { title: string; children: React.ReactNode }) {
   return (
-    <section className="grid gap-4 border-t border-line py-[clamp(1.75rem,3vw,2.5rem)] first:border-t-0 first:pt-0 md:grid-cols-[minmax(9rem,12rem)_minmax(0,1fr)] md:gap-10">
+    <section className="reveal grid gap-4 border-t border-line py-[clamp(1.75rem,3vw,2.5rem)] first:border-t-0 first:pt-0 md:grid-cols-[minmax(9rem,12rem)_minmax(0,1fr)] md:gap-10">
       <h2 className="text-[1.35rem] font-semibold leading-tight tracking-[-0.01em]">{title}</h2>
       <div className="min-w-0">{children}</div>
     </section>
@@ -82,7 +82,19 @@ function Route({ stops }: { stops: string[] }) {
               aria-hidden
               className={`relative grid h-5 w-5 shrink-0 place-items-center rounded-full ${end ? "bg-ink" : "border-2 border-ink bg-white"}`}
             />
-            <span className={end ? "text-ink/60" : "font-medium"}>{s}</span>
+            {end ? (
+              <span className="text-ink/60">{s}</span>
+            ) : (
+              <a
+                href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(`${s}, Abu Dhabi`)}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="group inline-flex items-center gap-1.5 font-medium underline decoration-line decoration-2 underline-offset-4 transition-colors hover:text-brand-deep hover:decoration-brand"
+              >
+                {s}
+                <ArrowUpRight size={16} aria-hidden className="transition-transform duration-300 group-hover:-translate-y-0.5 group-hover:translate-x-0.5" />
+              </a>
+            )}
           </li>
         );
       })}
@@ -101,6 +113,7 @@ export default async function TourPage({
 
   const category = CATEGORIES.find((c) => c.id === tour.category);
 
+  const photos = tour.photos ?? [tour.image];
   const has = (re: RegExp) => tour.includes.some((i) => re.test(i));
   const quick = [
     tour.duration && { icon: Clock, label: "Duration", value: tour.duration },
@@ -144,7 +157,7 @@ export default async function TourPage({
   };
 
   return (
-    <>
+    <PhotoViewer photos={photos} title={tour.title}>
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{
@@ -154,14 +167,17 @@ export default async function TourPage({
       <section className="on-ink bg-ink text-white">
         <div className="grid lg:min-h-[min(72svh,46rem)] lg:grid-cols-2">
           <div className="relative aspect-[16/11] max-h-[60svh] w-full sm:aspect-[16/9] lg:order-2 lg:aspect-auto lg:max-h-none">
-            <Image
-              src={tour.image}
-              alt={tour.title}
-              fill
-              priority
-              sizes="(min-width: 1024px) 50vw, 100vw"
-              className="object-cover"
-            />
+            <PhotoTrigger index={0} label={`Open the ${photos.length} photos of this tour`} className="group absolute inset-0 overflow-hidden">
+              <Image
+                src={tour.image}
+                alt={tour.title}
+                fill
+                priority
+                sizes="(min-width: 1024px) 50vw, 100vw"
+                className="object-cover transition-transform duration-700 ease-out group-hover:scale-105"
+              />
+              {photos.length > 1 && <PhotoCount count={photos.length} />}
+            </PhotoTrigger>
           </div>
           <div className="flex flex-col justify-end px-[var(--gutter)] pb-[clamp(2rem,4vw,4rem)] pt-6 lg:pr-[clamp(2rem,4vw,5rem)] lg:pt-28">
             <nav aria-label="Breadcrumb" className="text-sm text-white/60">
@@ -200,7 +216,7 @@ export default async function TourPage({
       <Container className="pb-32 lg:pb-[clamp(5rem,8vw,9rem)]">
         <div className="grid gap-10 lg:grid-cols-[minmax(0,1fr)_minmax(22rem,27rem)] lg:gap-[clamp(3rem,6vw,8rem)]">
           <div className="min-w-0 pt-[clamp(1.75rem,3.5vw,3.5rem)]">
-            <ul className="grid grid-cols-2 gap-x-6 gap-y-5 border-b border-line pb-[clamp(1.75rem,3vw,2.5rem)] sm:grid-cols-4">
+            <ul className="reveal grid grid-cols-2 gap-x-6 gap-y-5 border-b border-line pb-[clamp(1.75rem,3vw,2.5rem)] sm:grid-cols-4">
               {quick.map(({ icon: Icon, label, value }) => (
                 <li key={label} className="flex gap-3">
                   <Icon size={22} className="mt-0.5 shrink-0 text-brand-deep" aria-hidden />
@@ -221,7 +237,7 @@ export default async function TourPage({
 
               {tour.photos && tour.photos.length > 1 && (
                 <div className="pb-[clamp(1.75rem,3vw,2.5rem)]">
-                  <Gallery photos={tour.photos.slice(1)} title={tour.title} />
+                  <GalleryGrid photos={tour.photos.slice(1)} offset={1} title={tour.title} />
                 </div>
               )}
 
@@ -311,6 +327,6 @@ export default async function TourPage({
           </section>
         )}
       </Container>
-    </>
+    </PhotoViewer>
   );
 }

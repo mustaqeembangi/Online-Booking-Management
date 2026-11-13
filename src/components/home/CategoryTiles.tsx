@@ -19,7 +19,7 @@ export default function CategoryTiles() {
             <Link
               key={c.id}
               href={`/tours?category=${c.id}`}
-              className={`reveal group relative isolate overflow-hidden rounded-[var(--radius-card)] bg-ink text-white ${layout[i]}`}
+              className={`reveal group relative isolate overflow-hidden rounded-[var(--radius-card)] bg-ink text-white transition-[box-shadow,scale] duration-500 ease-out hover:shadow-[0_30px_60px_-30px_rgb(11_18_14/0.6)] active:scale-[0.98] ${layout[i]}`}
             >
               <Image
                 src={c.image}

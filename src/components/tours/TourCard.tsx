@@ -7,7 +7,7 @@ export default function TourCard({ tour, className = "" }: { tour: Tour; classNa
   return (
     <Link
       href={`/tours/${tour.slug}`}
-      className={`group relative isolate block aspect-[4/5] overflow-hidden rounded-[var(--radius-card)] bg-ink text-white ${className}`}
+      className={`group relative isolate block aspect-[4/5] overflow-hidden rounded-[var(--radius-card)] bg-ink text-white transition-[translate,scale,box-shadow] duration-500 ease-out hover:-translate-y-1.5 hover:shadow-[0_30px_60px_-30px_rgb(11_18_14/0.6)] active:scale-[0.98] ${className}`}
     >
       <Image
         src={tour.image}
