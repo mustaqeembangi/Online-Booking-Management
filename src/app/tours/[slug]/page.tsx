@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { Check, MessageCircle, Star, X } from "lucide-react";
+import { Car, Check, Clock, Languages, MessageCircle, Plus, Star, Wallet, X } from "lucide-react";
 import Container from "@/components/ui/Container";
 import Button from "@/components/ui/Button";
 import TourCard from "@/components/tours/TourCard";
@@ -32,21 +32,60 @@ export async function generateMetadata({
   });
 }
 
-function List({ title, items, no = false }: { title: string; items: string[]; no?: boolean }) {
+type Mark = "yes" | "no" | "plus" | "dot";
+
+const MARKS: Record<Mark, React.ReactNode> = {
+  yes: <Check size={18} strokeWidth={2.75} className="text-brand-deep" />,
+  no: <X size={18} strokeWidth={2.75} className="text-dune" />,
+  plus: <Plus size={18} strokeWidth={2.75} className="text-brand-deep" />,
+  dot: <span className="h-1.5 w-1.5 rounded-full bg-ink" />,
+};
+
+function Bullets({ items, mark }: { items: string[]; mark: Mark }) {
   return (
-    <section className="mt-[clamp(2.5rem,5vw,4.5rem)] first:mt-0">
-      <h2 className="text-[clamp(1.75rem,3vw,3rem)] leading-none">{title}</h2>
-      <ul className="mt-5 grid gap-x-8 sm:grid-cols-2">
-        {items.map((i) => (
-          <li key={i} className="flex gap-3 border-t border-line py-3.5 text-[17px] leading-snug">
-            <span aria-hidden className="mt-0.5 grid h-5 w-5 shrink-0 place-items-center rounded-full bg-ink text-brand">
-              {no ? <X size={13} strokeWidth={3} /> : <Check size={13} strokeWidth={3} />}
-            </span>
-            <span>{i}</span>
-          </li>
-        ))}
-      </ul>
+    <ul className="grid gap-3">
+      {items.map((i) => (
+        <li key={i} className="flex gap-3 text-[17px] leading-snug">
+          <span aria-hidden className="grid h-6 w-5 shrink-0 place-items-center">
+            {MARKS[mark]}
+          </span>
+          <span>{i}</span>
+        </li>
+      ))}
+    </ul>
+  );
+}
+
+function Row({ title, children }: { title: string; children: React.ReactNode }) {
+  return (
+    <section className="grid gap-4 border-t border-line py-[clamp(1.75rem,3vw,2.5rem)] first:border-t-0 first:pt-0 md:grid-cols-[minmax(9rem,12rem)_minmax(0,1fr)] md:gap-10">
+      <h2 className="text-[1.35rem] font-semibold leading-tight tracking-[-0.01em]">{title}</h2>
+      <div className="min-w-0">{children}</div>
     </section>
+  );
+}
+
+function SubHead({ children }: { children: React.ReactNode }) {
+  return <h3 className="mb-3 mt-7 text-[15px] font-semibold uppercase tracking-[0.06em] text-ink/60 first:mt-0">{children}</h3>;
+}
+
+function Route({ stops }: { stops: string[] }) {
+  const all = ["Pickup in Dubai", ...stops, "Drop-off in Dubai"];
+  return (
+    <ol className="relative grid gap-5 before:absolute before:bottom-3 before:left-[9px] before:top-3 before:w-0.5 before:bg-line">
+      {all.map((s, i) => {
+        const end = i === 0 || i === all.length - 1;
+        return (
+          <li key={s} className="relative flex items-center gap-4 text-[17px]">
+            <span
+              aria-hidden
+              className={`relative grid h-5 w-5 shrink-0 place-items-center rounded-full ${end ? "bg-ink" : "border-2 border-ink bg-white"}`}
+            />
+            <span className={end ? "text-ink/60" : "font-medium"}>{s}</span>
+          </li>
+        );
+      })}
+    </ol>
   );
 }
 
@@ -60,13 +99,14 @@ export default async function TourPage({
   if (!tour) notFound();
 
   const category = CATEGORIES.find((c) => c.id === tour.category);
-  const facts = [
-    { label: "Duration", value: tour.duration },
-    { label: "Departs", value: tour.departs },
-    { label: "Returns", value: tour.returns },
-    { label: "Minimum guests", value: tour.minGuests ? String(tour.minGuests) : null },
-    { label: "Tour types", value: tour.types.length ? tour.types.join(" or ") : null },
-  ].filter((f): f is { label: string; value: string } => !!f.value);
+
+  const has = (re: RegExp) => tour.includes.some((i) => re.test(i));
+  const quick = [
+    tour.duration && { icon: Clock, label: "Duration", value: tour.duration },
+    has(/pick-?up/i) && { icon: Car, label: "Pickup", value: "From your hotel" },
+    has(/english/i) && { icon: Languages, label: "Guide", value: "English" },
+    { icon: Wallet, label: "Payment", value: "Nothing to pay online" },
+  ].filter((q): q is { icon: typeof Clock; label: string; value: string } => !!q);
 
   const related = [
     ...TOURS.filter((t) => t.category === tour.category && t.slug !== tour.slug),
@@ -152,16 +192,6 @@ export default async function TourPage({
             <p className="mt-4 max-w-2xl text-[clamp(1.05rem,1.4vw,1.35rem)] leading-snug text-white/85">
               {tour.summary}
             </p>
-            {facts.length > 0 && (
-              <dl className="mt-6 grid grid-cols-2 gap-x-6 gap-y-4 border-t border-white/15 pt-5 sm:grid-cols-3">
-                {facts.map((f) => (
-                  <div key={f.label}>
-                    <dt className="text-sm text-white/55">{f.label}</dt>
-                    <dd className="mt-0.5 font-medium">{f.value}</dd>
-                  </div>
-                ))}
-              </dl>
-            )}
           </div>
         </div>
       </section>
@@ -169,38 +199,82 @@ export default async function TourPage({
       <Container className="pb-32 lg:pb-[clamp(5rem,8vw,9rem)]">
         <div className="grid gap-10 lg:grid-cols-[minmax(0,1fr)_minmax(22rem,27rem)] lg:gap-[clamp(3rem,6vw,8rem)]">
           <div className="min-w-0 pt-[clamp(2.5rem,5vw,5rem)]">
-            {tour.highlights && <List title="Highlights" items={tour.highlights} />}
-            {tour.photos && tour.photos.length > 1 && (
-              <div className="mt-[clamp(2.5rem,5vw,4.5rem)] grid gap-[clamp(0.75rem,1.2vw,1.5rem)] first:mt-0">
-                {tour.photos.slice(1).map((src) => (
-                  <div key={src} className="relative aspect-[3/2] overflow-hidden rounded-[var(--radius-card)]">
-                    <Image
-                      src={src}
-                      alt={tour.title}
-                      fill
-                      sizes="(min-width: 1024px) 55vw, 100vw"
-                      className="object-cover"
-                    />
+            <ul className="grid grid-cols-2 gap-x-6 gap-y-5 border-b border-line pb-[clamp(1.75rem,3vw,2.5rem)] sm:grid-cols-4">
+              {quick.map(({ icon: Icon, label, value }) => (
+                <li key={label} className="flex gap-3">
+                  <Icon size={22} className="mt-0.5 shrink-0 text-brand-deep" aria-hidden />
+                  <div>
+                    <p className="text-sm text-ink/60">{label}</p>
+                    <p className="font-medium leading-snug">{value}</p>
                   </div>
-                ))}
-              </div>
-            )}
-            {tour.includes.length > 0 && <List title="What's included" items={tour.includes} />}
-            {tour.optionIncludes && (
-              <List title={tour.optionIncludes.title} items={tour.optionIncludes.items} />
-            )}
-            {tour.stops && <List title="Stops on the way" items={tour.stops} />}
-            {tour.notIncluded && <List title="Not included" items={tour.notIncluded} no />}
-            {tour.extras && tour.extras.length > 0 && (
-              <List title="Available at extra cost" items={tour.extras} />
-            )}
-            {tour.notes && tour.notes.length > 0 && (
-              <List title="Good to know" items={tour.notes} />
-            )}
-            {tour.notSuitableFor && (
-              <List title="Not suitable for" items={tour.notSuitableFor} no />
-            )}
-            {tour.whatToBring && <List title="What to bring" items={tour.whatToBring} />}
+                </li>
+              ))}
+            </ul>
+
+            <div className="pt-[clamp(1.75rem,3vw,2.5rem)]">
+              {tour.highlights && (
+                <Row title="Highlights">
+                  <Bullets items={tour.highlights} mark="yes" />
+                </Row>
+              )}
+
+              {tour.photos && tour.photos.length > 1 && (
+                <div className="grid gap-[clamp(0.75rem,1.2vw,1.5rem)] pb-[clamp(1.75rem,3vw,2.5rem)]">
+                  {tour.photos.slice(1).map((src) => (
+                    <div key={src} className="relative aspect-[3/2] overflow-hidden rounded-[var(--radius-card)]">
+                      <Image src={src} alt={tour.title} fill sizes="(min-width: 1024px) 55vw, 100vw" className="object-cover" />
+                    </div>
+                  ))}
+                </div>
+              )}
+
+              {tour.includes.length > 0 && (
+                <Row title="What's included">
+                  <Bullets items={tour.includes} mark="yes" />
+                  {tour.optionIncludes && (
+                    <>
+                      <SubHead>{tour.optionIncludes.title}</SubHead>
+                      <Bullets items={tour.optionIncludes.items} mark="plus" />
+                    </>
+                  )}
+                  {tour.notIncluded && (
+                    <>
+                      <SubHead>Not included</SubHead>
+                      <Bullets items={tour.notIncluded} mark="no" />
+                    </>
+                  )}
+                </Row>
+              )}
+
+              {tour.stops && (
+                <Row title="Route">
+                  <Route stops={tour.stops} />
+                </Row>
+              )}
+
+              {tour.notSuitableFor && (
+                <Row title="Not suitable for">
+                  <Bullets items={tour.notSuitableFor} mark="no" />
+                </Row>
+              )}
+
+              {(tour.whatToBring || tour.notes) && (
+                <Row title="Important information">
+                  {tour.whatToBring && (
+                    <>
+                      <SubHead>What to bring</SubHead>
+                      <Bullets items={tour.whatToBring} mark="yes" />
+                    </>
+                  )}
+                  {tour.notes && tour.notes.length > 0 && (
+                    <>
+                      <SubHead>Good to know</SubHead>
+                      <Bullets items={tour.notes} mark="dot" />
+                    </>
+                  )}
+                </Row>
+              )}
+            </div>
 
             {tour.includes.length === 0 && (
               <section className="on-ink mt-[clamp(2.5rem,5vw,4.5rem)] rounded-[var(--radius-card)] bg-ink p-[clamp(1.5rem,3vw,3rem)] text-white first:mt-0">
@@ -228,7 +302,7 @@ export default async function TourPage({
         {related.length > 0 && (
           <section className="mt-[clamp(4rem,8vw,8rem)]">
             <h2 className="display-lg">
-              {related.some((t) => t.category === tour.category) && category
+              {related.every((t) => t.category === tour.category) && category
                 ? `More ${category.name.toLowerCase()}`
                 : "You may also like"}
             </h2>

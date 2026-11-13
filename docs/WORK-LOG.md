@@ -1,5 +1,17 @@
 # Work log
 
+## 2026-11-13: tour page redesigned in GetYourGuide style
+
+**What changed:** tour pages now use GetYourGuide's layout: a key-facts row (duration, pickup, guide, payment) and topic rows with the title on the left: Highlights, What's included (with the 7-hour option and Not included inside it, tick / plus / cross marks), Route (Abu Dhabi tours, pickup to drop-off), Not suitable for, Important information (What to bring, Good to know). The duplicate duration line in the header was removed. "More …" heading only when every related tour shares the category.
+
+**Why:** the operator found the included / not included / avoid sections poorly designed and asked for the site to follow GetYourGuide.
+
+**Paths:** `src/app/tours/[slug]/page.tsx`.
+
+**Checks run:** `tsc --noEmit`, `npm run lint`, `npm run build` passed; desktop and phone screenshots of the built pages checked.
+
+**Delivery:** committed on `content/gyg-tours` with the GetYourGuide-only cut-down; push to `main` waiting for the operator's explicit OK.
+
 ## 2026-11-13: site cut down to the six GetYourGuide tours
 
 **What changed:** the 22 tours taken from the old ammartours.com were removed, with their photos; their URLs redirect (308) to `/tours`. Two categories remain: Desert safaris (4) and City tours (2). Home hero is now the GetYourGuide photo of an Ammar 4x4 with sandboarders ("Dunes. Desert. City."). The "chapters" section now uses the Red Dune Safari's GetYourGuide lists in three chapters (drive, dunes, evening). About page, contact band and share image use GetYourGuide photos. Dhow cruise and other removed tour wording taken out of titles, descriptions and the About services list (Musandam, Hatta, water sports, fishing, golf, scuba, helicopter, dhow cruise removed from it).
@@ -12,7 +24,7 @@
 
 **Checks run:** `tsc --noEmit`, `npm run lint`, `npm run build` passed. Production build served locally: home (desktop and phone), category tiles, about and tours list screenshots checked; an old tour URL returns 308 to `/tours`.
 
-**Delivery:** pushed to `main` on the operator's instruction (no preview); see the live check below in the status.
+**Delivery:** committed; push to `main` waiting for the operator's explicit OK (an automatic safety check stopped the first push).
 
 ## 2026-11-13: GetYourGuide photos and full text for the six GetYourGuide tours
 

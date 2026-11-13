@@ -2,7 +2,7 @@
 
 Updated 2026-11-13.
 
-**State:** live on `main` at https://travel.ammartours.com since 2026-11-13: the 2026 redesign, the SEO and share-image work, and only the six GetYourGuide tours (photos and full text from GetYourGuide). The 22 old tours were removed the same day and redirect to `/tours`.
+**State:** live on `main` at https://travel.ammartours.com since 2026-11-13: the 2026 redesign, the SEO and share-image work, and GetYourGuide photos and full text for the six GetYourGuide tours. Committed but NOT live: the 22 old tours removed (redirect to `/tours`), GetYourGuide photos across the site, and a GetYourGuide-style tour page; waiting for the operator's OK to push `content/gyg-tours` to `main`.
 
 **Needs the operator**
 - For more than two photos per tour, export them from the GetYourGuide supplier account (scrapers only reach the main photo).
