@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { MessageCircle, X } from "lucide-react";
+import { ArrowUpRight, MessageCircle, Plus, X } from "lucide-react";
 import Button from "@/components/ui/Button";
 import DatePicker from "@/components/ui/DatePicker";
 import Stepper from "@/components/ui/Stepper";
@@ -30,6 +30,7 @@ export default function BookingPanel({ tour }: { tour: Tour }) {
   const [pickup, setPickup] = useState("");
   const [name, setName] = useState("");
   const [note, setNote] = useState("");
+  const [showNote, setShowNote] = useState(false);
   const [errors, setErrors] = useState<Errors>({});
   const [sent, setSent] = useState(false);
   const [open, setOpen] = useState(false);
@@ -124,13 +125,13 @@ export default function BookingPanel({ tour }: { tour: Tour }) {
   );
 
   const form = (
-    <form onSubmit={submit} noValidate className="space-y-5">
+    <form onSubmit={submit} noValidate className="space-y-4">
       <div>
         <DatePicker label="Date" value={date} onChange={setDate} />
         {err(errors.date)}
       </div>
 
-      <div className="space-y-4">
+      <div className="space-y-3">
         <Stepper label="Adults" value={adults} min={1} onChange={setAdults} />
         <Stepper label="Children" value={children} min={0} onChange={setChildren} />
         {err(errors.guests)}
@@ -175,14 +176,25 @@ export default function BookingPanel({ tour }: { tour: Tour }) {
         />
         {err(errors.name)}
       </div>
-      <TextField
-        label="Note"
-        multiline
-        rows={2}
-        value={note}
-        onChange={setNote}
-        placeholder="Anything we should know"
-      />
+      {showNote ? (
+        <TextField
+          label="Note"
+          multiline
+          rows={2}
+          value={note}
+          onChange={setNote}
+          placeholder="Anything we should know"
+        />
+      ) : (
+        <button
+          type="button"
+          onClick={() => setShowNote(true)}
+          className="inline-flex items-center gap-1.5 text-sm font-semibold text-brand-deep underline decoration-2 underline-offset-4 hover:text-ink"
+        >
+          <Plus size={15} aria-hidden />
+          Add a note
+        </button>
+      )}
 
       <div className="border-t border-line pt-4">
         {estimateText ? (
@@ -200,7 +212,7 @@ export default function BookingPanel({ tour }: { tour: Tour }) {
         )}
         {estimateText && (
           <p className="mt-1 text-sm text-ink/60">
-            This is an estimate. We confirm the final price with you on WhatsApp.
+            An estimate. We confirm the final price on WhatsApp.
           </p>
         )}
       </div>
@@ -214,8 +226,22 @@ export default function BookingPanel({ tour }: { tour: Tour }) {
         Send booking on WhatsApp
       </Button>
       <p className="text-center text-sm text-ink/60">
-        Nothing is charged here. Our team confirms your booking with you on WhatsApp.
+        Nothing is charged here. We confirm on WhatsApp.
       </p>
+      {tour.gyg && (
+        <p className="text-center text-sm text-ink/60">
+          Prefer to pay online?{" "}
+          <a
+            href={tour.gyg.url}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="group inline-flex items-center gap-0.5 font-semibold text-ink underline decoration-brand decoration-2 underline-offset-4 hover:text-brand-deep"
+          >
+            Book on GetYourGuide
+            <ArrowUpRight size={15} aria-hidden className="transition-transform duration-300 group-hover:-translate-y-0.5 group-hover:translate-x-0.5" />
+          </a>
+        </p>
+      )}
       {sent && (
         <p role="status" className="text-center text-sm font-semibold text-brand-deep">
           WhatsApp should now be open in a new tab. If not, press the button again.
@@ -227,7 +253,7 @@ export default function BookingPanel({ tour }: { tour: Tour }) {
   return (
     <>
       {/* Desktop and iPad landscape: sticky card in the side column */}
-      <div className="sticky top-24 hidden max-h-[calc(100dvh-7rem)] overflow-y-auto rounded-[var(--radius-card)] border border-line bg-white p-[clamp(1.25rem,2vw,2rem)] shadow-[0_40px_80px_-40px_rgb(11_18_14/0.45)] lg:block">
+      <div className="sticky top-24 hidden max-h-[calc(100dvh-7rem)] overflow-y-auto rounded-[var(--radius-card)] border border-line bg-white p-[clamp(1.1rem,1.6vw,1.6rem)] shadow-[0_40px_80px_-40px_rgb(11_18_14/0.45)] lg:block">
         <div className="mb-5">{priceLine}</div>
         {form}
       </div>

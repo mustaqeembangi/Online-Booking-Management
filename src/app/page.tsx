@@ -6,6 +6,7 @@ import CategoryTiles from "@/components/home/CategoryTiles";
 import FeaturedTours from "@/components/home/FeaturedTours";
 import EveningSequence from "@/components/home/EveningSequence";
 import HowBooking from "@/components/home/HowBooking";
+import GuestReviews from "@/components/home/GuestReviews";
 import ContactBand from "@/components/home/ContactBand";
 
 export const metadata = pageMeta({
@@ -22,6 +23,7 @@ export default function HomePage() {
       <CategoryTiles />
       <FeaturedTours />
       <EveningSequence />
+      <GuestReviews />
       <HowBooking />
       <ContactBand />
     </>

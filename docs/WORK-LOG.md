@@ -1,5 +1,11 @@
 # Work log
 
+## 2026-11-13: real guest reviews and "Book on GetYourGuide"
+
+**What changed:** real GetYourGuide reviews (from the operator's saved pages) on each tour ("Guest reviews" row with a link to all reviews on that tour's GetYourGuide page) and a "What guests say" section on the home page (3 reviews, each linking to its tour). Data in `src/data/reviews.ts`; cards in `src/components/tours/ReviewCard.tsx` (long ones fold at 5 lines with Read more). Star counts per review are not shown: the saved pages draw every star the same, so a per-review rating could not be read. Left out: Slovenian-language, mixed, and Qasr Al Watan list reviews from 2023 that describe a Dubai tour (Zabeel Palace, Bastakiya); Qasr Al Watan shows its 2025 featured review, cut at a sentence. Each tour now has its GetYourGuide URL (`tour.gyg.url`): the header rating and a "Prefer to pay online? Book on GetYourGuide" line in the booking card / phone sheet link to it. Booking card made shorter (tighter spacing, note behind "Add a note") so it fits a 1440×900 screen.
+
+**Checks run:** `tsc --noEmit`, eslint, `npm run build` passed. Built site: reviews render on tour and home pages, Read more expands, GetYourGuide link present on desktop and in the phone sheet with the right URL; card height 729 px of 729 px available at 1440×900 (1280×800: 38 px scroll inside the card); 6 pages × 8 sizes with no sideways scrolling or broken images (a 320 px overflow from review cards was found and fixed).
+
 ## 2026-11-13: new Facebook link
 
 **What changed:** Facebook link set to https://www.facebook.com/profile.php?id=61595509272753 (operator supplied). One setting in `src/data/site.ts`, used by the contact page, footer and the site's structured data (`sameAs`).

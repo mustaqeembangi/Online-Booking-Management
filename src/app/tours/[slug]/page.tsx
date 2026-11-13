@@ -9,6 +9,8 @@ import TourCard from "@/components/tours/TourCard";
 import BookingPanel from "@/components/tours/BookingPanel";
 import { GalleryGrid, PhotoCount, PhotoTrigger, PhotoViewer } from "@/components/tours/Gallery";
 import { CATEGORIES, TOURS, getTour } from "@/data/tours";
+import { REVIEWS } from "@/data/reviews";
+import ReviewCard from "@/components/tours/ReviewCard";
 import { SITE } from "@/data/site";
 import { whatsappLink } from "@/lib/whatsapp";
 import { pageMeta, tourDescription, tourTitle } from "@/lib/seo";
@@ -114,6 +116,7 @@ export default async function TourPage({
   const category = CATEGORIES.find((c) => c.id === tour.category);
 
   const photos = tour.photos ?? [tour.image];
+  const reviews = REVIEWS[tour.slug] ?? [];
   const has = (re: RegExp) => tour.includes.some((i) => re.test(i));
   const quick = [
     tour.duration && { icon: Clock, label: "Duration", value: tour.duration },
@@ -196,7 +199,7 @@ export default async function TourPage({
             </h1>
             {tour.gyg && (
               <a
-                href={SITE.socials.getyourguide}
+                href={tour.gyg.url}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="mt-4 inline-flex items-center gap-2 text-[15px] text-white/80 hover:text-white"
@@ -262,6 +265,26 @@ export default async function TourPage({
               {tour.stops && (
                 <Row title="Route">
                   <Route stops={tour.stops} />
+                </Row>
+              )}
+
+              {reviews.length > 0 && tour.gyg && (
+                <Row title="Guest reviews">
+                  <div className="grid gap-[clamp(0.75rem,1.2vw,1.25rem)] sm:grid-cols-2">
+                    {reviews.map((r) => (
+                      <ReviewCard key={r.name + r.date} review={r} />
+                    ))}
+                  </div>
+                  <a
+                    href={tour.gyg.url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="group mt-5 inline-flex items-center gap-1.5 font-semibold text-brand-deep underline decoration-2 underline-offset-4 hover:text-ink"
+                  >
+                    <Star size={16} className="fill-brand text-brand" aria-hidden />
+                    Read all {tour.gyg.reviews.toLocaleString("en-US")} reviews on GetYourGuide
+                    <ArrowUpRight size={16} aria-hidden className="transition-transform duration-300 group-hover:-translate-y-0.5 group-hover:translate-x-0.5" />
+                  </a>
                 </Row>
               )}
 
