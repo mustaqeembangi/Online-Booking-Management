@@ -219,10 +219,21 @@ export default async function TourPage({
               )}
 
               {tour.photos && tour.photos.length > 1 && (
-                <div className="grid gap-[clamp(0.75rem,1.2vw,1.5rem)] pb-[clamp(1.75rem,3vw,2.5rem)]">
-                  {tour.photos.slice(1).map((src) => (
-                    <div key={src} className="relative aspect-[3/2] overflow-hidden rounded-[var(--radius-card)]">
-                      <Image src={src} alt={tour.title} fill sizes="(min-width: 1024px) 55vw, 100vw" className="object-cover" />
+                <div className="grid grid-cols-2 gap-[clamp(0.5rem,0.9vw,1rem)] pb-[clamp(1.75rem,3vw,2.5rem)] sm:grid-cols-3">
+                  {tour.photos.slice(1).map((src, i) => (
+                    <div
+                      key={src}
+                      className={`relative aspect-[3/2] overflow-hidden rounded-[var(--radius-card)] ${
+                        i === 0 ? "col-span-2 sm:col-span-3" : ""
+                      }`}
+                    >
+                      <Image
+                        src={src}
+                        alt={`${tour.title}, photo ${i + 2}`}
+                        fill
+                        sizes={i === 0 ? "(min-width: 1024px) 55vw, 100vw" : "(min-width: 1024px) 18vw, (min-width: 640px) 33vw, 50vw"}
+                        className="object-cover"
+                      />
                     </div>
                   ))}
                 </div>

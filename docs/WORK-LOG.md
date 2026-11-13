@@ -1,5 +1,15 @@
 # Work log
 
+## 2026-11-13: full photo gallery for the Desert Safari, Quad Bike, Camel and Sandboarding tour
+
+**What changed:** the operator saved the GetYourGuide page from their own browser (.mht). It lists the tour's 15 gallery photos; 14 are used (main photo + a gallery grid on the tour page: one large photo, then a 3-column grid, 2 on phones). Originals (2560 px) in `/home/dev/uploads/gyg-photos/t74766-gallery/`. About page now uses photo 3 of that set.
+
+**How:** read photo IDs from the saved page (`tour_img/<id>`), download `cdn.getyourguide.com/img/tour/<id>/80.jpg`. The same works for the other five tours once their pages are saved.
+
+**Checks run:** `tsc --noEmit`, `npm run build` passed; desktop screenshot checked.
+
+**Delivery:** committed on `content/gyg-tours`; not live.
+
 ## 2026-11-13: tour page redesigned in GetYourGuide style
 
 **What changed:** tour pages now use GetYourGuide's layout: a key-facts row (duration, pickup, guide, payment) and topic rows with the title on the left: Highlights, What's included (with the 7-hour option and Not included inside it, tick / plus / cross marks), Route (Abu Dhabi tours, pickup to drop-off), Not suitable for, Important information (What to bring, Good to know). The duplicate duration line in the header was removed. "More …" heading only when every related tour shares the category.

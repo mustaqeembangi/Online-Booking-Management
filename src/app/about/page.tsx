@@ -73,7 +73,7 @@ export default function AboutPage() {
         <div className="grid lg:grid-cols-2">
           <div className="relative aspect-[4/3] lg:aspect-auto lg:min-h-[min(80svh,48rem)]">
             <Image
-              src="/images/tours/desert-safari-quad-camel-sandboarding-2.jpg"
+              src="/images/tours/desert-safari-quad-camel-sandboarding-3.jpg"
               alt="An Ammar Tours 4x4 and guests riding quad bikes in the dunes"
               fill
               sizes="(min-width: 1024px) 50vw, 100vw"

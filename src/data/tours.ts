@@ -64,7 +64,10 @@ export const CATEGORIES: Category[] = [
   },
 ];
 
-const photos = (slug: string) => [img(slug), `/images/tours/${slug}-2.jpg`];
+const photos = (slug: string, count = 2) => [
+  img(slug),
+  ...Array.from({ length: count - 1 }, (_, i) => `/images/tours/${slug}-${i + 2}.jpg`),
+];
 
 // Shared by the three Ammar Tours red dune listings with a 4-hour and a 7-hour option (GetYourGuide, read 2026-11-13).
 const RED_DUNE_INCLUDES = [
@@ -117,7 +120,7 @@ export const TOURS: Tour[] = [
     title: "Desert Safari, Quad Bike, Camel Riding and Sandboarding",
     category: "desert-safari",
     image: img("desert-safari-quad-camel-sandboarding"),
-    photos: photos("desert-safari-quad-camel-sandboarding"),
+    photos: photos("desert-safari-quad-camel-sandboarding", 14),
     summary:
       "Experience the Lahbab Desert on a safari from Dubai, with thrilling dune bashing, camel riding, sandboarding and an optional quad bike ride.",
     price: { amount: 29, currency: "USD" },
