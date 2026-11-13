@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { Check, MessageCircle, Star } from "lucide-react";
+import { Check, MessageCircle, Star, X } from "lucide-react";
 import Container from "@/components/ui/Container";
 import Button from "@/components/ui/Button";
 import TourCard from "@/components/tours/TourCard";
@@ -32,7 +32,7 @@ export async function generateMetadata({
   });
 }
 
-function List({ title, items }: { title: string; items: string[] }) {
+function List({ title, items, no = false }: { title: string; items: string[]; no?: boolean }) {
   return (
     <section className="mt-[clamp(2.5rem,5vw,4.5rem)] first:mt-0">
       <h2 className="text-[clamp(1.75rem,3vw,3rem)] leading-none">{title}</h2>
@@ -40,7 +40,7 @@ function List({ title, items }: { title: string; items: string[] }) {
         {items.map((i) => (
           <li key={i} className="flex gap-3 border-t border-line py-3.5 text-[17px] leading-snug">
             <span aria-hidden className="mt-0.5 grid h-5 w-5 shrink-0 place-items-center rounded-full bg-ink text-brand">
-              <Check size={13} strokeWidth={3} />
+              {no ? <X size={13} strokeWidth={3} /> : <Check size={13} strokeWidth={3} />}
             </span>
             <span>{i}</span>
           </li>
@@ -88,7 +88,7 @@ export default async function TourPage({
     "@type": "TouristTrip",
     name: tour.title,
     description: tour.summary,
-    image: `${SITE.url}${tour.image}`,
+    image: (tour.photos ?? [tour.image]).map((src) => `${SITE.url}${src}`),
     url: `${SITE.url}/tours/${tour.slug}`,
     touristType: tour.types.length ? tour.types : undefined,
     provider: { "@type": "TravelAgency", name: SITE.name, url: SITE.url },
@@ -169,13 +169,38 @@ export default async function TourPage({
       <Container className="pb-32 lg:pb-[clamp(5rem,8vw,9rem)]">
         <div className="grid gap-10 lg:grid-cols-[minmax(0,1fr)_minmax(22rem,27rem)] lg:gap-[clamp(3rem,6vw,8rem)]">
           <div className="min-w-0 pt-[clamp(2.5rem,5vw,5rem)]">
+            {tour.highlights && <List title="Highlights" items={tour.highlights} />}
+            {tour.photos && tour.photos.length > 1 && (
+              <div className="mt-[clamp(2.5rem,5vw,4.5rem)] grid gap-[clamp(0.75rem,1.2vw,1.5rem)] first:mt-0">
+                {tour.photos.slice(1).map((src) => (
+                  <div key={src} className="relative aspect-[3/2] overflow-hidden rounded-[var(--radius-card)]">
+                    <Image
+                      src={src}
+                      alt={tour.title}
+                      fill
+                      sizes="(min-width: 1024px) 55vw, 100vw"
+                      className="object-cover"
+                    />
+                  </div>
+                ))}
+              </div>
+            )}
             {tour.includes.length > 0 && <List title="What's included" items={tour.includes} />}
+            {tour.optionIncludes && (
+              <List title={tour.optionIncludes.title} items={tour.optionIncludes.items} />
+            )}
+            {tour.stops && <List title="Stops on the way" items={tour.stops} />}
+            {tour.notIncluded && <List title="Not included" items={tour.notIncluded} no />}
             {tour.extras && tour.extras.length > 0 && (
               <List title="Available at extra cost" items={tour.extras} />
             )}
             {tour.notes && tour.notes.length > 0 && (
               <List title="Good to know" items={tour.notes} />
             )}
+            {tour.notSuitableFor && (
+              <List title="Not suitable for" items={tour.notSuitableFor} no />
+            )}
+            {tour.whatToBring && <List title="What to bring" items={tour.whatToBring} />}
 
             {tour.includes.length === 0 && (
               <section className="on-ink mt-[clamp(2.5rem,5vw,4.5rem)] rounded-[var(--radius-card)] bg-ink p-[clamp(1.5rem,3vw,3rem)] text-white first:mt-0">

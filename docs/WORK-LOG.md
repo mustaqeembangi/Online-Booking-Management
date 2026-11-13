@@ -1,5 +1,17 @@
 # Work log
 
+## 2026-11-13: GetYourGuide photos and full text for the six GetYourGuide tours
+
+**What changed:** each of the six tours now has its own two GetYourGuide photos (2560 px originals, saved at 1920 px) and the full GetYourGuide text: highlights, what's included, what the 7-hour option adds, stops (Abu Dhabi tours), not included, good to know, not suitable for, what to bring. Review counts updated. GetYourGuide filler lines ("Guide 5.0/5", guide-marketing blurbs) and a desert-sunset line wrongly on an Abu Dhabi listing were left out. Qasr Al Watan lists exist only in Spanish on GetYourGuide and were translated.
+
+**How the content was fetched:** GetYourGuide refuses direct requests (403). Apify actors with the Social Hub key (`SCRPR_APIFY_TOKEN`): `scrapesage/getyourguide-scraper` for text, `memo23/tours-activities-scraper` for a second photo. Neither returns the full gallery; generic crawlers were blocked. About $0.36 spent. Raw data and originals in `/home/dev/uploads/gyg-photos/` (not in the repo). CDN size `/80.jpg` = 2560x1707.
+
+**Paths:** `src/data/tours.ts` (new optional fields `photos`, `highlights`, `optionIncludes`, `stops`, `notIncluded`, `notSuitableFor`, `whatToBring`), `src/app/tours/[slug]/page.tsx`, `public/images/tours/<slug>.jpg` and `<slug>-2.jpg`.
+
+**Checks run:** `tsc --noEmit` and eslint on the changed files passed. Dev server on 5181: all six tour pages, one other tour and home return 200; desktop and phone screenshots checked.
+
+**Delivery:** committed on `content/gyg-tours` (on top of the unpushed `seo/optimizations`). Not pushed or deployed; waiting for the operator's OK on the preview.
+
 ## 2026-11-09: SEO, share images and small optimisations
 
 **What changed:** site address corrected to `travel.ammartours.com` everywhere Google and link previews read it (it pointed at the old `ammartours.com`). New page titles and descriptions, category pages in the sitemap, breadcrumb and website structured data. Generated JPEG share images for the site and each tour, new site icons and web manifest. Security headers, image caching, AVIF, smaller logo, skip link.
