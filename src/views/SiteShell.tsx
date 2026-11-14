@@ -1,23 +1,17 @@
 import type { Viewport } from "next";
-import { Cairo, Funnel_Display, Geist, IBM_Plex_Sans_Arabic, Instrument_Serif } from "next/font/google";
+import { Cairo, Geist, IBM_Plex_Sans_Arabic, Poppins } from "next/font/google";
 import { Analytics } from "@vercel/analytics/next";
 import Header from "@/components/layout/Header";
 import Footer from "@/components/layout/Footer";
 import WhatsAppFab from "@/components/layout/WhatsAppFab";
+import BottomNav from "@/components/layout/BottomNav";
 import RevealOnScroll from "@/components/layout/RevealOnScroll";
 import SiteJsonLd from "@/components/info/SiteJsonLd";
 import { UI, dir, type Lang } from "@/i18n";
 import "@/app/globals.css";
 
-const funnel = Funnel_Display({ subsets: ["latin"], variable: "--font-funnel", display: "swap" });
+const poppins = Poppins({ subsets: ["latin"], weight: ["500", "600", "700", "800"], variable: "--font-poppins", display: "swap" });
 const geist = Geist({ subsets: ["latin"], variable: "--font-geist", display: "swap" });
-const serifAccent = Instrument_Serif({
-  subsets: ["latin"],
-  weight: "400",
-  style: "italic",
-  variable: "--font-serif-accent",
-  display: "swap",
-});
 // Arabic: Cairo for headings, IBM Plex Sans Arabic for text. Only loaded on /ar pages.
 const cairo = Cairo({ subsets: ["arabic", "latin"], variable: "--font-cairo", display: "swap", preload: false });
 const plexArabic = IBM_Plex_Sans_Arabic({
@@ -36,7 +30,7 @@ export const viewport: Viewport = {
 };
 
 export default function SiteShell({ lang, children }: { lang: Lang; children: React.ReactNode }) {
-  const fonts = [funnel.variable, geist.variable, serifAccent.variable];
+  const fonts = [poppins.variable, geist.variable];
   if (lang === "ar") fonts.push(cairo.variable, plexArabic.variable);
   return (
     <html lang={lang} dir={dir(lang)} className={fonts.join(" ")}>
@@ -52,6 +46,7 @@ export default function SiteShell({ lang, children }: { lang: Lang; children: Re
         <main id="main">{children}</main>
         <Footer lang={lang} />
         <WhatsAppFab lang={lang} />
+        <BottomNav lang={lang} />
         <RevealOnScroll />
         <Analytics />
       </body>

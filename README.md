@@ -9,9 +9,9 @@ Tour website for Ammar Tours, Dubai. Static Next.js site, deployed by Vercel fro
 - `src/data/reviews.ts`: real GetYourGuide reviews shown on tour pages and the home page.
 - `src/data/site.ts`: phone, WhatsApp, email, address and social links.
 - `src/i18n`: languages. `ui.ts` holds every interface text in English and Arabic; `lp(lang, path)` makes links (`/tours` or `/ar/tours`).
-- `src/views`: the pages themselves (home, tours, tour detail, about, contact, not found) and `SiteShell` (html, fonts, header, footer). Each takes `lang`.
+- `src/views`: the pages themselves (home, tours, tour detail, gallery, reviews, about, contact, not found) and `SiteShell` (html, fonts, header, footer). Each takes `lang`.
 - `src/app/(en)` and `src/app/(ar)/ar`: thin route files for English (`/`) and Arabic (`/ar`), each group with its own root layout. Sitemap, robots, icons and share images stay in `src/app`.
-- `src/components`: `ui` controls, `layout` header and footer, `home`, `tours` (card, booking panel, gallery, reviews), `info`.
+- `src/components`: `ui` controls, `layout` (top bar + header, footer, phone bottom bar, WhatsApp pill), `classic` (home and inner-page sections in the client's classic tour-company style: page banner, popular tours, trust strip, about + testimonials, booking banner), `home` (hero with search box), `tours` (card, booking panel, gallery, reviews), `info`.
 - `src/lib/whatsapp.ts`: builds WhatsApp links and booking messages (Arabic messages show both tour names). `src/lib/seo.ts`: titles, descriptions, canonical and hreflang.
 - `public/images`: logo and tour photos.
 

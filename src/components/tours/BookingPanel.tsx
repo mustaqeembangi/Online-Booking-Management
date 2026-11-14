@@ -7,7 +7,7 @@ import DatePicker from "@/components/ui/DatePicker";
 import Stepper from "@/components/ui/Stepper";
 import Select from "@/components/ui/Select";
 import TextField from "@/components/ui/TextField";
-import { formatPrice, type Tour } from "@/data/tours";
+import { aed, formatPrice, type Tour } from "@/data/tours";
 import { bookingMessage, bookingTourTitle, whatsappLink } from "@/lib/whatsapp";
 import { UI, type Lang } from "@/i18n";
 
@@ -44,8 +44,27 @@ export default function BookingPanel({ tour, lang }: { tour: Tour; lang: Lang })
   const estimate = price
     ? price.amount * adults + (price.childAmount ?? price.amount) * children
     : null;
+  // Shown in dirhams with the dollar amount after it: "AED 198 (~$54)".
   const estimateText =
-    price && estimate !== null ? formatPrice({ ...price, amount: estimate }) : null;
+    price && estimate !== null
+      ? `${aed({ ...price, amount: estimate })}${price.currency === "USD" ? ` (~${formatPrice({ ...price, amount: estimate })})` : ""}`
+      : null;
+
+  // Date and guests chosen in the home page search box arrive as ?date=YYYY-MM-DD&adults=N.
+  useEffect(() => {
+    const q = new URLSearchParams(window.location.search);
+    const n = Number(q.get("adults"));
+    // Read once after hydration; reading the URL during render would differ from the static HTML.
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+    if (n >= 1 && n <= 99) setAdults(n);
+    const m = /^(\d{4})-(\d{2})-(\d{2})$/.exec(q.get("date") ?? "");
+    if (m) {
+      const d = new Date(Number(m[1]), Number(m[2]) - 1, Number(m[3]));
+      const today = new Date();
+      today.setHours(0, 0, 0, 0);
+      if (d >= today) setDate(d);
+    }
+  }, []);
 
   // Keep the WhatsApp button clear of the bottom bar on phones.
   useEffect(() => {
@@ -120,11 +139,10 @@ export default function BookingPanel({ tour, lang }: { tour: Tour; lang: Lang })
   const priceLine = price ? (
     <>
       <span className="text-sm text-ink/60">{price.unit ? "" : `${p.from} `}</span>
-      <span className="font-display text-2xl font-semibold text-dune">
-        {formatPrice(price)}
-      </span>
+      <span className="whitespace-nowrap font-display text-2xl font-bold text-forest">{aed(price)}</span>
       <span className="text-sm text-ink/60">
         {price.unit ? ` ${price.unit}` : ` ${UI[lang].tour.perPerson}`}
+        {price.currency === "USD" && <span className="ms-1 text-ink/45">{UI[lang].classic.approx(formatPrice(price))}</span>}
       </span>
     </>
   ) : (
@@ -208,7 +226,7 @@ export default function BookingPanel({ tour, lang }: { tour: Tour; lang: Lang })
         {estimateText ? (
           <div className="flex items-baseline justify-between gap-3">
             <span className="text-[15px] text-ink/70">{b.estimate}</span>
-            <span className="font-display text-2xl font-semibold text-dune">
+            <span className="font-display text-xl font-bold text-forest">
               {estimateText}
             </span>
           </div>
@@ -261,13 +279,13 @@ export default function BookingPanel({ tour, lang }: { tour: Tour; lang: Lang })
   return (
     <>
       {/* Desktop and iPad landscape: sticky card in the side column */}
-      <div className="sticky top-24 hidden max-h-[calc(100dvh-7rem)] overflow-y-auto rounded-[var(--radius-card)] border border-line bg-white p-[clamp(1.1rem,1.6vw,1.6rem)] shadow-[0_40px_80px_-40px_rgb(11_18_14/0.45)] lg:block">
+      <div className="sticky top-32 hidden max-h-[calc(100dvh-9rem)] overflow-y-auto rounded-[var(--radius-card)] border border-line bg-white p-[clamp(1.1rem,1.6vw,1.6rem)] shadow-[0_40px_80px_-40px_rgb(11_18_14/0.45)] lg:block">
         <div className="mb-5">{priceLine}</div>
         {form}
       </div>
 
       {/* Phones and iPad portrait: sticky bottom bar */}
-      <div className="fixed inset-x-3 bottom-[max(0.75rem,env(safe-area-inset-bottom))] z-40 rounded-full border border-white/70 bg-white/90 shadow-[0_16px_40px_-16px_rgb(11_18_14/0.5)] backdrop-blur-xl lg:hidden">
+      <div className="fixed inset-x-3 bottom-[calc(4.4rem+env(safe-area-inset-bottom))] z-40 rounded-full border border-white/70 bg-white/90 shadow-[0_16px_40px_-16px_rgb(11_18_14/0.5)] backdrop-blur-xl lg:hidden">
         <div className="flex items-center justify-between gap-4 py-2 ps-6 pe-2">
           <div className="min-w-0 leading-tight">{priceLine}</div>
           <Button onClick={() => setOpen(true)} variant="ink" size="md" className="shrink-0">

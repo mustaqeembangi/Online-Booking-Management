@@ -1,13 +1,18 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import Container from "@/components/ui/Container";
+import { ArrowRight, Building2, Compass, Sun } from "lucide-react";
 import TourCard from "@/components/tours/TourCard";
+import PageBanner from "@/components/classic/PageBanner";
+import CtaBanner from "@/components/classic/CtaBanner";
+import TrustStrip from "@/components/classic/TrustStrip";
 import { getCategories, getTours, type CategoryId } from "@/data/tours";
-import { UI, lp, type Lang } from "@/i18n";
 import { SITE } from "@/data/site";
 import { pageMeta } from "@/lib/seo";
+import { UI, lp, type Lang } from "@/i18n";
 
 export type SearchParams = Promise<{ [key: string]: string | string[] | undefined }>;
+
+const ICON: Record<CategoryId, typeof Sun> = { "desert-safari": Sun, "city-tours": Building2 };
 
 const activeCategory = async (searchParams: SearchParams, lang: Lang) => {
   const sp = await searchParams;
@@ -26,75 +31,98 @@ export async function toursMeta(searchParams: SearchParams, lang: Lang): Promise
       lang,
     });
   }
-  return pageMeta({
-    title: t.metaTitle,
-    description: t.metaDescription(getTours(lang).length, SITE.name),
-    path: "/tours",
-    lang,
-  });
+  return pageMeta({ title: t.metaTitle, description: t.metaDescription(getTours(lang).length, SITE.name), path: "/tours", lang });
 }
 
 export default async function ToursView({ searchParams, lang }: { searchParams: SearchParams; lang: Lang }) {
+  const c = UI[lang].classic;
   const t = UI[lang].toursPage;
-  const CATEGORIES = getCategories(lang);
-  const TOURS = getTours(lang);
+  const categories = getCategories(lang);
+  const tours = getTours(lang);
   const active = await activeCategory(searchParams, lang);
+  const shown = active ? categories.filter((x) => x.id === active.id) : categories;
 
-  const list = active ? TOURS.filter((x) => x.category === active.id) : TOURS;
-  // Tours with a GetYourGuide rating first, then the rest in the order of the data.
-  const sorted = [...list].sort((a, b) => Number(!!b.gyg) - Number(!!a.gyg));
-
-  const chip = (isActive: boolean) =>
-    `inline-flex h-11 shrink-0 items-center whitespace-nowrap rounded-full px-5 text-[15px] font-medium transition-colors ${
-      isActive ? "bg-ink text-white" : "text-ink hover:bg-ink/10"
+  const tab = (on: boolean) =>
+    `group flex min-w-[7.5rem] flex-1 flex-col items-center gap-2 rounded-2xl border px-4 py-4 text-center text-[15px] font-semibold transition-[background-color,color,translate,box-shadow] duration-300 hover:-translate-y-0.5 sm:flex-none ${
+      on
+        ? "border-green bg-green text-white shadow-[0_14px_28px_-14px_rgb(31_138_60/0.9)]"
+        : "border-line bg-white text-ink shadow-[0_10px_24px_-18px_rgb(11_18_14/0.5)] hover:border-green"
     }`;
 
   return (
     <>
-      <section className="on-ink bg-ink pb-[clamp(2.5rem,5vw,5rem)] pt-[clamp(8rem,14vw,14rem)] text-white">
-        <Container>
-          <h1 className="hero-title">
-            {active ? active.name : (<>{t.titleAll[0]} <span className="accent-word text-brand">{t.titleAll[1]}</span></>)}
-          </h1>
-          <p className="mt-5 max-w-2xl text-[clamp(1.05rem,1.4vw,1.35rem)] text-white/75">
-            {active
-              ? active.blurb
-              : t.intro}
-          </p>
-        </Container>
-      </section>
+      <PageBanner
+        lang={lang}
+        title={c.toursBannerTitle}
+        sub={c.toursBannerSub}
+        image="/images/tours/red-dune-safari-quad-camel-bbq.jpg"
+        crumb={active ? active.name : c.toursBannerTitle}
+      />
 
-      <Container className="pb-[clamp(4rem,8vw,8rem)]">
-        <nav
-          aria-label={t.filter}
-          className="sticky top-[5.5rem] z-20 -mt-[1.75rem] flex w-fit max-w-full gap-1 overflow-x-auto rounded-full border border-line bg-white/90 p-1 shadow-[0_16px_40px_-20px_rgb(11_18_14/0.45)] backdrop-blur-xl no-scrollbar"
-        >
-          <Link href={lp(lang, "/tours")} scroll={false} aria-current={!active ? "page" : undefined} className={chip(!active)}>
-            {t.all}
+      <div className="mx-auto max-w-[1240px] px-[var(--gutter)] xl:px-6">
+        <nav aria-label={t.filter} className="no-scrollbar -mt-6 flex gap-3 overflow-x-auto pb-2 pt-1 sm:overflow-visible">
+          <Link href={lp(lang, "/tours")} scroll={false} aria-current={!active ? "page" : undefined} className={tab(!active)}>
+            <Compass size={34} strokeWidth={1.6} aria-hidden className={!active ? "text-white" : "text-green"} />
+            {c.allTours}
           </Link>
-          {CATEGORIES.map((c) => (
-            <Link
-              key={c.id}
-              href={lp(lang, `/tours?category=${c.id satisfies CategoryId}`)}
-              scroll={false}
-              aria-current={active?.id === c.id ? "page" : undefined}
-              className={chip(active?.id === c.id)}
-            >
-              {c.name}
-            </Link>
-          ))}
+          {categories.map((cat) => {
+            const Icon = ICON[cat.id];
+            const on = active?.id === cat.id;
+            return (
+              <Link
+                key={cat.id}
+                href={lp(lang, `/tours?category=${cat.id}`)}
+                scroll={false}
+                aria-current={on ? "page" : undefined}
+                className={tab(on)}
+              >
+                <Icon size={34} strokeWidth={1.6} aria-hidden className={on ? "text-white" : "text-green"} />
+                {cat.name}
+              </Link>
+            );
+          })}
         </nav>
 
-        <p className="mt-8 text-sm text-ink/60" aria-live="polite">
-          {t.count(sorted.length)}
-        </p>
+        {shown.map((cat, i) => {
+          const Icon = ICON[cat.id];
+          const intro = c.categoryIntro[cat.id];
+          const list = tours.filter((x) => x.category === cat.id);
+          return (
+            <section
+              key={cat.id}
+              className={`py-[clamp(2rem,4vw,3rem)] ${i > 0 ? "border-t border-line" : ""}`}
+            >
+              <div className="reveal mb-6 flex flex-wrap items-center gap-x-5 gap-y-3">
+                <span className="grid h-16 w-16 shrink-0 place-items-center rounded-full bg-gold text-forest">
+                  <Icon size={32} strokeWidth={1.7} aria-hidden />
+                </span>
+                <div className="min-w-0 flex-1">
+                  <h2 className="text-[clamp(1.4rem,2.4vw,1.9rem)] leading-tight text-forest">{intro.title}</h2>
+                  <p className="mt-1 text-ink/70">{intro.text}</p>
+                </div>
+                {!active && (
+                  <Link
+                    href={lp(lang, `/tours?category=${cat.id}`)}
+                    scroll={false}
+                    className="inline-flex shrink-0 items-center gap-1.5 rounded-full border-2 border-green px-4 py-1.5 text-sm font-semibold text-green transition-colors hover:bg-green hover:text-white"
+                  >
+                    {intro.all}
+                    <ArrowRight size={15} aria-hidden />
+                  </Link>
+                )}
+              </div>
+              <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+                {list.map((x) => (
+                  <TourCard key={x.slug} tour={x} lang={lang} className="reveal" />
+                ))}
+              </div>
+            </section>
+          );
+        })}
+      </div>
 
-        <div className="mt-4 grid grid-cols-[repeat(auto-fill,minmax(min(100%,19rem),1fr))] gap-[clamp(0.75rem,1.2vw,1.5rem)]">
-          {sorted.map((x) => (
-            <TourCard key={x.slug} tour={x} lang={lang} />
-          ))}
-        </div>
-      </Container>
+      <CtaBanner lang={lang} />
+      <TrustStrip lang={lang} tone="white" />
     </>
   );
 }

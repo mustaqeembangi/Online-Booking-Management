@@ -1,5 +1,15 @@
 # Work log
 
+## 2026-11-14: classic tour-company redesign (client rejected the editorial look)
+
+**Why:** the client rejected the design and sent an AI mock-up plus https://oceanairtravels.com/ as references: a conventional Dubai tour-operator site. Operator decisions: keep only the 6 GetYourGuide tours; show prices as AED with dollars ("AED 99 ~$27", fixed 3.6725 rate); add Gallery and Reviews pages; no preference on marketing claims, so only verifiable ones are shown (4.9 on GetYourGuide, 24/7 support, hotel pickup, 113,000+ reviews). "Best Price Guarantee" and "Free cancellation" left out until confirmed.
+
+**What changed:** Poppins headings, forest green #0b3b2c / green #1f8a3c / gold #f5a623. Sticky header: dark-green top bar (location, phone, email, About, Contact, language) + white bar (logo, Home, Tours ▾, Experiences ▾, About Us, Gallery, Reviews, green Book Now). Home: photo hero "Discover Dubai with Ammar Tours", activity chips, search box (tour, date, guests → opens the tour with date/guests filled into the booking form), Our Popular Tours cards (photo, title, tags, duration, rating, AED price, Book Now), green trust strip, About + testimonials slider (real reviews), "Ready for Your Dubai Adventure?" banner, classic footer. Tours page: photo banner with breadcrumb, icon category tabs, a section per category. New /gallery (all tour photos, one viewer) and /reviews (overall score, per-tour ratings, all reviews). About/Contact use the photo banner. Phones: fixed bottom bar (Home, Tours, Call, WhatsApp); desktop: "Chat with us" pill. Tour detail keeps the GetYourGuide layout with AED prices. Old editorial home sections removed. Arabic for all new text.
+
+**Checks run:** `tsc --noEmit`, eslint, `npm run build` passed. Built site: desktop, phone and Arabic screenshots; home search opened `/tours/red-dune-safari-quad-camel-bbq?adults=2&date=2026-11-18` with the date filled in; 15 pages (EN + AR, incl. gallery and reviews) × 8 sizes with no sideways scrolling or broken images.
+
+**Delivery:** committed on `redesign/classic`; not pushed (waiting for the operator / client OK).
+
 ## 2026-11-13: new home headline
 
 **What changed:** home hero headline is now four lines: "Desert Safari / Quad Biking / Dune Buggy / City Tours" (last line in the green accent), Arabic "سفاري الصحراء / الدراجات الرباعية / الدون باجي / جولات المدن". Smaller headline size (`.hero-title-list`) so each line stays on one row; slideshow bars hidden on screens under 640 px tall, where they touched the headline. Note: no tour on the site offers a dune buggy (operator's wording, flagged to them).

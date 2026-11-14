@@ -18,7 +18,7 @@ const EVERY_MS = 6500;
 
 // Crossfading photos with a slow zoom. Each slide links to its tour. Stops on hover, in a hidden tab
 // and for people who prefer reduced motion (they can still pick a slide with the buttons).
-export default function HeroSlides({ slides, lang }: { slides: HeroSlide[]; lang: Lang }) {
+export default function HeroSlides({ slides, lang, controls = true }: { slides: HeroSlide[]; lang: Lang; controls?: boolean }) {
   const chooseLabel = UI[lang].hero.choose;
   const showLabel = UI[lang].hero.show;
   const [i, setI] = useState(0);
@@ -64,6 +64,7 @@ export default function HeroSlides({ slides, lang }: { slides: HeroSlide[]; lang
         ))}
       </div>
 
+      {controls && (
       <div className="absolute left-[var(--gutter)] right-[var(--gutter)] top-[calc(5.5rem+env(safe-area-inset-top))] z-10 flex items-center gap-3 md:top-28 [@media(max-height:640px)]:hidden">
         <div className="flex gap-1.5" role="group" aria-label={chooseLabel}>
           {slides.map((sl, n) => (
@@ -92,6 +93,7 @@ export default function HeroSlides({ slides, lang }: { slides: HeroSlide[]; lang
           <ArrowUpRight size={16} aria-hidden className="shrink-0 transition-transform duration-300 group-hover:-translate-y-0.5 group-hover:translate-x-0.5 rtl:group-hover:-translate-x-0.5" />
         </Link>
       </div>
+      )}
     </>
   );
 }

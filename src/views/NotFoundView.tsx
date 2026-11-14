@@ -10,7 +10,7 @@ export const notFoundMeta = (lang: Lang) => ({ title: UI[lang].meta.notFound, ro
 export default function NotFoundView({ lang }: { lang: Lang }) {
   const t = UI[lang].notFound;
   return (
-    <Container className="flex min-h-[85svh] flex-col justify-end pb-[clamp(3rem,6vw,6rem)] pt-32">
+    <Container className="flex min-h-[60svh] flex-col justify-center py-[clamp(3rem,6vw,6rem)]">
       <h1 className="hero-title">
         {t.title[0]} <span className="accent-word text-brand-deep">{t.title[1]}</span>
       </h1>

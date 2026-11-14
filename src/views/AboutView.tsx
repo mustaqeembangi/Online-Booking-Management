@@ -3,6 +3,8 @@ import Image from "next/image";
 import { ArrowUpRight } from "lucide-react";
 import Link from "next/link";
 import Container from "@/components/ui/Container";
+import PageBanner from "@/components/classic/PageBanner";
+import TrustStrip from "@/components/classic/TrustStrip";
 import Button from "@/components/ui/Button";
 import { SITE } from "@/data/site";
 import { GYG_TOTAL_REVIEWS } from "@/data/tours";
@@ -25,25 +27,13 @@ export default function AboutView({ lang }: { lang: Lang }) {
   const reviews = num(lang, GYG_TOTAL_REVIEWS);
   return (
     <>
-      <section className="on-ink relative isolate flex min-h-[min(82svh,52rem)] items-end overflow-hidden bg-ink text-white">
-        <Image
-          src="/images/tours/red-dune-safari-quad-camel-bbq-20.jpg"
-          alt={t.heroAlt}
-          fill
-          priority
-          sizes="100vw"
-          className="hero-photo -z-20 object-cover"
-        />
-        <div className="absolute inset-0 -z-10 bg-gradient-to-t from-ink via-ink/35 to-ink/10" />
-        <Container className="pb-[clamp(2rem,5vw,5rem)] pt-32">
-          <h1 className="hero-title">
-            {t.title[0]} <span className="accent-word text-brand">{t.title[1]}</span>
-          </h1>
-          <p className="mt-5 max-w-2xl text-[clamp(1.05rem,1.4vw,1.35rem)] text-white/90">
-            {t.intro(SITE.name)}
-          </p>
-        </Container>
-      </section>
+      <PageBanner
+        lang={lang}
+        title={`${t.title[0]} ${t.title[1]}`}
+        sub={t.intro(SITE.name)}
+        image="/images/tours/red-dune-safari-quad-camel-bbq-20.jpg"
+        crumb={UI[lang].classic.nav.about}
+      />
 
       <Container as="section" className="section-y">
         <div className="grid gap-10 lg:grid-cols-2 lg:gap-[clamp(3rem,6vw,8rem)]">
@@ -108,6 +98,8 @@ export default function AboutView({ lang }: { lang: Lang }) {
           </div>
         </div>
       </section>
+
+      <TrustStrip lang={lang} tone="white" />
 
       <Container className="py-[clamp(2.5rem,4vw,4rem)]">
         <p className="text-lg">

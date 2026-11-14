@@ -199,7 +199,7 @@ export default async function TourView({ params, lang }: { params: TourParams; l
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify([jsonLd, breadcrumbs]).replace(/</g, "\\u003c") }}
       />
-      <Container className="pb-32 pt-[clamp(6rem,9vw,8rem)] lg:pb-[clamp(5rem,8vw,8rem)]">
+      <Container className="pb-32 pt-[clamp(1.25rem,2.5vw,2rem)] lg:pb-[clamp(4rem,6vw,6rem)]">
         <nav aria-label={t.breadcrumb} className="text-sm text-ink/60">
           <Link href={lp(lang, "/tours")} className="hover:text-ink">{t.breadcrumb}</Link>
           {category && (
@@ -327,7 +327,7 @@ export default async function TourView({ params, lang }: { params: TourParams; l
             )}
 
             {tour.gyg && reviews.length > 0 && (
-              <section id="reviews" className="scroll-mt-28 border-t border-line pt-[clamp(2rem,4vw,3rem)]">
+              <section id="reviews" className="scroll-mt-36 border-t border-line pt-[clamp(2rem,4vw,3rem)]">
                 <div className="grid gap-8 md:grid-cols-[minmax(13rem,16rem)_minmax(0,1fr)] md:gap-10">
                   <div className="reveal">
                     <h2 className="text-[1.6rem] font-bold leading-tight">{r.customer}</h2>

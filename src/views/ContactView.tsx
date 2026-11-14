@@ -2,6 +2,7 @@ import { pageMeta } from "@/lib/seo";
 import { Clock, Mail, MapPin, MessageCircle, Phone } from "lucide-react";
 import Container from "@/components/ui/Container";
 import ContactForm from "@/components/info/ContactForm";
+import PageBanner from "@/components/classic/PageBanner";
 import { SITE } from "@/data/site";
 import { whatsappLink } from "@/lib/whatsapp";
 import { UI, type Lang } from "@/i18n";
@@ -55,15 +56,17 @@ export default function ContactView({ lang }: { lang: Lang }) {
   ];
 
   return (
-    <Container className="pb-[clamp(4rem,8vw,8rem)] pt-[clamp(8rem,14vw,14rem)]">
-      <h1 className="hero-title max-w-5xl">
-        {t.title[0]} <span className="accent-word text-brand-deep">{t.title[1]}</span>
-      </h1>
-      <p className="mt-5 max-w-2xl text-[clamp(1.05rem,1.4vw,1.35rem)] text-ink/70">
-        {t.intro}
-      </p>
+    <>
+    <PageBanner
+      lang={lang}
+      title={`${t.title[0]} ${t.title[1]}`}
+      sub={t.intro}
+      image="/images/tours/safari-quad-camel-bbq-buffet-2.jpg"
+      crumb={UI[lang].classic.nav.contact}
+    />
+    <Container className="pb-[clamp(4rem,8vw,8rem)]">
 
-      <div className="mt-[clamp(2.5rem,5vw,5rem)] grid gap-10 lg:grid-cols-2 lg:gap-[clamp(3rem,6vw,8rem)]">
+      <div className="mt-[clamp(2rem,4vw,3.5rem)] grid gap-10 lg:grid-cols-2 lg:gap-[clamp(3rem,6vw,8rem)]">
         <div>
           <ul className="divide-y divide-line border-y border-line">
             {rows.map(({ icon: Icon, label, node }) => (
@@ -99,5 +102,6 @@ export default function ContactView({ lang }: { lang: Lang }) {
         </div>
       </div>
     </Container>
+    </>
   );
 }

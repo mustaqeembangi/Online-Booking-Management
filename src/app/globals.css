@@ -6,8 +6,11 @@
   --color-brand-deep: #2f6b2a;
   --color-dune: #c65a1e;
   --color-line: #e7e9e4;
-  --font-display: var(--font-funnel), ui-sans-serif, system-ui, sans-serif;
-  --font-accent: var(--font-serif-accent), ui-serif, Georgia, serif;
+  /* Classic tour-company look (client's sample, 2026-11-14): deep forest green bars, bright green buttons. */
+  --color-forest: #0b3b2c;
+  --color-green: #1f8a3c;
+  --color-gold: #f5a623;
+  --font-display: var(--font-poppins), ui-sans-serif, system-ui, sans-serif;
   --font-body: var(--font-geist), ui-sans-serif, system-ui, sans-serif;
 }
 
@@ -36,8 +39,8 @@ body {
 
 h1, h2, h3, h4 {
   font-family: var(--font-display);
-  font-weight: 600;
-  letter-spacing: -0.03em;
+  font-weight: 700;
+  letter-spacing: -0.015em;
   text-wrap: balance;
 }
 
@@ -67,43 +70,33 @@ p { text-wrap: pretty; }
   -webkit-backdrop-filter: blur(16px) saturate(160%);
 }
 @utility section-y {
-  padding-block: clamp(3rem, 6vw, 6.5rem);
+  padding-block: clamp(3rem, 5vw, 5rem);
 }
 @utility display-xl {
-  font-size: clamp(2.75rem, 7vw, 8rem);
-  line-height: 0.95;
-  letter-spacing: -0.045em;
+  font-size: clamp(1.9rem, 3.6vw, 3rem);
+  line-height: 1.12;
+  letter-spacing: -0.02em;
 }
 @utility display-lg {
-  font-size: clamp(2.25rem, 5vw, 5.5rem);
-  line-height: 1;
-  letter-spacing: -0.04em;
+  font-size: clamp(1.6rem, 2.8vw, 2.4rem);
+  line-height: 1.15;
+  letter-spacing: -0.015em;
 }
 @utility no-scrollbar {
   scrollbar-width: none;
   &::-webkit-scrollbar { display: none; }
 }
 
+/* The highlighted word in a heading ("Ammar Tours"): same font, coloured by the caller. */
 .accent-word {
-  font-family: var(--font-accent);
-  font-style: italic;
-  font-weight: 400;
-  letter-spacing: -0.02em;
+  font-family: var(--font-display);
+  font-style: normal;
 }
 
-/* Sized by width and height, so it also fits phones held sideways and short laptops. */
 .hero-title {
-  font-size: clamp(3rem, min(20vw, 11.5svh), 8rem);
-  line-height: 0.88;
-  letter-spacing: -0.05em;
-}
-@media (min-width: 768px) {
-  .hero-title { font-size: min(12.5vw, 18svh); }
-}
-/* Home hero with four two-word lines: smaller so each line fits on one row. */
-.hero-title.hero-title-list { font-size: clamp(2.3rem, min(11.5vw, 8svh), 6.5rem); line-height: 0.95; }
-@media (min-width: 768px) {
-  .hero-title.hero-title-list { font-size: min(7.2vw, 11.5svh); }
+  font-size: clamp(2.3rem, 5vw, 4.4rem);
+  line-height: 1.06;
+  letter-spacing: -0.025em;
 }
 
 @media (prefers-reduced-motion: no-preference) {
@@ -179,20 +172,14 @@ body:has([data-booking-panel]) .whatsapp-fab { display: none; }
 
 /* ---------- Arabic (/ar): right-to-left ---------- */
 :root[dir="rtl"] {
-  --font-display: var(--font-cairo), var(--font-funnel), ui-sans-serif, system-ui, sans-serif;
+  --font-display: var(--font-cairo), var(--font-poppins), ui-sans-serif, system-ui, sans-serif;
   --font-body: var(--font-plex-arabic), var(--font-geist), ui-sans-serif, system-ui, sans-serif;
-  --font-accent: var(--font-cairo), ui-sans-serif, system-ui, sans-serif;
 }
 /* Letter spacing pulls Arabic letters apart, so none anywhere. */
 [dir="rtl"] * { letter-spacing: 0 !important; }
 /* Arabic letters are taller than Latin ones; tight Latin line heights clip them. */
 [dir="rtl"] h1, [dir="rtl"] h2, [dir="rtl"] h3 { font-weight: 700; line-height: 1.25; }
-[dir="rtl"] .hero-title { line-height: 1.12; font-size: clamp(2.6rem, min(16vw, 10svh), 7rem); }
-[dir="rtl"] .hero-title.hero-title-list { line-height: 1.2; font-size: clamp(2.1rem, min(10.5vw, 7.5svh), 6rem); }
-@media (min-width: 768px) {
-  [dir="rtl"] .hero-title { font-size: min(10vw, 15svh); }
-  [dir="rtl"] .hero-title.hero-title-list { font-size: min(6.4vw, 10svh); }
-}
+[dir="rtl"] .hero-title { line-height: 1.3; }
 [dir="rtl"] .display-xl, [dir="rtl"] .display-lg { line-height: 1.2; }
 /* The Latin accent is an italic serif; Arabic uses the heading font in a lighter weight instead. */
 [dir="rtl"] .accent-word { font-family: var(--font-display); font-style: normal; font-weight: 500; }

@@ -4,6 +4,8 @@ Updated 2026-11-13.
 
 **State:** live on `main` at https://travel.ammartours.com since 2026-11-13: the 2026 redesign, the SEO and share-image work, and only the six GetYourGuide tours, each with its GetYourGuide photo gallery and full text, on a tour page laid out like GetYourGuide (mosaic, full description, review summary); real guest reviews and a "Book on GetYourGuide" link; the whole site in Arabic under `/ar` (since 2026-11-13). The 22 old tours were removed and redirect to `/tours`.
 
+**Ready, not live:** classic tour-company redesign on branch `redesign/classic` (client's sample + oceanairtravels.com style), waiting for approval.
+
 **Needs the operator**
 - Confirm +971 55 231 3157 is also the WhatsApp number.
 - The home headline says "Dune Buggy" but no tour offers one: add a buggy tour or change the word.

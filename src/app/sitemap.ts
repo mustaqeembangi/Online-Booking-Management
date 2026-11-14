@@ -11,6 +11,8 @@ export default function sitemap(): MetadataRoute.Sitemap {
     ["/tours", 0.9],
     ...CATEGORIES.map((c): [string, number] => [`/tours?category=${c.id}`, 0.8]),
     ...TOURS.map((t): [string, number] => [`/tours/${t.slug}`, t.gyg ? 0.9 : 0.7]),
+    ["/gallery", 0.5],
+    ["/reviews", 0.6],
     ["/about", 0.5],
     ["/contact", 0.5],
   ];

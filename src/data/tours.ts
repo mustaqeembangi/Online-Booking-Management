@@ -48,6 +48,8 @@ export interface Tour {
     scores?: { guide: number; transport: number; value: number };
   };
   notAllowed?: string[];
+  // Two or three words shown on tour cards, e.g. "Dune Bashing • BBQ • Shows".
+  tags?: string[];
   photos?: string[];
   highlights?: string[];
   optionIncludes?: { title: string; items: string[] };
@@ -62,13 +64,13 @@ const img = (slug: string) => `/images/tours/${slug}.jpg`;
 export const CATEGORIES: Category[] = [
   {
     id: "desert-safari",
-    name: "Desert safaris",
+    name: "Desert Safari",
     blurb: "Red dunes, quad bikes, camels and a BBQ evening",
     image: img("red-dune-safari-quad-camel-bbq"),
   },
   {
     id: "city-tours",
-    name: "City tours",
+    name: "City Tours",
     blurb: "Abu Dhabi day trips from Dubai",
     image: img("abu-dhabi-tour-sheikh-zayed-mosque"),
   },
@@ -133,6 +135,7 @@ export const TOURS: Tour[] = [
     photos: photos("desert-safari-quad-camel-sandboarding", 14),
     summary:
       "Experience the Lahbab Desert on a safari from Dubai, with thrilling dune bashing, camel riding, sandboarding and an optional quad bike ride.",
+    tags: ["Dune Bashing", "Camel Ride", "Sandboarding"],
     price: { amount: 29, currency: "USD" },
     duration: "4 hours",
     departs: null,
@@ -189,6 +192,7 @@ export const TOURS: Tour[] = [
     photos: photos("red-dune-safari-quad-camel-bbq", 20),
     summary:
       "Escape Dubai and drive across the red Lahbab Desert in a 4x4. Enjoy the sunset, sandboarding and a camel ride, with a BBQ dinner at the camp on the 7-hour option.",
+    tags: ["Red Dunes", "Quad Bike", "BBQ Dinner"],
     price: { amount: 27, currency: "USD" },
     duration: "4 or 7 hours",
     departs: null,
@@ -230,6 +234,7 @@ export const TOURS: Tour[] = [
     photos: photos("safari-quad-camel-bbq-buffet", 20),
     summary:
       "A desert adventure with dune bashing, sandboarding and camel rides. Choose quad biking, or a traditional camp evening with a BBQ buffet dinner and shows.",
+    tags: ["Dune Bashing", "BBQ Buffet", "Live Shows"],
     price: { amount: 27, currency: "USD" },
     duration: "4 or 7 hours",
     departs: null,
@@ -277,6 +282,7 @@ export const TOURS: Tour[] = [
     photos: photos("evening-tour-quad-camel-bbq", 26),
     summary:
       "A desert trip with a little of everything: dune bashing, a camel ride, sandboarding, quad biking and a BBQ dinner at the camp.",
+    tags: ["Quad Biking", "Camel Ride", "BBQ"],
     price: { amount: 27, currency: "USD" },
     duration: "4 or 7 hours",
     departs: null,
@@ -317,6 +323,7 @@ export const TOURS: Tour[] = [
     photos: photos("abu-dhabi-tour-sheikh-zayed-mosque", 8),
     summary:
       "A full-day guided tour of Abu Dhabi from Dubai. Visit the Sheikh Zayed Grand Mosque, drive along the Corniche, explore the Heritage Village and see the city's landmarks.",
+    tags: ["Sheikh Zayed Mosque", "Heritage Village", "Corniche"],
     price: { amount: 54, currency: "USD" },
     duration: "10 hours",
     departs: null,
@@ -367,6 +374,7 @@ export const TOURS: Tour[] = [
     photos: photos("abu-dhabi-city-tour-qasr-al-watan", 8),
     summary:
       "A full day in the UAE's capital: the Sheikh Zayed Grand Mosque, the Corniche, Emirates Palace and a visit inside the Qasr Al Watan palace.",
+    tags: ["Qasr Al Watan", "Grand Mosque", "Corniche"],
     price: { amount: 81, currency: "USD" },
     duration: "10 hours",
     departs: null,
@@ -427,6 +435,13 @@ export const getFeaturedTours = () => TOURS.filter((t) => t.featured);
 export function formatPrice(price: TourPrice) {
   const symbol = price.currency === "USD" ? "$" : "AED ";
   return `${symbol}${price.amount}`;
+}
+
+// Prices are stored in US dollars (GetYourGuide's prices); the site shows dirhams first.
+export const USD_TO_AED = 3.6725; // the dirham's fixed peg to the dollar
+export function aed(price: TourPrice) {
+  const n = price.currency === "AED" ? price.amount : Math.round(price.amount * USD_TO_AED);
+  return `AED ${n}`;
 }
 
 export const GYG_TOTAL_REVIEWS = TOURS.reduce(
