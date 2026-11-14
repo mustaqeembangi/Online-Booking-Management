@@ -10,7 +10,7 @@
 
 **Checks run:** `tsc --noEmit`, eslint, `npm run build` passed. Built site: desktop, phone and Arabic screenshots; search "mosque" listed the 2 Abu Dhabi tours; 15 pages × 8 sizes with no sideways scrolling or broken images.
 
-**Delivery:** committed on `redesign/v2`; not pushed. v1 stays on `redesign/classic`; live site unchanged.
+**Delivery:** `redesign/classic` and `redesign/v2` pushed (not `main`) as Vercel previews; the operator turned off Vercel Authentication for previews. Both preview URLs return 200 for home, tours, Arabic, gallery, reviews and a tour page, with `x-robots-tag: noindex`. Live site unchanged.
 
 ## 2026-11-14: classic tour-company redesign (client rejected the editorial look)
 
