@@ -1,5 +1,17 @@
 # Work log
 
+## 2026-11-14: v2 design styled after oceanairtravels.com
+
+**Why:** the operator asked to keep the classic version (v1, branch `redesign/classic`, built from the client's AI mock-up) and to make a second version taken from https://oceanairtravels.com/ itself, so the client can choose.
+
+**How the reference was read:** plain Playwright screenshots of the OceanAir home and desert category pages (no stealth); colours sampled from them: navy #032836, teal #006b91, page #fafbfc; font Montserrat (read from the page).
+
+**What changed (branch `redesign/v2`, from v1):** Montserrat, navy/teal palette, teal small-caps eyebrows. Header: logo, Experiences ▾ (all tours), Destinations ▾ (Dubai, Abu Dhabi with counts), Gallery, Reviews, About, "عربي · AED" pill, navy Book now; transparent over the home photo until scrolling. Home: photo hero with eyebrow, headline, pill search with live tour suggestions (photo, rating, price) and quick-pick chips, navy strip (4.9 · 113,000+ reviews, hotel pickup, nothing to pay online, 24/7 support); Browse by category tiles; Where to, first? with Dubai / Abu Dhabi tabs; destination cards; Spotlight on the 7-hour desert evening; The Ammar Tours standard (licensed guides, clear pickup, nothing to pay online) with photo and badge; Why book with us figures. Tours page like OceanAir's category page: photo header with stat pills, two Bestseller cards with real review quotes, sticky filter chips, All tours grid. Cards: "DUBAI · 4 hours", title, teal rating, From AED ~$, View →; "Top rated" only for 4.9+ with 1,000+ reviews (GetYourGuide's own label). Footer: navy, WhatsApp call to action instead of a newsletter, Explore / Support / Contact. No phone bottom bar (OceanAir has none); round WhatsApp button. Own wording throughout; OceanAir's "Since 2010", discounts, "viewing now", free cancellation and videos left out.
+
+**Checks run:** `tsc --noEmit`, eslint, `npm run build` passed. Built site: desktop, phone and Arabic screenshots; search "mosque" listed the 2 Abu Dhabi tours; 15 pages × 8 sizes with no sideways scrolling or broken images.
+
+**Delivery:** committed on `redesign/v2`; not pushed. v1 stays on `redesign/classic`; live site unchanged.
+
 ## 2026-11-14: classic tour-company redesign (client rejected the editorial look)
 
 **Why:** the client rejected the design and sent an AI mock-up plus https://oceanairtravels.com/ as references: a conventional Dubai tour-operator site. Operator decisions: keep only the 6 GetYourGuide tours; show prices as AED with dollars ("AED 99 ~$27", fixed 3.6725 rate); add Gallery and Reviews pages; no preference on marketing claims, so only verifiable ones are shown (4.9 on GetYourGuide, 24/7 support, hotel pickup, 113,000+ reviews). "Best Price Guarantee" and "Free cancellation" left out until confirmed.

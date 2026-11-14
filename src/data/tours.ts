@@ -426,6 +426,9 @@ export function getTourIn(slug: string, lang: Lang) {
   const t = getTour(slug);
   return t && localizeTour(t, lang);
 }
+// Where the tour takes place (for "Dubai · 4 hours" labels and the destination tabs).
+export const destinationOf = (t: Tour) => (t.category === "city-tours" ? "abu-dhabi" : "dubai");
+
 export const getCategories = (lang: Lang): Category[] =>
   lang === "en" ? CATEGORIES : CATEGORIES.map((c) => ({ ...c, ...CATEGORIES_AR[c.id] }));
 export const getToursByCategory = (id: CategoryId) =>

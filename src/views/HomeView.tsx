@@ -1,11 +1,9 @@
 import { pageMeta } from "@/lib/seo";
 import { SITE } from "@/data/site";
 import { UI, type Lang } from "@/i18n";
-import Hero from "@/components/home/Hero";
-import PopularTours from "@/components/classic/PopularTours";
-import TrustStrip from "@/components/classic/TrustStrip";
-import AboutSays from "@/components/classic/AboutSays";
-import CtaBanner from "@/components/classic/CtaBanner";
+import HeroV2 from "@/components/v2/HeroV2";
+import CategoryTilesV2 from "@/components/v2/CategoryTilesV2";
+import { ByDestination, Spotlight, Standard, WhereWeGo, WhyUs } from "@/components/v2/HomeSections";
 
 export const homeMeta = (lang: Lang) =>
   pageMeta({
@@ -15,15 +13,17 @@ export const homeMeta = (lang: Lang) =>
     lang,
   });
 
-// Classic tour-company home page (client's sample, 2026-11-14).
+// v2 home page, styled after oceanairtravels.com (client's reference, 2026-11-14).
 export default function HomeView({ lang }: { lang: Lang }) {
   return (
     <>
-      <Hero lang={lang} />
-      <PopularTours lang={lang} />
-      <TrustStrip lang={lang} />
-      <AboutSays lang={lang} />
-      <CtaBanner lang={lang} />
+      <HeroV2 lang={lang} />
+      <CategoryTilesV2 lang={lang} />
+      <ByDestination lang={lang} />
+      <WhereWeGo lang={lang} />
+      <Spotlight lang={lang} />
+      <Standard lang={lang} />
+      <WhyUs lang={lang} />
     </>
   );
 }

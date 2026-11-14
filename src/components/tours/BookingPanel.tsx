@@ -285,7 +285,7 @@ export default function BookingPanel({ tour, lang }: { tour: Tour; lang: Lang })
       </div>
 
       {/* Phones and iPad portrait: sticky bottom bar */}
-      <div className="fixed inset-x-3 bottom-[calc(4.4rem+env(safe-area-inset-bottom))] z-40 rounded-full border border-white/70 bg-white/90 shadow-[0_16px_40px_-16px_rgb(11_18_14/0.5)] backdrop-blur-xl lg:hidden">
+      <div className="fixed inset-x-3 bottom-[max(0.75rem,env(safe-area-inset-bottom))] z-40 rounded-full border border-white/70 bg-white/90 shadow-[0_16px_40px_-16px_rgb(11_18_14/0.5)] backdrop-blur-xl lg:hidden">
         <div className="flex items-center justify-between gap-4 py-2 ps-6 pe-2">
           <div className="min-w-0 leading-tight">{priceLine}</div>
           <Button onClick={() => setOpen(true)} variant="ink" size="md" className="shrink-0">

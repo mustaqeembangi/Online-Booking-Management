@@ -1,17 +1,18 @@
 @import "tailwindcss";
 
 @theme {
-  --color-ink: #0b120e;
-  --color-brand: #8fdc55;
-  --color-brand-deep: #2f6b2a;
+  --color-ink: #1d2427;
+  --color-brand: #5cc3e4;
+  --color-brand-deep: #006b91;
   --color-dune: #c65a1e;
   --color-line: #e7e9e4;
-  /* Classic tour-company look (client's sample, 2026-11-14): deep forest green bars, bright green buttons. */
-  --color-forest: #0b3b2c;
-  --color-green: #1f8a3c;
+  /* v2: OceanAir-style palette (oceanairtravels.com, sampled 2026-11-14): deep navy, teal accents. */
+  --color-forest: #032836;
+  --color-green: #006b91;
   --color-gold: #f5a623;
-  --font-display: var(--font-poppins), ui-sans-serif, system-ui, sans-serif;
-  --font-body: var(--font-geist), ui-sans-serif, system-ui, sans-serif;
+  --color-mist: #fafbfc;
+  --font-display: var(--font-montserrat), ui-sans-serif, system-ui, sans-serif;
+  --font-body: var(--font-montserrat), ui-sans-serif, system-ui, sans-serif;
 }
 
 :root {
@@ -30,7 +31,7 @@ html {
 }
 
 body {
-  background: #fff;
+  background: var(--color-mist);
   color: var(--color-ink);
   font-family: var(--font-body);
   overflow-x: clip;
@@ -39,8 +40,8 @@ body {
 
 h1, h2, h3, h4 {
   font-family: var(--font-display);
-  font-weight: 700;
-  letter-spacing: -0.015em;
+  font-weight: 600;
+  letter-spacing: -0.01em;
   text-wrap: balance;
 }
 
@@ -172,8 +173,8 @@ body:has([data-booking-panel]) .whatsapp-fab { display: none; }
 
 /* ---------- Arabic (/ar): right-to-left ---------- */
 :root[dir="rtl"] {
-  --font-display: var(--font-cairo), var(--font-poppins), ui-sans-serif, system-ui, sans-serif;
-  --font-body: var(--font-plex-arabic), var(--font-geist), ui-sans-serif, system-ui, sans-serif;
+  --font-display: var(--font-cairo), var(--font-montserrat), ui-sans-serif, system-ui, sans-serif;
+  --font-body: var(--font-plex-arabic), var(--font-montserrat), ui-sans-serif, system-ui, sans-serif;
 }
 /* Letter spacing pulls Arabic letters apart, so none anywhere. */
 [dir="rtl"] * { letter-spacing: 0 !important; }
@@ -187,3 +188,7 @@ body:has([data-booking-panel]) .whatsapp-fab { display: none; }
 [dir="rtl"] :is(.lucide-arrow-up-right, .lucide-arrow-right, .lucide-arrow-left, .lucide-chevron-right, .lucide-chevron-left) {
   scale: -1 1;
 }
+
+/* v2: small teal capitals above section headings ("WHERE TO START"). */
+.eyebrow { font-size: 0.72rem; font-weight: 700; letter-spacing: 0.16em; text-transform: uppercase; color: var(--color-brand-deep); }
+[dir="rtl"] .eyebrow { font-size: 0.85rem; }
