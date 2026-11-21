@@ -1,7 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { ArrowRight, Clock, Star } from "lucide-react";
-import { aed, formatPrice, type Tour } from "@/data/tours";
+import { aed, usd, type Tour } from "@/data/tours";
 import { UI, lp, type Lang } from "@/i18n";
 
 // 45,778 -> "45k+", 955 -> "955"
@@ -52,9 +52,7 @@ export default function TourCard({ tour, lang, className = "" }: { tour: Tour; l
               <>
                 <span className="block text-xs text-ink/60">{t.price.from}</span>
                 <span className="whitespace-nowrap font-display text-lg font-bold text-forest">{aed(tour.price)}</span>
-                {tour.price.currency === "USD" && (
-                  <span className="ms-1.5 text-xs text-ink/50">{UI[lang].classic.approx(formatPrice(tour.price))}</span>
-                )}
+                <span className="ms-1.5 text-xs text-ink/50">{UI[lang].classic.approx(usd(tour.price))}</span>
               </>
             ) : (
               <span className="font-semibold text-forest">{t.price.ask}</span>

@@ -1,5 +1,11 @@
 # Work log
 
+## 2026-11-21: prices for the three new safaris
+
+**What changed:** Dune Buggy AED 675, Quad Bike AED 299, Evening safari AED 175 (client's marked screenshot; read as AED per adult). Dollar amount shown for dirham prices too ("AED 675 ~$184"). Same change as on `redesign/v2`.
+
+**Checks run:** `npm run build` passed; prices checked on the tours page.
+
 ## 2026-11-21: three new tours from the client's Word documents
 
 **What changed:** added Ammar's own evening safaris (not on GetYourGuide): "Red Dune Desert Safari with BBQ Dinner, Camel Ride & Dune Buggy", "… Quad Bike & Camel Ride" and "Dubai: Evening Desert Safari with BBQ Dinner, Camel Ride & Sandboarding". Each has summary, tags, highlights, inclusions, exclusions, know-before-you-go, what to bring, pickup/return times (shown in the key features) and a full description (overview, itinerary, BBQ menu, family note), all in Arabic too. No prices yet (shown as "Ask for price"), no ratings. Photos reuse Ammar's GetYourGuide photos (real buggy shots for the buggy tour); the Gallery page lists only the GetYourGuide tours so photos are not shown twice. Listed after the other desert safaris.
