@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { ArrowUpRight, Car, Check, Clock, Languages, MessageCircle, Plus, Star, Wallet, X } from "lucide-react";
+import { ArrowUpRight, Bus, CalendarCheck, CalendarClock, Check, Clock, Flag, History, MessageCircle, Plus, Star, X } from "lucide-react";
 import Stars from "@/components/ui/Stars";
 import Expandable from "@/components/ui/Expandable";
 import ReviewList from "@/components/tours/ReviewList";
@@ -150,17 +150,18 @@ export default async function TourView({ params, lang }: { params: TourParams; l
   const reviews = REVIEWS[tour.slug] ?? [];
   const description = (lang === "ar" ? DESCRIPTIONS_AR : DESCRIPTIONS)[tour.slug];
 
-  // Key features, as on GetYourGuide. Pickup and guide are read from the English lists.
+  // Key features, in GetYourGuide's order. Free cancellation (24 hours) confirmed by the operator on 2026-11-21.
   const has = (re: RegExp) => base.includes.some((i) => re.test(i));
   const features = [
+    { icon: CalendarCheck, title: t.featCancel, sub: t.featCancelSub },
+    { icon: CalendarClock, title: t.featReserve, sub: t.featReserveSub },
     tour.duration && {
-      icon: Clock,
+      icon: History,
       title: t.featDuration(tour.duration),
       sub: tour.departs && tour.returns ? t.featTimes(tour.departs, tour.returns) : t.featDurationSub,
     },
-    has(/english/i) && { icon: Languages, title: t.featGuide, sub: t.guideValue },
-    has(/pick-?up/i) && { icon: Car, title: t.featPickup, sub: t.featPickupSub },
-    { icon: Wallet, title: t.featPay, sub: t.featPaySub },
+    { icon: Flag, title: t.featGuide, sub: t.guideValue },
+    has(/pick-?up/i) && { icon: Bus, title: t.featPickup, sub: t.featPickupSub },
   ].filter((f): f is { icon: typeof Clock; title: string; sub: string } => !!f);
 
   const all = getTours(lang);
