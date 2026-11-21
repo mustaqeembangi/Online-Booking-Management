@@ -7,6 +7,9 @@ Updated 2026-11-13.
 **Ready, not live:** classic tour-company redesign on branch `redesign/classic` (client's sample + oceanairtravels.com style), waiting for approval.
 
 **Needs the operator**
+- Prices (adult and child) for the three new evening safaris (buggy, quad, basic evening); they show "Ask for price" until then.
+- Dune buggy rules: minimum driving age and insurance note for the buggy tour.
+- Evening safari: dune bashing 20–30 or 30–45 minutes? (the client's document says both).
 - Confirm +971 55 231 3157 is also the WhatsApp number.
 - The home headline says "Dune Buggy" but no tour offers one: add a buggy tour or change the word.
 - Ideally have a native Arabic speaker read the Arabic pages once (written by Claude).

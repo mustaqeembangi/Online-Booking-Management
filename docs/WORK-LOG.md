@@ -1,5 +1,15 @@
 # Work log
 
+## 2026-11-21: three new tours from the client's Word documents
+
+**What changed:** added Ammar's own evening safaris (not on GetYourGuide): "Red Dune Desert Safari with BBQ Dinner, Camel Ride & Dune Buggy", "… Quad Bike & Camel Ride" and "Dubai: Evening Desert Safari with BBQ Dinner, Camel Ride & Sandboarding". Each has summary, tags, highlights, inclusions, exclusions, know-before-you-go, what to bring, pickup/return times (shown in the key features) and a full description (overview, itinerary, BBQ menu, family note), all in Arabic too. No prices yet (shown as "Ask for price"), no ratings. Photos reuse Ammar's GetYourGuide photos (real buggy shots for the buggy tour); the Gallery page lists only the GetYourGuide tours so photos are not shown twice. Listed after the other desert safaris.
+
+**Edits to the client's text:** the evening tour's overview said 30–45 minutes of dune bashing but its itinerary and inclusions said 20–30; 20–30 used. The buggy document's know-before-you-go was copied from the quad tour (quad age and insurance lines); quad-only lines left out for the buggy tour, general self-drive insurance note kept.
+
+**Checks run:** `tsc --noEmit`, eslint, `npm run build` passed; the 3 tours return 200 in English and Arabic with description and pickup times; a booking for the quad tour produced a WhatsApp message without an estimate; 9 pages × 8 sizes with no sideways scrolling.
+
+**Delivery:** committed on `redesign/v2` and copied to `redesign/classic` (this branch).
+
 ## 2026-11-14: classic tour-company redesign (client rejected the editorial look)
 
 **Why:** the client rejected the design and sent an AI mock-up plus https://oceanairtravels.com/ as references: a conventional Dubai tour-operator site. Operator decisions: keep only the 6 GetYourGuide tours; show prices as AED with dollars ("AED 99 ~$27", fixed 3.6725 rate); add Gallery and Reviews pages; no preference on marketing claims, so only verifiable ones are shown (4.9 on GetYourGuide, 24/7 support, hotel pickup, 113,000+ reviews). "Best Price Guarantee" and "Free cancellation" left out until confirmed.

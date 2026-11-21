@@ -15,7 +15,8 @@ export const galleryMeta = (lang: Lang) =>
 export default function GalleryView({ lang }: { lang: Lang }) {
   const c = UI[lang].classic;
   const g = UI[lang].gallery;
-  const tours = getTours(lang);
+  // The GetYourGuide tours own the photos; the newer tours reuse some of them, so they are left out here.
+  const tours = getTours(lang).filter((x) => x.gyg);
   const groups = tours.map((x) => x.photos ?? [x.image]);
   const all = groups.flat();
   // Position of each tour's first photo in the page-wide viewer.
