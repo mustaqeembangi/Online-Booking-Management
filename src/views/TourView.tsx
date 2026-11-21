@@ -153,7 +153,11 @@ export default async function TourView({ params, lang }: { params: TourParams; l
   // Key features, as on GetYourGuide. Pickup and guide are read from the English lists.
   const has = (re: RegExp) => base.includes.some((i) => re.test(i));
   const features = [
-    tour.duration && { icon: Clock, title: t.featDuration(tour.duration), sub: t.featDurationSub },
+    tour.duration && {
+      icon: Clock,
+      title: t.featDuration(tour.duration),
+      sub: tour.departs && tour.returns ? t.featTimes(tour.departs, tour.returns) : t.featDurationSub,
+    },
     has(/english/i) && { icon: Languages, title: t.featGuide, sub: t.guideValue },
     has(/pick-?up/i) && { icon: Car, title: t.featPickup, sub: t.featPickupSub },
     { icon: Wallet, title: t.featPay, sub: t.featPaySub },
@@ -222,7 +226,7 @@ export default async function TourView({ params, lang }: { params: TourParams; l
               <span className="underline decoration-1 underline-offset-4">{t.reviewCount(num(lang, tour.gyg.reviews))}</span>
             </a>
           )}
-          <span aria-hidden className="text-ink/30">•</span>
+          {tour.gyg && <span aria-hidden className="text-ink/30">•</span>}
           <span className="text-ink/70">
             {t.provider}: {SITE.name}
           </span>

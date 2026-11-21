@@ -91,3 +91,59 @@ export const DESCRIPTIONS: Record<string, DescBlock[]> = {
     {"p": "Marvel at the distinctive architecture of Ferrari World, featuring the world’s largest space frame structure and the iconic Ferrari logo on the roof."},
   ],
 };
+
+// The client's own evening safaris (Word documents, 2026-11-21). Same programme; buggy / quad tours add one stop.
+const EVENING = (extra: string | null, bashing: string): DescBlock[] => [
+  { h: "Tour overview" },
+  { p: "Escape the city and discover the beauty of Dubai's desert on an unforgettable evening safari." },
+  {
+    p: `Your adventure begins with pickup from your Dubai hotel or residence in a comfortable, air-conditioned 4x4. Travel into the desert for an exciting ${bashing} dune-bashing drive across the golden dunes.`,
+  },
+  { p: "Stop at a desert viewpoint to take photos and enjoy the scenery. Try sandboarding on the dunes and capture sunset photos." },
+  {
+    p: "Continue to the traditional desert camp for a camel ride, Arabic coffee, dates, henna and a relaxed atmosphere. As evening falls, enjoy a BBQ buffet dinner with vegetarian and non-vegetarian options.",
+  },
+  { p: "The evening continues with live entertainment, including belly dancing, Tanoura and fire performances, before your comfortable return to Dubai." },
+  { h: "Itinerary" },
+  {
+    ul: [
+      "Hotel pickup: meet your safari driver at your Dubai hotel or residence",
+      "Desert drive: travel toward the desert in an air-conditioned 4x4",
+      ...(extra ? [extra] : []),
+      "Dune bashing: an exciting 20–30-minute drive across the dunes",
+      "Photo stop and sunset: watch the desert change colour as the sun goes down",
+      "Sandboarding: slide down the soft desert dunes",
+      "Desert camp: arrive at the traditional camp and relax",
+      "Camel ride: a traditional camel ride and photos",
+      "Arabic hospitality: Arabic coffee, dates and henna painting",
+      "BBQ dinner: grilled meats, salads, rice, breads, vegetarian dishes and desserts",
+      "Live entertainment: belly dancing, Tanoura and a fire show",
+      "Return to Dubai: a comfortable transfer back to your hotel or residence",
+    ],
+  },
+  { h: "BBQ dinner" },
+  { p: "The buffet can include:" },
+  {
+    ul: [
+      "BBQ chicken",
+      "Kebabs",
+      "Rice",
+      "Arabic bread",
+      "Salads",
+      "Hummus",
+      "Vegetarian dishes",
+      "Fresh vegetables",
+      "Sauces and side dishes",
+      "Desserts",
+      "Tea and coffee",
+      "Unlimited soft drinks and water",
+    ],
+  },
+  { p: "Menu items may vary with availability and season." },
+  { h: "Family friendly" },
+  { p: "The safari suits families and couples. Children can enjoy the desert scenery, sandboarding, the camel ride, camp activities and dinner." },
+];
+
+DESCRIPTIONS["desert-safari-bbq-dune-buggy"] = EVENING("Dune buggy: 30 minutes of self-drive dune buggy in the open red-sand desert, with a guide", "20–30-minute");
+DESCRIPTIONS["desert-safari-bbq-quad-bike"] = EVENING("Quad biking: 35 minutes of self-drive quad biking in the open red-sand desert, with a guide", "20–30-minute");
+DESCRIPTIONS["evening-desert-safari-bbq"] = EVENING(null, "20–30-minute");

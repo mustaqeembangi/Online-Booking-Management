@@ -7,6 +7,9 @@ Updated 2026-11-13.
 **Ready, not live — two designs for the client to choose:** v1 classic tour-company look on `redesign/classic` (from the client's AI mock-up); v2 on `redesign/v2` (styled after oceanairtravels.com). Both branches pushed 2026-11-14 as Vercel previews (public since the operator turned off Vercel Authentication for previews; Vercel sends noindex): v1 https://online-booking-management-csp7if5kj-mbangi66s-projects.vercel.app , v2 https://online-booking-management-46nj2fltw-mbangi66s-projects.vercel.app . Live site unchanged. Next: client picks one, then merge that branch to `main`.
 
 **Needs the operator**
+- Prices (adult and child) for the three new evening safaris (buggy, quad, basic evening); they show "Ask for price" until then.
+- Dune buggy rules: minimum driving age and insurance note for the buggy tour.
+- Evening safari: dune bashing 20–30 or 30–45 minutes? (the client's document says both).
 - Confirm +971 55 231 3157 is also the WhatsApp number.
 - The home headline says "Dune Buggy" but no tour offers one: add a buggy tour or change the word.
 - Ideally have a native Arabic speaker read the Arabic pages once (written by Claude).

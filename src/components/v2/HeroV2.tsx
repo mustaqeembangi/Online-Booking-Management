@@ -30,7 +30,7 @@ export default function HeroV2({ lang }: { lang: Lang }) {
       slug: x.slug,
       title: x.title,
       image: x.image,
-      meta: `${x.gyg?.rating.toFixed(1) ?? ""} · ${v.destinations[destinationOf(x)]} · ${x.duration ?? ""}`,
+      meta: [x.gyg?.rating.toFixed(1), v.destinations[destinationOf(x)], x.duration].filter(Boolean).join(" · "),
       price: x.price ? aed(x.price) : "",
       href: lp(lang, `/tours/${x.slug}`),
       words: [en.title, ar.title, ...(en.tags ?? []), ...(ar.tags ?? []), en.summary, ar.summary].join(" ").toLowerCase(),
