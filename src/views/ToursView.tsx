@@ -5,7 +5,7 @@ import { ArrowRight, CalendarDays, SlidersHorizontal, Star, Tag } from "lucide-r
 import TourCard from "@/components/tours/TourCard";
 import PageBanner from "@/components/classic/PageBanner";
 import { REVIEWS } from "@/data/reviews";
-import { aed, formatPrice, getCategories, getTours, type CategoryId } from "@/data/tours";
+import { aed, usd, getCategories, getTours, type CategoryId } from "@/data/tours";
 import { SITE } from "@/data/site";
 import { pageMeta } from "@/lib/seo";
 import { UI, lp, num, type Lang } from "@/i18n";
@@ -106,7 +106,7 @@ export default async function ToursView({ searchParams, lang }: { searchParams: 
                         <span className="leading-tight">
                           <span className="block text-[11px] text-white/55">{UI[lang].price.from}</span>
                           <span className="whitespace-nowrap text-lg font-bold">{x.price && aed(x.price)}</span>
-                          {x.price?.currency === "USD" && <span className="ms-1.5 text-[11px] text-white/50">~{formatPrice(x.price)}</span>}
+                          {x.price && <span className="ms-1.5 text-[11px] text-white/50">~{usd(x.price)}</span>}
                         </span>
                         <span className="inline-flex items-center gap-1.5 rounded-full bg-white px-4 py-2 text-[13px] font-semibold text-forest">
                           {v.viewTour}

@@ -7,7 +7,7 @@ import DatePicker from "@/components/ui/DatePicker";
 import Stepper from "@/components/ui/Stepper";
 import Select from "@/components/ui/Select";
 import TextField from "@/components/ui/TextField";
-import { aed, formatPrice, type Tour } from "@/data/tours";
+import { aed, usd, type Tour } from "@/data/tours";
 import { bookingMessage, bookingTourTitle, whatsappLink } from "@/lib/whatsapp";
 import { UI, type Lang } from "@/i18n";
 
@@ -47,7 +47,7 @@ export default function BookingPanel({ tour, lang }: { tour: Tour; lang: Lang })
   // Shown in dirhams with the dollar amount after it: "AED 198 (~$54)".
   const estimateText =
     price && estimate !== null
-      ? `${aed({ ...price, amount: estimate })}${price.currency === "USD" ? ` (~${formatPrice({ ...price, amount: estimate })})` : ""}`
+      ? `${aed({ ...price, amount: estimate })} (~${usd({ ...price, amount: estimate })})`
       : null;
 
   // Date and guests chosen in the home page search box arrive as ?date=YYYY-MM-DD&adults=N.
@@ -142,7 +142,7 @@ export default function BookingPanel({ tour, lang }: { tour: Tour; lang: Lang })
       <span className="whitespace-nowrap font-display text-2xl font-bold text-forest">{aed(price)}</span>
       <span className="text-sm text-ink/60">
         {price.unit ? ` ${price.unit}` : ` ${UI[lang].tour.perPerson}`}
-        {price.currency === "USD" && <span className="ms-1 text-ink/45">{UI[lang].classic.approx(formatPrice(price))}</span>}
+        <span className="ms-1 text-ink/45">{UI[lang].classic.approx(usd(price))}</span>
       </span>
     </>
   ) : (

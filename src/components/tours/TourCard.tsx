@@ -1,7 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { ArrowRight, Star } from "lucide-react";
-import { aed, destinationOf, formatPrice, type Tour } from "@/data/tours";
+import { aed, destinationOf, usd, type Tour } from "@/data/tours";
 import { UI, lp, num, type Lang } from "@/i18n";
 
 // v2 (OceanAir style): photo, "DUBAI · 4 HOURS", title, rating, "From AED 99 ~$27", "View →".
@@ -53,9 +53,7 @@ export default function TourCard({ tour, lang, className = "" }: { tour: Tour; l
               <>
                 <span className="block text-[11px] text-ink/50">{t.price.from}</span>
                 <span className="whitespace-nowrap text-[17px] font-bold text-forest">{aed(tour.price)}</span>
-                {tour.price.currency === "USD" && (
-                  <span className="ms-1.5 text-[11px] text-ink/45">{t.classic.approx(formatPrice(tour.price))}</span>
-                )}
+                <span className="ms-1.5 text-[11px] text-ink/45">{t.classic.approx(usd(tour.price))}</span>
               </>
             ) : (
               <span className="font-semibold text-forest">{t.price.ask}</span>

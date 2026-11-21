@@ -317,7 +317,7 @@ export const TOURS: Tour[] = [
     },
   },
   // Ammar Tours' own evening safaris (not on GetYourGuide), from the client's Word documents (2026-11-21).
-  // No prices yet ("Ask for price") and no ratings. Photos are Ammar's own, reused from the GetYourGuide galleries.
+  // Prices per adult in AED from the client (2026-11-21); no ratings. Photos are Ammar's own, reused from the GetYourGuide galleries.
   {
     slug: "desert-safari-bbq-dune-buggy",
     title: "Red Dune Desert Safari with BBQ Dinner, Camel Ride & Dune Buggy",
@@ -336,7 +336,7 @@ export const TOURS: Tour[] = [
     tags: ["Dune Buggy", "BBQ Dinner", "Live Shows"],
     summary:
       "An evening in the Dubai desert with a 30-minute self-drive dune buggy, dune bashing, sandboarding, a camel ride and sunset photos, then a BBQ dinner and live shows at a desert camp.",
-    price: null,
+    price: { amount: 675, currency: "AED" },
     duration: "6–7 hours",
     departs: "2:30–3:00 PM",
     returns: "9:00–9:30 PM",
@@ -398,7 +398,7 @@ export const TOURS: Tour[] = [
     tags: ["Quad Bike", "BBQ Dinner", "Live Shows"],
     summary:
       "An evening in the Dubai desert with 35 minutes of self-drive quad biking, dune bashing, sandboarding, a camel ride and sunset photos, then a BBQ dinner and live shows at a desert camp.",
-    price: null,
+    price: { amount: 299, currency: "AED" },
     duration: "6–7 hours",
     departs: "2:30–3:00 PM",
     returns: "9:00–9:30 PM",
@@ -461,7 +461,7 @@ export const TOURS: Tour[] = [
     tags: ["Dune Bashing", "Camel Ride", "BBQ Dinner"],
     summary:
       "An evening in the Dubai desert with dune bashing, red-dune views, sandboarding, a camel ride and sunset photos, then a BBQ dinner, live shows and Arabic hospitality at a desert camp.",
-    price: null,
+    price: { amount: 175, currency: "AED" },
     duration: "6–7 hours",
     departs: "2:30–3:00 PM",
     returns: "8:30–9:30 PM",
@@ -641,6 +641,11 @@ export function formatPrice(price: TourPrice) {
 
 // Prices are stored in US dollars (GetYourGuide's prices); the site shows dirhams first.
 export const USD_TO_AED = 3.6725; // the dirham's fixed peg to the dollar
+// The same price in US dollars, for the small "~$27" next to the dirham price.
+export function usd(price: TourPrice) {
+  const n = price.currency === "USD" ? price.amount : Math.round(price.amount / USD_TO_AED);
+  return `$${n}`;
+}
 export function aed(price: TourPrice) {
   const n = price.currency === "AED" ? price.amount : Math.round(price.amount * USD_TO_AED);
   return `AED ${n}`;
