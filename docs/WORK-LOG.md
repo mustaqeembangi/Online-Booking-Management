@@ -1,5 +1,11 @@
 # Work log
 
+## 2026-11-21: GetYourGuide key features on every tour
+
+**What changed:** tour pages list the five key features in GetYourGuide's order: Free cancellation (cancel up to 24 hours before for a full refund), Reserve now & pay later, Duration (with pickup/return times where known), Live tour guide (English), Pickup included. Free cancellation was confirmed by the operator asking for it (2026-11-21). "Reserve now & pay later" replaces "Nothing to pay online". English and Arabic; both designs.
+
+**Checks run:** `npm run build` passed; features checked on a new tour, an Arabic tour and on a phone.
+
 ## 2026-11-21: prices for the three new safaris
 
 **What changed:** Dune Buggy AED 675, Quad Bike AED 299, Evening safari AED 175 (client's marked screenshot; read as AED per adult, children charged the same in the estimate until told otherwise). The small dollar amount now shows for dirham prices too (`usd()` in tours.ts): "AED 675 ~$184".

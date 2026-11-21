@@ -13,7 +13,6 @@ Updated 2026-11-13.
 - Confirm +971 55 231 3157 is also the WhatsApp number.
 - The home headline says "Dune Buggy" but no tour offers one: add a buggy tour or change the word.
 - Ideally have a native Arabic speaker read the Arabic pages once (written by Claude).
-- Confirm whether the GetYourGuide cancellation rule (full refund up to 24 hours before) also applies to direct WhatsApp bookings; it is not shown on the site yet.
 - Revoke the Cloudinary key that was committed in the old `.env.local.example`.
 - Tell the owner ammartours.com is hacked (casino spam, broken forms).
 
